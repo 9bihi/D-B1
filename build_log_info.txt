@@ -1,0 +1,31 @@
+Initialized native services in: /Users/bihi/.gradle/native
+Initialized jansi services in: /Users/bihi/.gradle/native
+Received JVM installation metadata from '/opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home': {JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home, JAVA_VERSION=17.0.18, JAVA_VENDOR=Homebrew, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.18+0, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.18+0, VM_VENDOR=Homebrew, OS_ARCH=aarch64}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Starting process 'Gradle build daemon'. Working directory: /Users/bihi/.gradle/daemon/8.7 Command: /opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home/bin/java --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country=MA -Duser.language=en -Duser.variant -cp /Users/bihi/.gradle/wrapper/dists/gradle-8.7-bin/bhs2wmbdwecv87pi65oeuq5iu/gradle-8.7/lib/gradle-launcher-8.7.jar -javaagent:/Users/bihi/.gradle/wrapper/dists/gradle-8.7-bin/bhs2wmbdwecv87pi65oeuq5iu/gradle-8.7/lib/agents/gradle-instrumentation-agent-8.7.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.7
+Successfully started process 'Gradle build daemon'
+An attempt to start the daemon took 0.466 secs.
+Exception in thread "DisconnectableInputStream source reader" org.gradle.api.UncheckedIOException: java.io.IOException: Input/output error
+	at org.gradle.internal.UncheckedException.throwAsUncheckedException(UncheckedException.java:62)
+	at org.gradle.internal.UncheckedException.throwAsUncheckedException(UncheckedException.java:41)
+	at org.gradle.util.internal.DisconnectableInputStream$1.run(DisconnectableInputStream.java:127)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: Input/output error
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:282)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at org.gradle.util.internal.DisconnectableInputStream$1.run(DisconnectableInputStream.java:98)
+	... 1 more
+The client will now receive all logging from the daemon (pid: 15925). The daemon log file: /Users/bihi/.gradle/daemon/8.7/daemon-15925.out.log
+Daemon will be stopped at the end of the build 
+Using 8 worker leases.
+Received JVM installation metadata from '/opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home': {JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home, JAVA_VERSION=17.0.18, JAVA_VENDOR=Homebrew, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.18+0, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.18+0, VM_VENDOR=Homebrew, OS_ARCH=aarch64}
+Watching the file system is configured to be enabled if available
+Now considering [/Users/bihi/Desktop/Deutsch B1 Exam] as hierarchies to watch
+File system watching is active
+Starting Build
+Settings evaluated using settings file '/Users/bihi/Desktop/Deutsch B1 Exam/settings.gradle.kts'.
+Projects loaded. Root project using build file '/Users/bihi/Desktop/Deutsch B1 Exam/build.gradle.kts'.
+Included projects: [root project 'DeutschB1', project ':app']
+

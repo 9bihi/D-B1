@@ -1,0 +1,3 @@
+<resources>
+    <style name="Theme.DeutschB1" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
