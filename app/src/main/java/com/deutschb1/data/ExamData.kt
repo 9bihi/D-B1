@@ -71,6 +71,8 @@ data class SprechenTask(
 )
 
 data class ExamContent(
+    val id: String,
+    val name: String,
     val provider: ExamProvider,
     val lesenParts: List<ReadingPart>,
     val hoerenParts: List<HoerenPart>,
@@ -80,7 +82,9 @@ data class ExamContent(
 
 // ─── Goethe B1 Content ───────────────────────────────────────────────────────
 
-val GoetheExam = ExamContent(
+val GoetheExam1 = ExamContent(
+    id = "goethe_1",
+    name = "Modelltest 1",
     provider = ExamProvider.GOETHE,
     lesenParts = listOf(
         ReadingPart(
@@ -315,157 +319,519 @@ val GoetheExam = ExamContent(
     )
 )
 
+val GoetheExam2 = ExamContent(
+    id = "goethe_2",
+    name = "Modelltest 2",
+    provider = ExamProvider.GOETHE,
+    lesenParts = listOf(
+        ReadingPart(
+            partNumber = 1,
+            title = "Teil 1 – Arbeitswelt",
+            instruction = "Lesen Sie den Text und entscheiden Sie: Richtig oder Falsch?",
+            text = """
+                München – Die Vier-Tage-Woche wird in Deutschland immer beliebter. 
+                Nach einer Pilotstudie berichten 80% der teilnehmenden Unternehmen von einer höheren Mitarbeiterzufriedenheit. 
+                Die Produktivität blieb in den meisten Fällen gleich oder verbesserte sich sogar leicht. 
+                Gewerkschaften fordern nun eine gesetzliche Regelung, während Arbeitgeberverbände vor steigenden Lohnkosten warnen. 
+                Experten glauben, dass dieses Modell besonders für junge Fachkräfte ein wichtiges Argument bei der Jobsuche ist.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(1, "Die Vier-Tage-Woche senkt laut Studie die Produktivität massiv.", listOf("Richtig", "Falsch"), 1, "Text sagt: Produktivität blieb gleich oder verbesserte sich."),
+                MultipleChoiceQuestion(2, "80% der Firmen sind zufriedener mit dem neuen Modell.", listOf("Richtig", "Falsch"), 0, "Text sagt: 80% berichten von höherer Zufriedenheit."),
+                MultipleChoiceQuestion(3, "Junge Fachkräfte finden die Vier-Tage-Woche unattraktiv.", listOf("Richtig", "Falsch"), 1, "Experten glauben, es ist ein wichtiges Argument für junge Fachkräfte.")
+            )
+        )
+    ),
+    hoerenParts = emptyList(),
+    schreibenTasks = emptyList(),
+    sprechenTasks = emptyList()
+)
+
 // ─── ÖSD B1 Content ──────────────────────────────────────────────────────────
 
-val OesdExam = ExamContent(
+val OesdExam1 = ExamContent(
+    id = "oesd_1",
+    name = "Modelltest 1",
     provider = ExamProvider.OESD,
     lesenParts = listOf(
         ReadingPart(
             partNumber = 1,
-            title = "Teil 1 – Globales Leseverstehen",
-            instruction = "Lesen Sie den Text und beantworten Sie die Fragen.",
+            title = "Teil 1 – AZUBI Clara",
+            instruction = "Lesen Sie den Text und die Aufgaben 1 bis 6 dazu. Wählen Sie: Sind die Aussagen Richtig oder Falsch?",
             text = """
-                Wien, eine Stadt für alle
-                
-                Wien gilt seit Jahren als eine der lebenswertesten Städte der Welt. 
-                Jedes Jahr strömen Millionen von Touristen in die österreichische Hauptstadt, aber auch immer mehr Menschen entscheiden sich, dauerhaft hier zu leben. 
-                
-                Was macht Wien so besonders? Die Stadt bietet eine einzigartige Kombination aus imperialem Erbe und moderner Lebensqualität. 
-                Die U-Bahn fährt bis Mitternacht, Kaffeehaus-Kultur ist UNESCO-Kulturerbe und das Gesundheitssystem gilt als eines der besten weltweit. 
-                
-                Besonders attraktiv für internationale Zuwanderer ist das hohe Sicherheitsniveau und die gute Vereinbarkeit von Familie und Beruf. 
-                Die Stadt bietet umfangreiche Kinderbetreuungsmöglichkeiten und viele Betriebe ermöglichen flexible Arbeitszeiten. 
-                Laut einer aktuellen Studie würden 92% der Wien-Bewohner wieder in die Stadt ziehen, wenn sie die Wahl hätten.
+                AZUBI Clara Mein neues Leben hat begonnen! Seit gestern bin ich nun also Auszubildende (AZUBI) in der Firma und lerne im dualen System. Nach drei Jahren praktischer Ausbildung im Betrieb plus Berufsschule bin ich dann hoffentlich am Ziel: Bürokauffrau. Ja, jetzt denke ich schon an das Ziel, dabei war gestern gerade mal mein erster Tag in der Firma. Ich hatte Riesenglück, dass ich so schnell eine Ausbildungsstelle gefunden habe. Heutzutage ist das nämlich gar nicht so einfach. Meine Mitschülerinnen können ein Lied davon singen. Aber ich bin ein echter Glückspilz und so war auch mein erster Tag ein Glückstag. Früh morgens nahm ich die Straßenbahn zum Marktplatz und nach 5 Minuten Fußmarsch war ich pünktlich um 8 in der Firma. Ich meldete mich gleich in der Personalabteilung im Büro von Frau Mellert, die ich schon vom Vorstellungsgespräch kannte. Da war auch schon Piet, der mit mir zusammen die Ausbildung macht und in meiner Parallelklasse war. Frau Mellert führte uns als erstes durch die Firma. Sie stellte uns allen Kollegen und Kolleginnen vor und zeigte uns sämtliche Räume. Puh! Das Gebäude ist ein Labyrinth, ich glaube, ich brauche einen Kompass, um meinen Arbeitsplatz zu finden. Zum Glück konnte sich Piet den Weg ganz gut merken. Dafür kann ich mich an die Namen der Leute besser erinnern. Am Infoschalter sitzt ein lustiger Mensch mit blonden Haaren, ich glaube, er heißt Zimmermann. In der Buchhaltung habe ich mir Frau Hentel merken können, weil wir da auch gleich Papiere ausfüllen mussten. Herr Wagner ist unser Chef, mit dem werden wir aber nicht viel Kontakt haben, denn er ist ständig auf Reisen. Frau Lenzig ist für mich zuständig und Piet ist gleich im Büro nebenan bei Frau Andersson, die mit einem Schweden verheiratet ist. OK, die anderen Namen kommen später, morgen ist auch noch ein Tag! Das Wichtigste ist, dass im Haus noch mehr AZUBIs sind, nämlich Leon, Sandra, Tina und Vero! Sie haben uns zur Frühstückspause in der Kantine mit Butterbrezeln und Kaffee überrascht. Leon und Sandra sind im dritten Lehrjahr und machen bald Prüfungen. Tina und Vero sind im zweiten Lehrjahr und haben uns versprochen, uns bei allem zu helfen. Wie wir so gemütlich beisammen saßen, haben wir ihnen auch gleich Löcher in den Bauch gefragt, denn für uns ist ja alles so neu. Wer kennt sich schon aus mit den zukünftigen Aufgaben, wie Bürokommunikation, Personalwirtschaft, Marketing usw. Jedenfalls war es ein guter Anfang und übermorgen beginnt dann auch die Schule. ☺
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Warum siedeln sich immer mehr Menschen dauerhaft in Wien an?",
-                    listOf("Wegen der niedrigen Mieten", "Wegen der hohen Lebensqualität", "Wegen des Klimas"), 1,
-                    "Wien bietet hohe Lebensqualität mit Sicherheit, Gesundheit und Familienfreundlichkeit."),
-                MultipleChoiceQuestion(2, "Was ist laut Text ein UNESCO-Kulturerbe?",
-                    listOf("Die Wiener U-Bahn", "Die Kaffeehaus-Kultur", "Das Gesundheitssystem"), 1,
-                    "Die Kaffeehaus-Kultur ist laut Text UNESCO-Kulturerbe."),
-                MultipleChoiceQuestion(3, "Was zeigt die Studie am Ende des Textes?",
-                    listOf("Die meisten Bewohner würden wieder nach Wien ziehen", "92% wollen Wien verlassen", "Weniger Menschen mögen Wien"), 0,
-                    "Laut Studie würden 92% der Wien-Bewohner wieder hierher ziehen.")
+                MultipleChoiceQuestion(1, "Clara schreibt über ihren ersten Schultag.", listOf("Richtig", "Falsch"), 1, "Sie schreibt über ihren ersten Tag in der Firma, die Schule beginnt erst übermorgen."),
+                MultipleChoiceQuestion(2, "Die Ausbildung zur Bürokauffrau dauert 3 Jahre.", listOf("Richtig", "Falsch"), 0, "Text: 'Nach drei Jahren praktischer Ausbildung...'"),
+                MultipleChoiceQuestion(3, "Clara und Piet waren rechtzeitig in der Firma.", listOf("Richtig", "Falsch"), 0, "Text: '...war ich pünktlich um 8 in der Firma.'"),
+                MultipleChoiceQuestion(4, "Der Chef zeigt ihnen alles im Haus.", listOf("Richtig", "Falsch"), 1, "Frau Mellert aus der Personalabteilung führte sie durch die Firma."),
+                MultipleChoiceQuestion(5, "Frau Lenzig organisiert Geschäftsreisen.", listOf("Richtig", "Falsch"), 1, "Herr Wagner ist ständig auf Reisen; Frau Lenzig ist für Clara zuständig."),
+                MultipleChoiceQuestion(6, "Die Firma hat sechs AZUBIs.", listOf("Richtig", "Falsch"), 0, "Clara, Piet, Leon, Sandra, Tina und Vero = 6 AZUBIs."),
+                MultipleChoiceQuestion(7, "In zwei Tagen ist der erste Schultag im dualen Ausbildungssystem.", listOf("Richtig", "Falsch"), 0, "Text: '...übermorgen beginnt dann auch die Schule.'")
             )
         ),
         ReadingPart(
             partNumber = 2,
-            title = "Teil 2 – Selektives Lesen",
-            instruction = "Welche Information finden Sie in welchem Text? Ordnen Sie zu.",
+            title = "Teil 2a – Weihnachten und ein Heim für Tiere",
+            instruction = "Lesen Sie den Text aus der Presse und die Aufgaben 7 bis 9 dazu. Wählen Sie bei jeder Aufgabe die richtige Lösung a, b oder c.",
             text = """
-                Text A – Jobangebot: Wir suchen ab sofort einen Kundenberater (m/w/d) für unser Team in Graz. 
-                Voraussetzungen: Abgeschlossene kaufmännische Ausbildung, sehr gute Deutschkenntnisse (min. C1), 
-                Erfahrung im Kundenkontakt. Wir bieten: 38,5 Std./Woche, 2.400€ brutto, betriebliche Altersvorsorge.
-                Bewerbungen an: jobs@firma-graz.at
-                
-                Text B – Stellenangebot: Gasthaus Zum Goldenen Hirschen sucht Koch/Köchin.
-                Anforderungen: Berufsausbildung als Koch, Bereitschaft zu Wochenendarbeit, Teamgeist.
-                Arbeitszeit: variabel, ca. 40 Std./Woche. Gehalt: nach KV Gastronomie.
-                Kontakt: goldener.hirsch@gasthaus.at
-                
-                Text C – Praktikum: Das österreichische Rote Kreuz bietet Praktikumsplätze für engagierte 
-                junge Menschen (18-25 J.). Dauer: 3 Monate, Aufwandsentschädigung 400€/Monat. 
-                Geeignet für Studierende der Sozialarbeit, Psychologie oder Pädagogik.
-                Infos: praktikum@roteskreuz.at
+                Weihnachten und ein Heim für Tiere
+                In eigener Sache meldete sich ein Tierheim in Dortmund. Es ist bekannt, dass gerade in der Vorweihnachtszeit viele ein Tier aus dem Tierheim holen wollen, um die Lieben damit zu beschenken. Aber gerade davor warnt das Tierheim. Nach einer Umfrage, die im Oktober am „Tag der offenen Tür“ durchgeführt wurde, stimmte die Mehrheit der Besucher sogar für einen Vermittlungsstopp, demnach soll die Abgabe von Tieren an Interessenten in der Weihnachtszeit nicht möglich sein. Frau Scheffer, Vorsitzende des Tierschutzvereins unterstützt diese Maßnahme. Sie meint, dass die Freude über das Tier oft nicht lange anhält. Spätestens wenn die Besitzer erkennen, dass ein Tier nicht nur Liebe braucht und die täglichen Pflichten unangenehm sind, landen die neuen Freunde schnell wieder im Tierheim oder gar auf der Straße. Die Anschaffung eines Tieres sollte gut überlegt werden. Jedes Tier hat seine eigenen Bedürfnisse, die den zukünftigen Besitzer Raum, Geld und Zeit kosten. Eine wichtige Rolle spielt dabei auch die Lebenserwartung, denn ein Tier kann ein Begleiter für viele Jahre sein. Man verschenkt besser ein Stofftier, aber wer unbedingt ein lebendiges Tier verschenken will, sollte das mit den zukünftigen Besitzern und Angehörigen unterm Weihnachtsbaum besprechen. Im Januar kann dann das Versprechen guten Gewissens eingelöst werden.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(4, "Wo kann man sich für eine unbezahlte Stelle mit geringer Aufwandsentschädigung bewerben?",
-                    listOf("Text A", "Text B", "Text C"), 2,
-                    "Das Rote Kreuz bietet Praktikum mit Aufwandsentschädigung."),
-                MultipleChoiceQuestion(5, "Welche Stelle erfordert Kenntnisse im Umgang mit Kunden?",
-                    listOf("Text A", "Text B", "Text C"), 0,
-                    "Text A verlangt Erfahrung im Kundenkontakt.")
+                MultipleChoiceQuestion(8, "Frau Scheffer sagt, ...", listOf("dass man die Liebe zum Tier pflegen muss.", "dass die Liebe zum Tier ein Leben lang hält.", "dass die Freude über das Tier oft schnell vergeht."), 2),
+                MultipleChoiceQuestion(9, "Wer ein Tier möchte, ...", listOf("muss die Bedürfnisse des Tieres berücksichtigen.", "muss die Bedürfnisse des Besitzers kennen.", "braucht eine hohe Lebenserwartung."), 0),
+                MultipleChoiceQuestion(10, "Wer ein Tier schenken möchte, ...", listOf("muss sich rechtzeitig melden.", "sollte das vorher mit den Besitzern klären.", "kann es unter den Weihnachtsbaum legen."), 1)
+            )
+        ),
+        ReadingPart(
+            partNumber = 3,
+            title = "Teil 2b – Gelbe Postbusse",
+            instruction = "Lesen Sie den Text aus der Presse und die Aufgaben 10 bis 12 dazu. Wählen Sie bei jeder Aufgabe die richtige Lösung a, b oder c.",
+            text = """
+                Kommen die gelben Postbusse wieder?
+                Post und ADAC planen mit modernem Fernbusnetz der Bahn Konkurrenz zu machen. Die Konkurrenz belebt den Markt. Poststationen, wie man sie von alten Bildern her kennt. Die Post beforderte nicht nur Briefe und Pakete, sondern war schon immer ein beliebtes Reisemittel. Ob mit der Postkutsche oder mit dem Postbus, mit der Post fuhr man durch das Land, um von einem Ort zum anderen zu kommen. Was in den Sechzigerjahren nicht mehr rentabel war und darum eingestellt wurde, soll jetzt wieder eingerichtet werden. Dahinter steckt keine neue Idee, sondern ein neuer Partner. Die Kooperation ist mit dem Automobilclub ADAC geplant. Der Grund dafür ist, dass ab 2013 private Firmen bundesweiten Linienverkehr anbieten durfen. Das Monopol der Bahn für den Langstreckenverkehr wurde aufgehoben und gibt der Konkurrenz eine Chance. Kaufen wir in Zukunft im Postamt zusammen mit den Briefmarken unsere Fahrschein für gelbe Busse im ganzen Land? Die Konkurrenz schläft nicht. Private Omnibusunternehmen können ihr Fernstreckennetz leicht umstellen. Im Fokus steht die Zusammenarbeit vieler regionaler Anbieter unter einer gemeinsamen Organisation. Das gilt auch für Firmen außerhalb der Landesgrenzen. Interesse zeigen bereits Verkehrskonzerne aus Frankreich und Großbritannien, die Erfahrung mit Fernlinien haben.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(11, "Der Busfernverkehr ...", listOf("soll neu organisiert werden.", "ist ein Monopol der Bahn.", "ist nicht mehr rentabel."), 0),
+                MultipleChoiceQuestion(12, "Private Busunternehmen ...", listOf("planen ein landesweites Streckennetz.", "wollen mit der Bahn zusammen arbeiten.", "haben nach 2013 keine Chance."), 0),
+                MultipleChoiceQuestion(13, "Europäische Verkehrskonzerne ...", listOf("wollen mit der Deutschen Post zusammen arbeiten.", "können ihre Erfahrungen einbringen.", "ordnen sich regionalen Interessen unter."), 1)
+            )
+        ),
+        ReadingPart(
+            partNumber = 4,
+            title = "Teil 3 – Anzeigen",
+            instruction = "Welche Anzeige passt zu welcher Situation? Wählen Sie 0, falls keine passt.",
+            text = """
+                Anzeigen:
+                A: Wohnbüro, 5 Zimmer, in Stuttgart in ruhiger Lage zu vermieten.
+                B: Günstige Eigentumswohnungen in Norditalien, Mallorca, Nordgriechenland.
+                C: München, 5-Zi.-Maisonette, am Park, ruhig, 160 m2, Kaufpreis: 399 000 Euro.
+                D: Schöne, helle 2 1/2- Zimmerwohnung in Stuttgart-Bonlanden zu verkaufen.
+                E: Hamburger Familie sucht Haus/Wohnung in München (01.06 - 01.09).
+                F: Arzt sucht große 4-5-Zimmer-Wohnung oder Haus mit Garten.
+                G: Studentenzimmer in Wohnheim in München zu vermieten.
+                H: Seniorenresidenz „Waldidyll“, Appartements ab 1424 Euro monatlich.
+                I: Massivblockhäuser zum Kauf am Sulmsee, 40.000 Euro.
+                J: Werbefachmann sucht Büroräume, ca. 60 Quadratmeter im Großraum Stuttgart.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(14, "Jens hat ein altes Haus geerbt und möchte es renovieren lassen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 10),
+                MultipleChoiceQuestion(15, "Frau Scheidt ist das Einfamilienhaus zu groß und sie möchte es vermieten.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 0),
+                MultipleChoiceQuestion(16, "Frau Wenzel ist Architektin und sucht ein größeres Wohnbüro.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 9),
+                MultipleChoiceQuestion(17, "Freunde aus Holland wollen sich eine kleine Wohnung in Stuttgart kaufen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 3),
+                MultipleChoiceQuestion(18, "Sarah ist Studentin und sucht ein Zimmer in München.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 6),
+                MultipleChoiceQuestion(19, "Familie Walter möchte ihre Wohnung für drei Monate im Sommer vermieten.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 10),
+                MultipleChoiceQuestion(20, "Herr Rollberg will sich eine schöne und bequeme Wohnung in München kaufen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 2)
+            )
+        ),
+        ReadingPart(
+            partNumber = 5,
+            title = "Teil 4 – Alternative Heilmethoden",
+            instruction = "Ist die Person für alternative Heilmethoden? Wählen Sie Ja oder Nein.",
+            text = """
+                Lesermeinungen zum Thema Naturmedizin:
+                20: Lena (18) erinnert sich an Großmutters Hausmittel.
+                21: Nickel (26), Medizinstudent, hält alternative Therapien für unseriös.
+                22: Ferdinand (48) vertraut nur der Schulmedizin bei echten Krankheiten.
+                23: Steiner (39), Heilpraktiker, ist begeistert von neuen Erkenntnissen.
+                24: Dr. Turm (61) bleibt überzeugter Schulmediziner.
+                25: Sarah Wick (23) warnt vor Leichtgläubigkeit.
+                26: Schwester M. (44) sieht in der Natur die Lösung für viele Leiden.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(21, "Lena, 18, Berlin", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion(22, "Nickel, 26, Wallis", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(23, "Ferdinand, 48, Graz", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(24, "Steiner, 39, Köln", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion(25, "Dr. Turm, 61, München", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(26, "Sarah Wick, 23, Rostock", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(27, "Schwester M., 44, Kehl", listOf("Ja", "Nein"), 0)
+            )
+        ),
+        ReadingPart(
+            partNumber = 6,
+            title = "Teil 5 – Regeln Museumsbahn",
+            instruction = "Lesen Sie die Regeln und wählen Sie die richtige Lösung a, b oder c.",
+            text = """
+                Liebe Besucher der Museumsbahn, beachten Sie bitte folgende Regeln:
+                1. Auf dem gesamten Museumsgelände gilt die allgemeine Straßenverkehrsordnung. Auch hier hat der Schienenverkehr Vorrang vor dem Straßenverkehr.
+                2. Das Museumsgelände ist kein Spielplatz. Lokomotiven und Waggons sind keine Sportgeräte. Es ist verboten, darauf herum zu klettern.
+                3. Betreten streng verboten für Gleisanlagen und abgesperrte Bereiche.
+                4. Bei Personenzügen darf nur in den dafür vorgesehenen Wagen mitgefahren werden.
+                5. Bei fahrenden Zügen ist es verboten auf- oder abzuspringen.
+                6. Während der Fahrt darf man sich nicht hinauslehnen und nach Pflanzen greifen.
+                7. Dampfloks verursachen Schmutz. Keine Haftung übernommen.
+                8. Hunde an der Leine führen.
+                9. Fotografieren nur für private Zwecke erlaubt.
+                10. Anweisungen des Personals befolgen.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(28, "Auf dem Gelände der Museumsbahn ...", listOf("dürfen keine Autos fahren.", "gelten die allgemeinen Verkehrsregeln.", "dürfen nur Züge fahren."), 1),
+                MultipleChoiceQuestion(29, "Es ist nicht erlaubt, ...", listOf("die Fahrzeuge anzufassen.", "auf die Fahrzeugen zu klettern.", "Sport zu treiben."), 1),
+                MultipleChoiceQuestion(30, "Es ist verboten, ...", listOf("während der Fahrt aufzustehen.", "Hunde mitzuführen.", "bei fahrendem Zug Blumen zu pflücken."), 2),
+                MultipleChoiceQuestion(31, "Fotos ...", listOf("kann man am Kiosk kaufen.", "dürfen keine gemacht werden.", "dürfen nur für den privaten Gebrauch gemacht werden."), 2)
             )
         )
     ),
     hoerenParts = listOf(
         HoerenPart(
             partNumber = 1,
-            title = "Teil 1 – Radiobericht",
-            instruction = "Sie hören einen Radiobericht. Was ist richtig?",
-            transcript = """
-                Guten Morgen, hier ist Ö1. Es folgen die Nachrichten.
-                
-                Das österreichische Parlament hat gestern ein neues Klimaschutzgesetz verabschiedet. 
-                Das Gesetz sieht vor, dass Österreich bis 2040 klimaneutral sein soll – zehn Jahre früher als von der EU gefordert. 
-                Dafür werden die Investitionen in erneuerbare Energien um 30 Prozent erhöht. 
-                Wirtschaftsverbände kritisieren das Gesetz als zu ambitioniert und befürchten höhere Kosten für Unternehmen. 
-                Umweltorganisationen begrüßen den Schritt, fordern aber noch schnellere Maßnahmen.
-                
-                Zum Wetter: In Wien bleibt es heute bewölkt bei 12 Grad. Ab morgen wird es wärmer.
-            """.trimIndent(),
+            title = "Teil 1 – Kurztexte",
+            instruction = "Sie hören fünf kurze Texte. Lösen Sie die Aufgaben.",
+            transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wann soll Österreich klimaneutral sein?",
-                    listOf("2030", "2040", "2050"), 1,
-                    "Das Ziel ist 2040 – zehn Jahre früher als EU-Vorgabe."),
-                MultipleChoiceQuestion(2, "Wie reagieren Wirtschaftsverbände auf das Gesetz?",
-                    listOf("Positiv", "Neutral", "Kritisch"), 2,
-                    "Wirtschaftsverbände kritisieren das Gesetz als zu ambitioniert.")
+                MultipleChoiceQuestion(101, "Text 1: Die andalusischen Apfelsinen kosten 34 Cent das Kilo.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(102, "Text 1: Das Angebot gilt ...", listOf("bis nächste Woche.", "solange es diese Produkte noch gibt.", "nur für Kunden mit der Bonuskarte."), 0),
+                MultipleChoiceQuestion(103, "Text 2: Die Maschine ist in der Luft und fliegt nach Frankfurt.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(104, "Text 2: Der Flug dauert heute länger aufgrund ...", listOf("des starken Flugverkehrs.", "des Gegenwinds.", "der verspäteten Starterlaubnis."), 0),
+                MultipleChoiceQuestion(105, "Text 3: Der Zug fährt nicht bis Venedig.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(106, "Text 3: Passagiere müssen in Turin ...", listOf("in einen Bus umsteigen.", "einen anderen Zug nehmen.", "auf Anweisungen warten."), 0)
+            )
+        ),
+        HoerenPart(
+            partNumber = 2,
+            title = "Teil 2 – Uni-Rundgang",
+            instruction = "Wählen Sie die richtige Lösung a, b oder c.",
+            transcript = "Audiomaterial wird benötigt.",
+            questions = listOf(
+                MultipleChoiceQuestion(201, "Die Person, die die Einführung macht, ist ...", listOf("Student.", "vom Bibliothekspersonal.", "Mitarbeiter der Universität."), 0),
+                MultipleChoiceQuestion(202, "Im Leseraum kann man ...", listOf("Magazine aus dem Sortiment lesen.", "nur nach Anmeldung lesen.", "nur Material aus dem Archiv lesen."), 0),
+                MultipleChoiceQuestion(203, "Bücher über Partneruniversitäten erhält man ...", listOf("über das OPAC-Programm.", "mit einem Aufpreis.", "bei Frau Mertens."), 0)
+            )
+        ),
+        HoerenPart(
+            partNumber = 3,
+            title = "Teil 3 – Gespräch im Café",
+            instruction = "Sind die Aufgaben richtig oder falsch?",
+            transcript = "Audiomaterial wird benötigt.",
+            questions = listOf(
+                MultipleChoiceQuestion(301, "Hannelore kam über eine Recherche zu ihrem Job.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(302, "Hannelore war von der Familie begeistert.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(303, "Hannelores Reise nach Australien war anstrengend.", listOf("Richtig", "Falsch"), 0)
+            )
+        ),
+        HoerenPart(
+            partNumber = 4,
+            title = "Teil 4 – Diskussion: Englisch in der Gesellschaft",
+            instruction = "Ordnen Sie die Aussagen zu: Wer sagt was?",
+            transcript = "Moderatorin, Anna Wenz und Anton Grubauer diskutieren.",
+            questions = listOf(
+                MultipleChoiceQuestion(401, "Die deutsche Sprache hat auch die englische Sprache beeinflusst.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0),
+                MultipleChoiceQuestion(402, "Nicht alle Bundesbürger sprechen Englisch.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0),
+                MultipleChoiceQuestion(403, "Man braucht Zeit, ein neues Wort zu verstehen und zu benutzen.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0)
             )
         )
     ),
     schreibenTasks = listOf(
         SchreibenTask(
             taskNumber = 1,
-            title = "Schreiben 1 – Formeller Brief",
+            title = "Aufgabe 1 – E-Mail über einen Ausflug",
             prompt = """
-                Sie haben in einem Geschäft ein Produkt gekauft (z.B. Smartphone, Laptop), 
-                das nach einer Woche nicht mehr funktioniert. Sie sind sehr unzufrieden.
-                
-                Schreiben Sie einen formellen Beschwerdebrief (circa 150 Wörter):
-                • Erklären Sie das Problem genau
-                • Schildern Sie, wann und wo Sie das Produkt gekauft haben
-                • Formulieren Sie Ihre Forderung (Reparatur, Ersatz oder Rückerstattung)
-                • Setzen Sie eine Frist für die Antwort
+                Sie haben am Wochenende einen Ausflug gemacht. 
+                Beschreiben Sie: Wo waren Sie und wie ist die Stadt?
+                Begründen Sie: Wie war der Ausflug?
+                Empfehlen Sie Ihrem Freund/Ihrer Freundin, diese Stadt zu besuchen.
             """.trimIndent(),
-            minWords = 150,
-            hints = listOf(
-                "Formelle Anrede: 'Sehr geehrte Damen und Herren,'",
-                "Einleitung: Nennen Sie den Kaufzeitpunkt und das Produkt",
-                "Problembeschreibung: Was genau funktioniert nicht?",
-                "Forderung: klar und höflich formulieren",
-                "Frist setzen: 'Ich erwarte Ihre Antwort bis zum...'",
-                "Formeller Abschluss: 'Mit freundlichen Grüßen, ...'"
-            )
+            minWords = 80,
+            hints = listOf("Anrede", "Einleitung", "Hauptteil", "Schluss")
+        ),
+        SchreibenTask(
+            taskNumber = 2,
+            title = "Aufgabe 2 – Blogbeitrag: Kinos sterben",
+            prompt = """
+                Gästebuch-Meinung: „Ich finde es schade, dass Kinos schließen. Kinobesuch mit Freunden ist besser als allein fernsehen.“
+                Schreiben Sie Ihre Meinung dazu.
+            """.trimIndent(),
+            minWords = 80,
+            hints = listOf("Eigene Meinung", "Begründung")
+        ),
+        SchreibenTask(
+            taskNumber = 3,
+            title = "Aufgabe 3 – Besichtigungstermin",
+            prompt = """
+                Der Vermieter, Herr Schneider, hat Ihnen einen Besichtigungstermin vorgeschlagen. 
+                Bedanken Sie sich und schreiben Sie, ob Ihnen der Termin passt.
+            """.trimIndent(),
+            minWords = 40,
+            hints = listOf("Höfliche Form", "Zusage/Absage")
         )
     ),
     sprechenTasks = listOf(
         SprechenTask(
             taskNumber = 1,
-            title = "Sprechen 1 – Informationen erfragen",
-            instruction = "Sie sehen eine Anzeige für einen Deutschkurs. Fragen Sie den Kursanbieter nach Details.",
-            topic = "Kurs: 'Deutsch Intensiv B1 → B2' – Details unklar. Fragen Sie nach: Kursdauer, Kurszeiten, Kosten, Prüfungsvorbereitung, Möglichkeit Online/Präsenz.",
-            prepTimeSec = 90,
+            title = "Teil 1 – Gemeinsam etwas planen",
+            instruction = "Planen Sie den Besuch eines Freundes am Wochenende.",
+            topic = "Treffpunkt, Verkehrsmittel, Sehenswürdigkeiten, Abendgestaltung.",
+            prepTimeSec = 60,
             speakTimeSec = 180,
-            tips = listOf(
-                "W-Fragen: Wann? Wo? Wie viel? Wie lange?",
-                "Höflich fragen: 'Könnten Sie mir sagen...? / Darf ich fragen...?'",
-                "Nachfragen: 'Könnten Sie das bitte wiederholen?'",
-                "Interesse zeigen: 'Das klingt interessant!'",
-                "Abschlussfrage: 'Wie kann ich mich anmelden?'"
-            )
+            tips = listOf("Vorschläge machen", "Reagieren", "Einigung finden")
         ),
         SprechenTask(
             taskNumber = 2,
-            title = "Sprechen 2 – Diskussion",
-            instruction = "Diskutieren Sie mit Ihrem Partner über ein aktuelles Thema.",
-            topic = "Homeoffice: Soll das Arbeiten von zuhause Pflicht oder Kür sein? Diskutieren Sie Pro und Contra und kommen Sie zu einer gemeinsamen Einigung.",
-            prepTimeSec = 60,
-            speakTimeSec = 240,
-            tips = listOf(
-                "Position klar machen: 'Ich bin dafür/dagegen, weil...'",
-                "Auf Partner eingehen: 'Du hast recht, aber...'",
-                "Beispiele nennen: 'Zum Beispiel...'",
-                "Einigung suchen: 'Vielleicht können wir uns darauf einigen, dass...'"
+            title = "Teil 2 – Thema präsentieren",
+            instruction = "Präsentieren Sie das Thema: „Schokolade macht glücklich!“",
+            topic = "Inhalt/Struktur, persönliche Erfahrungen, Situation im Heimatland, Vor-/Nachteile, Abschluss.",
+            prepTimeSec = 120,
+            speakTimeSec = 180,
+            tips = listOf("Foliengliederung folgen", "Beispiele nennen")
+        ),
+        SprechenTask(
+            taskNumber = 3,
+            title = "Teil 3 – Über ein Thema sprechen",
+            instruction = "Reagieren Sie auf Rückmeldungen und stellen Sie Fragen.",
+            topic = "Feedback geben, eine Frage zur Präsentation des Partners stellen.",
+            prepTimeSec = 30,
+            speakTimeSec = 60,
+            tips = listOf("Interessantes hervorheben", "Anschlussfrage stellen")
+        )
+    )
+)
+
+
+val OesdExam2 = ExamContent(
+    id = "oesd_2",
+    name = "Modelltest 2",
+    provider = ExamProvider.OESD,
+    lesenParts = listOf(
+        ReadingPart(
+            partNumber = 1,
+            title = "Teil 1 – Mein Reisemosaik",
+            instruction = "Lesen Sie den Text und die Aufgaben 1 bis 6 dazu. Wählen Sie: Sind die Aussagen Richtig oder Falsch?",
+            text = """
+                Mein Reisemosaik von Deutschland
+                7. Etappe: Die Entscheidung meiner Reise - Familienbesuch
+                Nachdem ich nun Metropolen und Ballungsgebiete hinter mir gelassen habe, wende ich mich dem landlichen Sudwesten zu. Die Hälfte meiner Familie stammt aus dem Schwarzwald, darum fuhr ich mit der Bahn gleich mal mitten hinein, nämlich ins Kinzigtal. Noch während die Landschaft mit ihren idyllischen Tälern und Orten an mir vorbeigleitet, steigen Erinnerungen in mir hoch. Dann hält der Zug im Bahnhof und ich steige aus. Ist es die Luft, ist es der Geruch nach frisch geschnittenem Heu: gleich waren sie da, die Bilder aus Kindertagen. Ich lächle und winke meinem Cousin, der mich mit dem Auto abholt. Erst einmal begrüßen und ankommen. So viele Augen, so viele Hände und Arme, herzliche Wärme empfängt mich. Es gibt auch gleich Vesper mit Bauernbrot, Wurst und Speck vom „Brettle“. Mit scharfem Messer hauchdünn geschnitten, zergeht mir die Erinnerung auf der Zunge. Als Getränk kann ich wählen zwischen Most vom Bauern oder doch ein „Tannenzäpfle“, falls ich Lust auf ein Bier habe. Das Wasser ist schließlich zum Waschen und für die Tiere da. Und mit der Nahrung nehme ich auch gleich ein Sprachbad. Wie lange habe ich diesen Klang der Sprache nicht gehört! Auch das ist Deutsch, eine Behauptung, für die mich die meisten meiner Kollegen spöttisch belächeln, weil Alemannisch für sie eine Fremdsprache ist. Dabei ist Dialekt heutzutage wieder im Trend. Wie viel ärmer wäre die Sprache ohne die Mundart. Vielleicht ist die Sprache der Umgebung auch so ein bisschen etwas wie Heimat, die man mit sich im Herzen trägt. Beim Abendspaziergang um den Waldsee, besprechen wir Pläne für eine kleine Wanderung am nächsten Tag. Nach langer Diskussion, ob es auf den Brandenkopf, zu den Nillhöfen oder auf die Heidburg gehen soll, beschließen wir das Auto in der Garage stehen zu lassen und nur so weit zu gehen, wie uns die Füße von der Haustüre aus tragen. Das war eine kluge und pragmatische Entscheidung. Zum Einen hätten wir gar nicht alle in ein Auto gepasst und es wäre ein zweites Auto nötig gewesen. Zum Anderen wollte ich schließlich Natur pur genießen. Noch während ich hier in meinen Laptop tippe, erinnere ich mich an glückliche Kindertage, rieche die Waldluft und freue mich auf morgen.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(1, "Der Bericht handelt von einem Reise-Souvenir aus Deutschland.", listOf("Richtig", "Falsch"), 1),
+                MultipleChoiceQuestion(2, "Der Schreiber war zuerst in großen Städten.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(3, "Ein Verwandter holt ihn ab.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(4, "Nach der Ankunft gibt es etwas zu Essen.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(5, "Sie trinken Wasser.", listOf("Richtig", "Falsch"), 1),
+                MultipleChoiceQuestion(6, "Die Kollegen mögen den süddeutschen Dialekt.", listOf("Richtig", "Falsch"), 1),
+                MultipleChoiceQuestion(7, "Sie wollen zu Fuß gehen und nicht mit dem Auto fahren.", listOf("Richtig", "Falsch"), 0)
             )
+        ),
+        ReadingPart(
+            partNumber = 2,
+            title = "Teil 2a – Bio-Äpfel",
+            instruction = "Lesen Sie den Text aus der Presse und die Aufgaben 7 bis 9 dazu. Wählen Sie bei jeder Aufgabe die richtige Lösung a, b oder c.",
+            text = """
+                Sind Bio-Äpfel wirklich besser?
+                Huch, Bio-Produkte sind gar nicht gesünder als konventionelle? Ein Skandal? Was für ein Quatsch. Wer Bio für grundsätzlich gesünder hält, der kann Bio-Zigaretten rauchen und sich von Bio-Schokolade ernähren. Nein, der Öko-Landwirtschaft geht es um Nachhaltigkeit. Und skandalös ist dabei etwas ganz anderes. Eine Studie bestätigt, was sich jeder mit ein bisschen Verstand auch selbst denken kann. Ein Apfel ist nicht einfach gesünder, nur weil er vom Bio-Bauern kommt. Viele Bio-Produkte entsprechen nicht den Geschmacksvorstellungen der Konsumenten. Der Begriff „gesund“ ist schon fragwürdig. Eine mit viel Butter und Zucker angerührte Schokoladentorte macht auch dann nicht schlank, wenn sie aus Bio-Produkten hergestellt wird. Auch ein Bio-Lutscher kann Karies verursachen. Und, ja, auch Tabak aus Bio-Anbau ist krebserregend. Wie immer, wenn es um Ernährung geht, geht es um ausgewogene Ernährung. Bio ist nicht gleich Bio. Wer Wert darauf legt, dass ein Produkt nicht nur weitgehend pestizidfrei ist und umweltschonend angebaut wird, muss schon genau hinsehen. Auch aufgepasst, wer sicher sein will, Fleisch von halbwegs glücklichen Hühnern, Schweinen und Rindern zu essen. Für die strengen Kriterien muss man leider meist auch mehr bezahlen, aber es lohnt sich. Bio hat nun mal seinen Preis, wenn im Einklang mit der Natur angebaut wurde.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(8, "Es wurde festgestellt,...", listOf("a) dass Bio-Äpfel besser schmecken.", "b) dass Bio-Bauern gesund leben.", "c) dass „Bio“ nicht selbstverständlich auch gesünder ist."), 2),
+                MultipleChoiceQuestion(9, "Wer Bio-Qualität sucht,...", listOf("a) muss die Produkte genau prüfen.", "b) muss Glück haben.", "c) hat eine hohe Lebenserwartung."), 0),
+                MultipleChoiceQuestion(10, "Der Preis für Bio-Produkte ...", listOf("a) wird streng kontrolliert.", "b) ist oft hoch.", "c) häng von der Natur ab."), 1)
+            )
+        ),
+        ReadingPart(
+            partNumber = 3,
+            title = "Teil 2b – Europaschule Köln",
+            instruction = "Lesen Sie den Text aus der Presse und die Aufgaben 10 bis 12 dazu. Wählen Sie bei jeder Aufgabe die richtige Lösung a, b oder c.",
+            text = """
+                Infofest der Europaschule Köln
+                Großer Andrang herrschte beim diesjährigen Informationsfest der Europaschule in Köln. Wie jedes Jahr öffnete die Europaschule ihre Pforten, um sich allen Interessierten vorzustellen. Grundschulkinder und -eltern nahmen die Gelegenheit zu Unterrichtsbesuchen im 5. und 6. Jahrgang wahr. In separaten Veranstaltungen wurde über die möglichen Schullaufbahnen sowie das Schulprogramm in beiden Sekundarstufen informiert. Führungen durch das Schulgebäude sorgten für die nötige Orientierung. Vielfältige Ausstellungen, Aufführungen und Aktionen zeigten einen repräsentativen Querschnitt des Schulalltags. Der Schriftsteller Alexander Rothe wurde eingeladen und feierlich zum offiziellen Lesepaten der Europaschule ernannt, natürlich mit einer kurzen Lesung im Theatersaal. In der Vorstellung der Wahlsprachen lag der besondere Fokus in diesem Jahr auf dem Fach Russisch. Hierzu gab es ein buntes Programm mit verschiedenen Aufführungen und russischen Spezialitäten. Das Mensa-Team und die Schülerfirma „milchig“ sorgten für weitere Stärkungen im England-Café. Auch die Gäste konnten aktiv werden, beim Märchenquiz raten, in der Disko tanzen, ein Tombola-Los kaufen oder die Spieler vom Kickerturnier unterstützen. Natürlich ist ein solch umfangreiches Programm nicht ohne die Hilfe aller möglich. Ein besonderer Dank geht an alle Eltern, die Schülerinnen und Schüler, die Kolleginnen und Kollegen sowie die Mitarbeiter der Europaschule, die in der Vorbereitung dieses Tages mit großem Einsatz bei der Sache waren.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(11, "Die Besucher ...", listOf("a) verloren auf dem Fest die Orientierung.", "b) beschwerten sich über den großen Andrang auf dem Fest.", "c) konnten sich über die Europaschule in Köln informieren."), 2),
+                MultipleChoiceQuestion(12, "Die Schüler ...", listOf("a) zeigten Beispiele aus dem täglichen Schulleben.", "b) lasen Texte des Schriftstellers Alexander Rothe.", "c) machten Werbung für die Schülerfirma „milchig“."), 0),
+                MultipleChoiceQuestion(13, "Der Dank gilt ...", listOf("a) der Schulleitung.", "b) allen, die mitgeholfen haben.", "c) dem Programm-Team."), 1)
+            )
+        ),
+        ReadingPart(
+            partNumber = 4,
+            title = "Teil 3 – Restaurant-Anzeigen",
+            instruction = "Welche Anzeige passt zu welcher Situation? Wählen Sie 0, falls keine passt.",
+            text = """
+                Anzeigen:
+                A: Waldau-Stuben – Bier vom Fass, Kaffee, Wurstsalat. Mo-Fr 6-21 Uhr.
+                B: DER GRIECHE IM GRÜNEN – Gartenwirtschaft, griechische Spezialitäten, Mittagstisch.
+                C: Banyan – Asia-Restaurant, vegetarische Speisen (China-Schnitzel, Rindersteak ohne Fleisch).
+                D: Gasthof zum Ochsen – Täglich leckere Mittagsmenüs von 11.30-14.00 Uhr.
+                E: Till Eulenspiegel – Restaurant mit Biergarten und Räumen für Familienfeste.
+                F: Café Bellini – Italienischer Espresso und Kaffeespezialitäten.
+                G: Pronto Pronto online – Italienische und mexikanische Lieferung online.
+                H: Sushi digital – Online-Bestellung für Sushi.
+                I: Bäckerei Konditorei Café – Lemon Pie und feine Backwaren.
+                J: (Keine passende Anzeige)
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(14, "Herr Berger möchte mittags preiswert und gut essen gehen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 3),
+                MultipleChoiceQuestion(15, "Franz möchte einen richtig guten italienischen Espresso trinken.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 5),
+                MultipleChoiceQuestion(16, "Herr Wengert möchte nach der Arbeit mit Kollegen Bier trinken und eine Kleinigkeit essen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 0),
+                MultipleChoiceQuestion(17, "Frau Ehlert sucht ein Restaurant mit Musik aus der Jugend ihrer Eltern.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 10),
+                MultipleChoiceQuestion(18, "Frau Bär sucht ein Restaurant, wo sie vegetarisch essen kann.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 2),
+                MultipleChoiceQuestion(19, "Frau Sulcher möchte ausländisch essen gehen und dabei draußen sitzen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 1),
+                MultipleChoiceQuestion(20, "Herr Thomas sucht einen Partyservice für eine Gartenparty.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 10)
+            )
+        ),
+        ReadingPart(
+            partNumber = 5,
+            title = "Teil 4 – Extremsport",
+            instruction = "Ist die Person gegen Extremsport? Wählen Sie Ja oder Nein.",
+            text = """
+                Lesermeinungen zum Extremsport:
+                20: U. Filsmann hält Extremsport-Wettkämpfe für Unsinn und fordert deren Abschaffung.
+                21: Norbert P. sieht in misslungener Organisation ein großes Risiko und will das Einstellen des Laufen.
+                22: Wilma J. hält Extremsport für legitim, solange man sich der Risiken bewusst ist.
+                23: Nicole findet es wichtig, eigene Fähigkeiten einzuschätzen, und will Wettkämpfe nicht verteufeln.
+                24: Walther meint, mit besserer Organisation und Prüfung der Sportler hat Extremsport eine Chance.
+                25: Dr. Rosner warnt davor, dass Sport zur Droge werden kann und plädiert für Verzicht auf Wettkämpfe.
+                26: Svenja R. findet das Streben nach Leistungsmessung nach jahrelangem Training ganz natürlich.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(21, "U. Filsmann, 46, Landshut", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion(22, "Norbert P., 52, Konstanz", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion(23, "Wilma J., 39, Leipzig", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(24, "Nicole, 39, Freiburg", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(25, "Walther, 42, Baden-Baden", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion(26, "Dr. Rosner, 56, Wien", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion(27, "Svenja R., 29, Flensburg", listOf("Ja", "Nein"), 1)
+            )
+        ),
+        ReadingPart(
+            partNumber = 6,
+            title = "Teil 5 – Zooführungen",
+            instruction = "Lesen Sie den Text und wählen Sie die richtige Lösung a, b oder c.",
+            text = """
+                Geburtstagsführungen im Zoo Berlin
+                Wir bieten Zooführungen mit Einblicken in den Zooalltag und jede Menge spannende Aktionen rund um die Tiere! In der Regel kann man auf jeder Tour füttern und zumeist auch einen Blick hinter die Kulissen riskieren. Die Gestaltung der Tour hängt auch vom Wetter ab.
+                - Für Kinder ab 5 Jahren (Geburtstagskind und Gäste)
+                - Mindestens 1 Erwachsener als Begleitperson
+                - Mo-Fr um 14.00 und 15.00 Uhr (Winter) / 15.30 Uhr (Sommer)
+                - Wochenende um 11.00, 13.00 und 15.00 Uhr
+                Dauer: Eine Stunde und etwas mehr.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(28, "Der Berliner Zoo ...", listOf("a) feiert Geburtstag.", "b) feiert mit den Tieren Geburtstag.", "c) bietet Geburtstagsführungen an."), 2),
+                MultipleChoiceQuestion(29, "Das Programm ...", listOf("a) beinhaltet meistens auch eine Fütterung.", "b) ist bei Regen riskant.", "c) wird in der Regel bei schönem Wetter geplant."), 0),
+                MultipleChoiceQuestion(30, "Zielgruppen sind ...", listOf("a) Besucher unter fünf Jahren.", "b) Erwachsene mit Kindern.", "c) Kinder im Alter ab fünf."), 2),
+                MultipleChoiceQuestion(31, "Die Führung ...", listOf("a) dauert den ganzen Tag.", "b) ist an Wochentagen nur nachmittags möglich.", "c) kann man Samstag und Sonntag nur vormittags buchen."), 1)
+            )
+        )
+    ),
+    hoerenParts = listOf(
+        HoerenPart(
+            partNumber = 1,
+            title = "Teil 1 – Kurztexte",
+            instruction = "Fünf kurze Texte. Wählen Sie die richtige Lösung.",
+            transcript = "Audiomaterial wird benötigt.",
+            questions = listOf(
+                MultipleChoiceQuestion(101, "Text 1: Man kann ab dem 12. April indische Tiger und Löwen sehen.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(102, "Text 1: Der Tierpark ist ...", listOf("täglich geöffnet.", "bis zum 12. April geöffnet.", "erst ab dem 12. April geöffnet."), 0),
+                MultipleChoiceQuestion(103, "Text 2: Das Möbelhaus verschenkt nur 200 Euro-Wertgutscheine.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(104, "Text 2: Die Wertgutscheine ...", listOf("gelten nur für die Sommerkollektion.", "gelten nur für Möbelstücke mit dem roten Punkt.", "gelten für alle Möbelstücke im ganzen Möbelhaus."), 0),
+                MultipleChoiceQuestion(105, "Text 3: Gaby bekommt Besuch von ihrer Mutter.", listOf("Richtig", "Falsch"), 0)
+            )
+        ),
+        HoerenPart(
+            partNumber = 2,
+            title = "Teil 2 – Burgführung",
+            instruction = "Wählen Sie die richtige Lösung a, b oder c.",
+            transcript = "Audiomaterial wird benötigt.",
+            questions = listOf(
+                MultipleChoiceQuestion(201, "Die Führung erzählt das Leben ...", listOf("der Ritter und Krieger.", "des Grafen Friedbergs.", "des Grafen Wertburgs."), 0),
+                MultipleChoiceQuestion(202, "Die Burg entstand ...", listOf("im 6. Jahrhundert.", "im Jahr 1545.", "in der Neuzeit."), 0),
+                MultipleChoiceQuestion(203, "Warum schrieb Graf Friedberg Märchen?", listOf("Es machte ihm Spaß.", "Er wollte seinem Sohn eine Freude machen.", "Er wollte ein Märchenbuch schreiben."), 0)
+            )
+        ),
+        HoerenPart(
+            partNumber = 3,
+            title = "Teil 3 – Dschungelwanderer",
+            instruction = "Sind die Aufgaben Richtig oder Falsch?",
+            transcript = "Audiomaterial wird benötigt.",
+            questions = listOf(
+                MultipleChoiceQuestion(301, "Die Dschungelwanderung war eine spontane Entscheidung.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(302, "Die Dschungelwanderer waren nicht immer in Begleitung.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion(303, "Der Sonnenuntergang in den Anden war wunderschön.", listOf("Richtig", "Falsch"), 0)
+            )
+        ),
+        HoerenPart(
+            partNumber = 4,
+            title = "Teil 4 – Deutsche im Ausland",
+            instruction = "Ordnen Sie die Aussagen zu: Wer sagt was?",
+            transcript = "Moderatorin, Bernd Bechstein und Ulrike Meyer diskutieren.",
+            questions = listOf(
+                MultipleChoiceQuestion(401, "Nur ältere Menschen verbinden die Deutschen noch mit dem Krieg.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0),
+                MultipleChoiceQuestion(402, "Es gibt Menschen, die mehr als Deutsche arbeiten.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0),
+                MultipleChoiceQuestion(403, "Ausländer sind Deutschen gegenüber sehr freundlich.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0)
+            )
+        )
+    ),
+    schreibenTasks = listOf(
+        SchreibenTask(
+            taskNumber = 1,
+            title = "Aufgabe 1 – Italienischkurs",
+            prompt = """
+                Sie machen einen Italienischkurs für Ihren Urlaub.
+                Begründen Sie die Wahl des Instituts.
+                Beschreiben Sie den Unterricht.
+                Schlagen Sie Ihrem Freund vor, auch zu lernen.
+            """.trimIndent(),
+            minWords = 80,
+            hints = listOf("Begründung", "Unterricht", "Vorschlag")
+        ),
+        SchreibenTask(
+            taskNumber = 2,
+            title = "Aufgabe 2 – Blog: Make-up für 10-Jährige",
+            prompt = """
+                Meinung: „Schminken für kleine Mädchen unmöglich! Zeitungen wissen nicht mehr was sie schreiben sollen.“
+                Schreiben Sie Ihre Meinung dazu.
+            """.trimIndent(),
+            minWords = 80,
+            hints = listOf("Eigene Meinung")
+        ),
+        SchreibenTask(
+            taskNumber = 3,
+            title = "Aufgabe 3 – Absage Goldene Hochzeit",
+            prompt = """
+                Einladung zur goldenen Hochzeit von Herrn/Frau Sanders. Sie sind verreist.
+                Bedanken Sie sich und sagen Sie ab.
+            """.trimIndent(),
+            minWords = 40,
+            hints = listOf("Dank", "Absage")
+        )
+    ),
+    sprechenTasks = listOf(
+        SprechenTask(
+            taskNumber = 1,
+            title = "Teil 1 – Überraschungsparty organisieren",
+            instruction = "Planen Sie eine Überraschungsparty für einen Freund.",
+            topic = "Ort, Gäste, Einkauf, Information.",
+            prepTimeSec = 60,
+            speakTimeSec = 180,
+            tips = listOf("Vorschläge machen", "Entscheiden")
+        ),
+        SprechenTask(
+            taskNumber = 2,
+            title = "Teil 2 – Thema präsentieren",
+            instruction = "Präsentieren Sie das Thema: „Ist Facebook nützlich?“",
+            topic = "Erfahrung, Situation im Heimatland, Vor-/Nachteile, Abschluss.",
+            prepTimeSec = 120,
+            speakTimeSec = 180,
+            tips = listOf("Struktur folgen", "Beispiele")
+        ),
+        SprechenTask(
+            taskNumber = 3,
+            title = "Teil 3 – Über ein Thema sprechen",
+            instruction = "Reagieren Sie auf Rückmeldungen und stellen Sie Fragen.",
+            topic = "Rückmeldung geben und Frage stellen zur Partner-Präsentation.",
+            prepTimeSec = 30,
+            speakTimeSec = 60,
+            tips = listOf("Feedback", "Frage")
         )
     )
 )
 
 // ─── TELC B1 Content ─────────────────────────────────────────────────────────
 
-val TelcExam = ExamContent(
+val TelcExam1 = ExamContent(
+    id = "telc_1",
+    name = "Modelltest 1",
     provider = ExamProvider.TELC,
     lesenParts = listOf(
         ReadingPart(
@@ -618,8 +984,9 @@ val TelcExam = ExamContent(
 
 // ─── All Exams Map ────────────────────────────────────────────────────────────
 
-val allExams: Map<ExamProvider, ExamContent> = mapOf(
-    ExamProvider.GOETHE to GoetheExam,
-    ExamProvider.OESD to OesdExam,
-    ExamProvider.TELC to TelcExam
+val allExams: Map<ExamProvider, List<ExamContent>> = mapOf(
+    ExamProvider.GOETHE to listOf(GoetheExam1, GoetheExam2),
+    ExamProvider.OESD to listOf(OesdExam1, OesdExam2),
+    ExamProvider.TELC to listOf(TelcExam1)
 )
+
