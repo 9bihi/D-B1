@@ -7,30 +7,27 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.deutschb1.data.ExamProvider
 import com.deutschb1.data.ExamSkill
-import com.deutschb1.data.LearnTheme
 import com.deutschb1.data.allExams
-import com.deutschb1.data.allLearnContent
+import com.deutschb1.data.allCategories
 import com.deutschb1.ui.exam.hoeren.HoerenScreen
 import com.deutschb1.ui.exam.lesen.LesenScreen
 import com.deutschb1.ui.exam.schreiben.SchreibenScreen
 import com.deutschb1.ui.exam.SkillSelectorScreen
 import com.deutschb1.ui.exam.ModelltestSelectorScreen
 import com.deutschb1.ui.exam.sprechen.SprechenScreen
+import com.deutschb1.ui.exams.ExamsHomeScreen
 import com.deutschb1.ui.home.HomeScreen
-import com.deutschb1.ui.learn.LearnHomeScreen
-import com.deutschb1.ui.learn.ThemePhraseListScreen
-import com.deutschb1.ui.learn.CategoryDetailScreen
+import com.deutschb1.ui.learn.*
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
-    object GoetheSkills : Screen("exam/goethe")
-    object OesdSkills : Screen("exam/oesd")
-    object TelcSkills : Screen("exam/telc")
-    
+    object ExamsHome : Screen("exams")
+    object ProviderSkillSelector : Screen("exams/{provider}") {
+        fun createRoute(provider: ExamProvider) = "exams/${provider.name}"
+    }
     object ModelltestSelector : Screen("exam/{provider}/{skill}") {
         fun createRoute(provider: ExamProvider, skill: ExamSkill) = "exam/${provider.name}/${skill.name}"
     }
-
     object Lesen : Screen("exam/{provider}/lesen/{modelltestId}") {
         fun createRoute(provider: ExamProvider, id: String) = "exam/${provider.name}/lesen/$id"
     }
@@ -44,15 +41,13 @@ sealed class Screen(val route: String) {
         fun createRoute(provider: ExamProvider, id: String) = "exam/${provider.name}/sprechen/$id"
     }
 
+    // Learn section
     object LearnHome : Screen("learn")
-    
-    // ADD THIS NEW OBJECT
     object LearnCategory : Screen("learn/category/{categoryId}") {
         fun createRoute(id: String) = "learn/category/$id"
     }
-
-    object LearnTheme : Screen("learn/{themeIndex}") {
-        fun createRoute(index: Int) = "learn/$index"
+    object LearnTheme : Screen("learn/theme/{themeIndex}") {
+        fun createRoute(index: Int) = "learn/theme/$index"
     }
 }
 
@@ -63,30 +58,29 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         startDestination = Screen.Home.route,
         modifier = modifier
     ) {
-
         composable(Screen.Home.route) {
             HomeScreen(navController = navController)
         }
 
-        // --- Skill Selectors ---
-        listOf(ExamProvider.GOETHE, ExamProvider.OESD, ExamProvider.TELC).forEach { provider ->
-            val route = when(provider) {
-                ExamProvider.GOETHE -> Screen.GoetheSkills.route
-                ExamProvider.OESD -> Screen.OesdSkills.route
-                ExamProvider.TELC -> Screen.TelcSkills.route
-            }
-            composable(route) {
-                SkillSelectorScreen(
-                    provider = provider,
-                    navController = navController,
-                    onSkillSelected = { skill ->
-                        navController.navigate(Screen.ModelltestSelector.createRoute(provider, skill))
-                    }
-                )
-            }
+        // Exams home
+        composable(Screen.ExamsHome.route) {
+            ExamsHomeScreen(navController = navController)
         }
 
-        // --- Modelltest Selector ---
+        // Provider skill selector
+        composable(Screen.ProviderSkillSelector.route) { backStackEntry ->
+            val providerStr = backStackEntry.arguments?.getString("provider")
+            val provider = ExamProvider.valueOf(providerStr!!)
+            SkillSelectorScreen(
+                provider = provider,
+                navController = navController,
+                onSkillSelected = { skill ->
+                    navController.navigate(Screen.ModelltestSelector.createRoute(provider, skill))
+                }
+            )
+        }
+
+        // Modelltest selector
         composable(Screen.ModelltestSelector.route) { backStackEntry ->
             val providerStr = backStackEntry.arguments?.getString("provider")
             val skillStr = backStackEntry.arguments?.getString("skill")
@@ -111,28 +105,25 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             )
         }
 
-        // --- Exam Screens ---
+        // Exam screens
         composable(Screen.Lesen.route) { backStackEntry ->
             val provider = ExamProvider.valueOf(backStackEntry.arguments?.getString("provider")!!)
             val id = backStackEntry.arguments?.getString("modelltestId")
             val exam = allExams[provider]?.find { it.id == id }!!
             LesenScreen(exam = exam, navController = navController)
         }
-
         composable(Screen.Hoeren.route) { backStackEntry ->
             val provider = ExamProvider.valueOf(backStackEntry.arguments?.getString("provider")!!)
             val id = backStackEntry.arguments?.getString("modelltestId")
             val exam = allExams[provider]?.find { it.id == id }!!
             HoerenScreen(exam = exam, navController = navController)
         }
-
         composable(Screen.Schreiben.route) { backStackEntry ->
             val provider = ExamProvider.valueOf(backStackEntry.arguments?.getString("provider")!!)
             val id = backStackEntry.arguments?.getString("modelltestId")
             val exam = allExams[provider]?.find { it.id == id }!!
             SchreibenScreen(exam = exam, navController = navController)
         }
-
         composable(Screen.Sprechen.route) { backStackEntry ->
             val provider = ExamProvider.valueOf(backStackEntry.arguments?.getString("provider")!!)
             val id = backStackEntry.arguments?.getString("modelltestId")
@@ -140,19 +131,17 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             SprechenScreen(exam = exam, navController = navController)
         }
 
-        // Learn
+        // Learn section
         composable(Screen.LearnHome.route) {
             LearnHomeScreen(navController = navController)
         }
-
-        // ADD THIS NEW BLOCK
         composable(Screen.LearnCategory.route) { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId") ?: return@composable
             CategoryDetailScreen(navController = navController, categoryId = categoryId)
         }
         composable(Screen.LearnTheme.route) { backStackEntry ->
             val themeIndex = backStackEntry.arguments?.getString("themeIndex")?.toIntOrNull() ?: 0
-            val content = allLearnContent.getOrNull(themeIndex)
+            val content = allCategories.flatMap { it.themes }.getOrNull(themeIndex)
             if (content != null) {
                 ThemePhraseListScreen(content = content, navController = navController)
             }

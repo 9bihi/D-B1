@@ -37,7 +37,7 @@ data class LearnPhrase(
     val german: String,
     val english: String,
     val exampleSentence: String,
-    val exampleTranslation: String,
+    val exampleTranslation: String = "",  // ← Add "= "" " to make it optional
     val usageTip: String = ""
 )
 
@@ -310,29 +310,256 @@ val EssenContent = LearnThemeContent(
 
 // ─── Schreiben Content ────────────────────────────────────────────────────────
 
-val SchreibenContent = LearnThemeContent(
+val SchreibenLearnContent = LearnThemeContent(
     theme = LearnTheme.SCHREIBEN,
     phrases = listOf(
-        LearnPhrase("eine E-Mail schreiben", "to write an email", "Ich muss eine formelle E-Mail an meinen Chef schreiben.", "I need to write a formal email to my boss.", "Formell vs. informell beachten"),
-        LearnPhrase("der Betreff", "subject line", "Der Betreff sollte kurz und klar sein.", "The subject line should be short and clear."),
-        LearnPhrase("Sehr geehrte Damen und Herren", "Dear Sir or Madam", "Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich...", "Dear Sir or Madam, I am writing to you regarding...", "Formelle Anrede"),
-        LearnPhrase("Liebe Grüße / Mit freundlichen Grüßen", "Best regards / Sincerely", "Mit freundlichen Grüßen, Max Müller", "Sincerely, Max Müller", "Grußformel am Ende"),
-        LearnPhrase("einen Aufsatz schreiben", "to write an essay", "Wir müssen einen Aufsatz über Umweltschutz schreiben.", "We have to write an essay about environmental protection."),
-        LearnPhrase("die Einleitung", "introduction", "Die Einleitung sollte das Thema vorstellen.", "The introduction should present the topic."),
-        LearnPhrase("der Hauptteil", "main body", "Im Hauptteil werden die Argumente präsentiert.", "In the main body, the arguments are presented."),
-        LearnPhrase("der Schluss", "conclusion", "Der Schluss fasst die wichtigsten Punkte zusammen.", "The conclusion summarizes the most important points."),
-        LearnPhrase("Meinung äußern", "to express opinion", "In diesem Abschnitt können Sie Ihre Meinung äußern.", "In this section, you can express your opinion."),
-        LearnPhrase("einerseits ... andererseits", "on one hand ... on the other hand", "Einerseits ist es teuer, andererseits ist es qualitativ hochwertig.", "On one hand it's expensive, on the other hand it's high quality."),
-        LearnPhrase("zusammenfassend kann man sagen", "in summary one can say", "Zusammenfassend kann man sagen, dass...", "In summary, one can say that..."),
-        LearnPhrase("ein Formular ausfüllen", "to fill out a form", "Bitte füllen Sie dieses Formular vollständig aus.", "Please fill out this form completely."),
-        LearnPhrase("eine Beschwerde schreiben", "to write a complaint", "Ich möchte eine Beschwerde über das Produkt schreiben.", "I want to write a complaint about the product."),
-        LearnPhrase("um Informationen bitten", "to request information", "Ich bitte Sie um weitere Informationen.", "I request further information from you.", "Formelle Formulierung"),
-        LearnPhrase("für etwas danken", "to thank for something", "Ich danke Ihnen für Ihre schnelle Antwort.", "I thank you for your quick response."),
-        LearnPhrase("eine Einladung schreiben", "to write an invitation", "Wir schreiben eine Einladung zur Geburtstagsparty.", "We're writing an invitation for the birthday party."),
-        LearnPhrase("Absender / Empfänger", "sender / recipient", "Tragen Sie Absender und Empfänger oben ein.", "Enter sender and recipient at the top."),
-        LearnPhrase("die Anrede", "salutation", "Die Anrede hängt vom Verhältnis zum Empfänger ab.", "The salutation depends on the relationship with the recipient."),
-        LearnPhrase("Rechtschreibung prüfen", "to check spelling", "Vergessen Sie nicht, die Rechtschreibung zu prüfen.", "Don't forget to check the spelling."),
-        LearnPhrase("einen Brief unterschreiben", "to sign a letter", "Unterschreiben Sie den Brief am Ende.", "Sign the letter at the end.")
+        // ─── TEMPLATES (Structure Guide) ───────────────────────────────────────
+        LearnPhrase(
+            german = "TEIL 1 Template: Erlebnisbeschreibung",
+            english = "Part 1 Template: Describing an Experience",
+            exampleSentence = """Struktur: 1. Einleitung (Wann/Wo/Mit wem?) → 2. Hauptteil (Was ist passiert?) → 3. Höhepunkt (Besonders ... hat mich ...) → 4. Gefühle (Ich habe mich ... gefühlt) → 5. Schluss (Empfehlung)""",
+            exampleTranslation = """Structure: 1. Introduction (When/Where/With whom?) → 2. Main part (What happened?) → 3. Highlight (Especially ... me ...) → 4. Feelings (I felt ...) → 5. Conclusion (Recommendation)""",
+            usageTip = "Wichtig: Ca. 80–100 Wörter schreiben."
+        ),
+        LearnPhrase(
+            german = "TEIL 2 Template: Meinungsäußerung",
+            english = "Part 2 Template: Expressing Opinion",
+            exampleSentence = """Struktur: 1. Position (Ich bin dafür/dagegen, weil...) → 2. Argument 1 (Einerseits...) → 3. Argument 2 (Außerdem...) → 4. Einschränkung (Natürlich..., aber...) → 5. Fazit (Meiner Meinung nach...)""",
+            exampleTranslation = """Structure: 1. Position (I am for/against because...) → 2. Argument 1 (On one hand...) → 3. Argument 2 (Furthermore...) → 4. Limitation (Of course..., but...) → 5. Conclusion (In my opinion...)""",
+            usageTip = "Wichtig: Klare Meinung und mindestens 2 Argumente."
+        ),
+        LearnPhrase(
+            german = "TEIL 3 Template: Brief / E-Mail",
+            english = "Part 3 Template: Letter / Email",
+            exampleSentence = """Struktur: 1. Anrede (Sehr geehrte... / Liebe...) → 2. Bezug (Ich schreibe bezüglich...) → 3. Vorstellung (Name, Alter) → 4. Anliegen (Fragen/Bewerbung) → 5. Abschluss (Ich würde mich freuen...)""",
+            exampleTranslation = """Structure: 1. Salutation (Dear...) → 2. Reference (I am writing regarding...) → 3. Introduction (Name, Age) → 4. Purpose (Questions/Application) → 5. Closing (I would be happy...)""",
+            usageTip = "Wichtig: Auf den Ton achten (formell vs. informell)."
+        ),
+
+        // ─── TEIL 1 EXAMPLES (1.1 - 1.10) ──────────────────────────────────────
+        LearnPhrase(
+            german = "1.1 Kino Film gesehen",
+            english = "Write to a friend about a movie you saw.",
+            exampleSentence = """Liebe Julia, ich möchte dir von einem tollen Kinoabend erzählen. Wir haben den Film "Das Lehrerzimmer" gesehen – ein spannendes deutsches Drama. Besonders beeindruckt hat mich das Ende des Films. Ich habe mich dabei bestens unterhalten. Ich würde den Film unbedingt empfehlen. Liebe Grüße, Mia""",
+            exampleTranslation = """Dear Julia, I would like to tell you about a great cinema evening. We watched the film 'The Teachers' Lounge' – an exciting German drama. I was especially impressed by the ending. I felt greatly entertained. I would definitely recommend the film. Best regards, Mia""",
+            usageTip = "Keywords: spannend, realistisch, beeindruckt, empfehlen"
+        ),
+        LearnPhrase(
+            german = "1.2 Flohmarkt",
+            english = "Write a blog post about a flea market visit.",
+            exampleSentence = """Hallo zusammen! Ich möchte euch von einem tollen Erlebnis erzählen. Mit meiner Freundin habe ich stundenlang zwischen den Ständen gestöbert. Besonders schön war die Atmosphäre. Ich habe mich dabei entspannt, fröhlich und nostalgisch gefühlt. Ein Flohmarktbesuch ist wirklich empfehlenswert!""",
+            exampleTranslation = """Hello everyone! I would like to tell you about a great experience. With my friend I browsed for hours between the stalls. The atmosphere was especially beautiful. I felt relaxed, cheerful and nostalgic. A flea market visit is really recommended!""",
+            usageTip = "Keywords: stöbern, Schnäppchen, Atmosphäre, nostalgisch"
+        ),
+        LearnPhrase(
+            german = "1.3 Kochkurs",
+            english = "Write to an acquaintance about a cooking course.",
+            exampleSentence = """Liebe Sandra, ich wollte dir von einem Kochkurs erzählen. Gemeinsam mit zehn anderen Teilnehmern habe ich ein italienisches Menü zubereitet. Besonders begeistert hat mich, wie viel besser die selbst gemachte Pasta schmeckt. Ich habe mich dabei sehr wohl und kreativ gefühlt.""",
+            exampleTranslation = """Dear Sandra, I wanted to tell you about a cooking course. Together with ten other participants I prepared an Italian menu. I was especially excited about how much better the homemade pasta tastes. I felt very comfortable and creative.""",
+            usageTip = "Keywords: zubereiten, geduldig, Tipps, inspiriert"
+        ),
+        LearnPhrase(
+            german = "1.4 Rundfahrt",
+            english = "Write to family about a bus/boat tour.",
+            exampleSentence = """Liebe Familie, ich möchte euch von einer wunderschönen Schiffsrundfahrt erzählen. Die zweistündige Fahrt führte uns an malerischen Uferdörfern vorbei. Besonders atemberaubend war die Aussicht auf die Alpen. Ich habe mich dabei vollkommen entspannt gefühlt.""",
+            exampleTranslation = """Dear Family, I would like to tell you about a wonderful boat tour. The two-hour trip led us past picturesque villages. The view of the Alps was especially breathtaking. I felt completely relaxed.""",
+            usageTip = "Keywords: malerisch, atemberaubend, unvergesslich, es lohnt sich"
+        ),
+        LearnPhrase(
+            german = "1.5 Klassentreffen",
+            english = "Write to a former classmate about a reunion.",
+            exampleSentence = """Lieber Marco, ich wollte dir von unserem Klassentreffen erzählen. Fast alle aus unserer alten Klasse sind zusammengekommen. Besonders lustig war der Moment, als jemand ein altes Schulfoto mitgebracht hat. Ich habe mich dabei warm und glücklich gefühlt.""",
+            exampleTranslation = """Dear Marco, I wanted to tell you about our class reunion. Almost everyone from our old class came together. Especially funny was the moment when someone brought an old school photo. I felt warm and happy.""",
+            usageTip = "Keywords: zusammenkommen, sich erinnern, kaum wiedererkennen"
+        ),
+        LearnPhrase(
+            german = "1.6 Geschäft eröffnen",
+            english = "Write a blog post about opening a shop.",
+            exampleSentence = """Hallo zusammen! Ich möchte euch von einem aufregenden Tag berichten. Die Vorbereitungen haben Monate gedauert. Besonders berührt hat mich, wie begeistert alle reagiert haben. Ich habe mich dabei stolz und glücklich gefühlt. Ein Traum ist endlich wahr geworden!""",
+            exampleTranslation = """Hello everyone! I would like to report about an exciting day. The preparations took months. I was especially touched by how enthusiastically everyone reacted. I felt proud and happy. A dream has finally come true!""",
+            usageTip = "Keywords: aufregend, Vorbereitung, begeistert, stolz"
+        ),
+        LearnPhrase(
+            german = "1.7 Neue Wohnung",
+            english = "Write to a friend about moving to a new apartment.",
+            exampleSentence = """Liebe Sophia, ich freue mich, dir von meiner neuen Wohnung erzählen zu können. Das Tragen der schweren Kartons war anstrengend. Die Wohnung ist hell und geräumig. Besonders gefällt mir die große Küche. Ich habe mich hier sofort wohl gefühlt.""",
+            exampleTranslation = """Dear Sophia, I am happy to tell you about my new apartment. Carrying the heavy boxes was exhausting. The apartment is bright and spacious. I especially like the large kitchen. I felt comfortable here immediately.""",
+            usageTip = "Keywords: anstrengend, geräumig, wohl fühlen, sich kümmern"
+        ),
+        LearnPhrase(
+            german = "1.8 Schulbesichtigung",
+            english = "Write to a relative about visiting a school with your child.",
+            exampleSentence = """Liebe Tante Renate, ich möchte dir von der Schulbesichtigung erzählen. Wir haben eine moderne Grundschule besucht. Besonders schön war der Moment, als Leon andere Kinder kennenlernte. Ich habe mich dabei erleichtert und optimistisch gefühlt. Es ist die richtige Wahl!""",
+            exampleTranslation = """Dear Aunt Renate, I would like to tell you about the school visit. We visited a modern primary school. Especially nice was the moment when Leon met other children. I felt relieved and optimistic. It is the right choice!""",
+            usageTip = "Keywords: modern, freundlich, erleichtert, optimistisch"
+        ),
+        LearnPhrase(
+            german = "1.9 Reise gemacht",
+            english = "Write a blog post about a trip.",
+            exampleSentence = """Hallo zusammen! Ich möchte euch von meiner unvergesslichen Reise nach Portugal erzählen. Wir sind durch bunte Gassen geschlendert. Besonders begeistert hat mich der Sonnenuntergang. Ich habe mich dabei frei und glücklich gefühlt. Absolut empfehlenswert!""",
+            exampleTranslation = """Hello everyone! I would like to tell you about my unforgettable trip to Portugal. We strolled through colorful streets. I was especially excited about the sunset. I felt free and happy. Absolutely recommended!""",
+            usageTip = "Keywords: schlendern, türkisfarben, Sonnenuntergang, atemberaubend"
+        ),
+        LearnPhrase(
+            german = "1.10 Museum besuchen",
+            english = "Tell a friend about a museum visit.",
+            exampleSentence = """Lieber David, ich wollte dir von einem besonderen Museumsbesuch erzählen. Ich war im Kunsthistorischen Museum in Wien. Besonders fasziniert hat mich ein Gemälde von Rembrandt. Ich habe mich dabei neugierig gefühlt. Ein Museumsbesuch bildet wirklich!""",
+            exampleTranslation = """Dear David, I wanted to tell you about a special museum visit. I was at the Art History Museum in Vienna. I was especially fascinated by a painting by Rembrandt. I felt curious. A museum visit is truly educational!""",
+            usageTip = "Keywords: Skulpturen, Führerin, fasziniert, Maltechnik"
+        ),
+
+        // ─── TEIL 2 EXAMPLES (2.1 - 2.10) ──────────────────────────────────────
+        LearnPhrase(
+            german = "2.1 Ungesundes Essen am Arbeitsplatz",
+            english = "Opinion: Healthy vs. Unhealthy food at work.",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen. Einerseits schadet ungesunde Ernährung der Konzentration. Außerdem kostet Fast Food langfristig mehr Geld. Natürlich verstehe ich, dass Berufstätige oft wenig Zeit haben. Meiner Meinung nach sollten Arbeitgeber gesunde Optionen anbieten.""",
+            exampleTranslation = """On this topic I have a clear opinion: I am against it. On one hand, unhealthy nutrition harms concentration. Furthermore, fast food costs more money in the long term. Of course I understand that workers often have little time. In my opinion, employers should offer healthy options.""",
+            usageTip = "Keywords: Konzentration, unproduktiv, bewusste Ernährung"
+        ),
+        LearnPhrase(
+            german = "2.2 Umweltschutz",
+            english = "Opinion: What can we do for environmental protection?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Umweltschutz ist eine absolute Notwendigkeit. Einerseits sehen wir täglich die Folgen des Klimawandels. Außerdem ist die Umwelt das Erbe künftiger Generationen. Natürlich reichen individuelle Maßnahmen allein nicht aus. Meiner Meinung nach brauchen wir persönliches Engagement und strenge Gesetze.""",
+            exampleTranslation = """On this topic I have a clear opinion: Environmental protection is an absolute necessity. On one hand, we see the consequences of climate change daily. Furthermore, the environment is the heritage of future generations. Of course, individual measures alone are not enough. In my opinion, we need personal commitment and strict laws.""",
+            usageTip = "Keywords: überzeugt, Klimawandel, Erbe, Engagement"
+        ),
+        LearnPhrase(
+            german = "2.3 Fernseher im Kinderzimmer",
+            english = "Opinion: Should kids have a TV in their room?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen. Einerseits können Eltern den Medienkonsum nicht mehr kontrollieren. Außerdem leiden Schlaf und Schulleistung. Natürlich dürfen Kinder auch fernsehen. Meiner Meinung nach sollte das immer im gemeinsamen Wohnzimmer stattfinden.""",
+            exampleTranslation = """On this topic I have a clear opinion: I am against it. On one hand, parents can no longer control media consumption. Furthermore, sleep and school performance suffer. Of course, children may watch TV. In my opinion, this should always happen in the shared living room.""",
+            usageTip = "Keywords: Medienkonsum, Aufsicht, Schulleistung, gemeinsam"
+        ),
+        LearnPhrase(
+            german = "2.4 Einkaufen im Internet",
+            english = "Opinion: Advantages of online shopping.",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Die Vorteile überwiegen. Einerseits ist es sehr bequem. Außerdem ist die Auswahl im Internet viel größer. Natürlich gibt es auch Risiken wie Betrug. Meiner Meinung nach sollte man Online-Shopping bewusst einsetzen.""",
+            exampleTranslation = """On this topic I have a clear opinion: The advantages outweigh. On one hand, it is very convenient. Furthermore, the selection on the internet is much larger. Of course, there are also risks like fraud. In my opinion, one should use online shopping consciously.""",
+            usageTip = "Keywords: überwiegen, mühelos, Auswahl, Betrug"
+        ),
+        LearnPhrase(
+            german = "2.5 Führerschein ab 16 Jahre",
+            english = "Opinion: Driving license at age 16?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin gegen den Führerschein ab 16 Jahren. Einerseits sind 16-Jährige oft noch nicht reif genug. Außerdem wäre die Kfz-Versicherung sehr teuer. Natürlich haben junge Menschen ein Mobilitätsproblem. Meiner Meinung nach ist begleitetes Fahren ab 17 ein guter Kompromiss.""",
+            exampleTranslation = """On this topic I have a clear opinion: I am against the driving license at 16. On one hand, 16-year-olds are often not mature enough. Furthermore, car insurance would be very expensive. Of course, young people have a mobility problem. In my opinion, accompanied driving from 17 is a good compromise.""",
+            usageTip = "Keywords: Verantwortung, finanzielle Belastung, Kompromiss"
+        ),
+        LearnPhrase(
+            german = "2.6 Urlaub am Strand",
+            english = "Opinion: Is beach vacation the best?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Strand ist wunderbar, aber nicht für jeden der beste. Einerseits bietet der Strand echte Erholung. Außerdem ist Schwimmen gesund. Natürlich bevorzugen manche Menschen Berge. Meiner Meinung nach ist es am wichtigsten, den Urlaub zu wählen, der Freude bringt.""",
+            exampleTranslation = """On this topic I have a clear opinion: Beach is wonderful, but not the best for everyone. On one hand, the beach offers real relaxation. Furthermore, swimming is healthy. Of course, some people prefer mountains. In my opinion, it is most important to choose the vacation that brings joy.""",
+            usageTip = "Keywords: Erholung, Verpflichtungen, abschalten, bevorzugen"
+        ),
+        LearnPhrase(
+            german = "2.7 Essen in öffentlichen Verkehrsmitteln",
+            english = "Opinion: Eating on buses/trains?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin gegen stark riechende Speisen. Einerseits ist der Geruch für andere Fahrgäste unangenehm. Außerdem kann Essen die Sitze schmutzig machen. Natürlich ist ein kleiner Keks in Ordnung. Meiner Meinung nach sollte man Rücksicht auf Mitreisende nehmen.""",
+            exampleTranslation = """On this topic I have a clear opinion: I am against strongly smelling food. On one hand, the smell is unpleasant for other passengers. Furthermore, food can make seats dirty. Of course, a small cookie is okay. In my opinion, one should be considerate of fellow travelers.""",
+            usageTip = "Keywords: Fahrgäste, störend, Rücksicht nehmen, intensiv"
+        ),
+        LearnPhrase(
+            german = "2.8 Soll man Vegetarier werden",
+            english = "Opinion: Should people become vegetarian?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Mehr Menschen sollten vegetarisch essen. Einerseits ist pflanzenbasierte Ernährung oft gesünder. Außerdem hat Fleischproduktion enorme Auswirkungen auf die Umwelt. Natürlich ist es eine persönliche Entscheidung. Meiner Meinung nach wäre weniger Fleisch essen schon ein großer Fortschritt.""",
+            exampleTranslation = """On this topic I have a clear opinion: More people should eat vegetarian. On one hand, plant-based nutrition is often healthier. Furthermore, meat production has enormous impacts on the environment. Of course, it is a personal decision. In my opinion, eating less meat would already be a big progress.""",
+            usageTip = "Keywords: pflanzenbasiert, Herzerkrankungen, Treibhausgase"
+        ),
+        LearnPhrase(
+            german = "2.9 Dürfen Männer weinen",
+            english = "Opinion: Should men cry in public?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ja, Männer dürfen weinen. Einerseits ist Weinen eine natürliche menschliche Reaktion. Außerdem zeigen Studien, dass Unterdrücken von Gefühlen zu Depressionen führen kann. Natürlich gibt es kulturelle Unterschiede. Meiner Meinung nach sollten wir alte Rollenbilder überwinden.""",
+            exampleTranslation = """On this topic I have a clear opinion: Yes, men may cry. On one hand, crying is a natural human reaction. Furthermore, studies show that suppressing feelings can lead to depression. Of course, there are cultural differences. In my opinion, we should overcome old role models.""",
+            usageTip = "Keywords: natürliche Reaktion, Trauer, unterdrücken, Rollenbilder"
+        ),
+        LearnPhrase(
+            german = "2.10 Telefonieren in öffentlichen Verkehrsmitteln",
+            english = "Opinion: Loud phone calls on transport?",
+            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Lautes Telefonieren ist störend. Einerseits wollen viele Mitfahrer in Ruhe lesen. Außerdem werden private Details hörbar erzählt. Natürlich muss man manchmal dringend telefonieren. Meiner Meinung nach sollte man leise sprechen oder in den Vorraum gehen.""",
+            exampleTranslation = """On this topic I have a clear opinion: Loud phone calls are disturbing. On one hand, many passengers want to read in peace. Furthermore, private details are told audibly. Of course, sometimes one must phone urgently. In my opinion, one should speak quietly or go to the vestibule.""",
+            usageTip = "Keywords: rücksichtslos, Mitfahrer, hörbar, peinlich"
+        ),
+
+        // ─── TEIL 3 EXAMPLES (3.1 - 3.6) ───────────────────────────────────────
+        LearnPhrase(
+            german = "3.1 Fahrrad-Anzeige",
+            english = "Email to seller: Ask about a used bike.",
+            exampleSentence = """Sehr geehrte/r Verkäufer/in, ich schreibe Ihnen bezüglich Ihrer Anzeige für ein gebrauchtes Mountainbike. Das Fahrrad interessiert mich sehr, da ich ein zuverlässiges Rad suche. Ich würde gerne wissen, wie alt das Fahrrad ist und ob der Preis verhandelbar ist. Ich bitte um einen Besichtigungstermin. Mit freundlichen Grüßen, Max Müller""",
+            exampleTranslation = """Dear Seller, I am writing to you regarding your advertisement for a used mountainbike. The bicycle interests me very much as I am looking for a reliable bike. I would like to know how old the bicycle is and if the price is negotiable. I request a viewing appointment. Sincerely, Max Müller""",
+            usageTip = "Keywords: zuverlässig, Arbeitsweg, gewartet, verhandelbar"
+        ),
+        LearnPhrase(
+            german = "3.2 Entschuldigung",
+            english = "Email to friend: Apologize for missed appointment.",
+            exampleSentence = """Lieber Jonas, ich schreibe dir, weil ich mich aufrichtig entschuldigen möchte. Leider habe ich unseren Termin völlig vergessen. Der Grund war ein unerwarteter Notfall bei der Arbeit. Ich hätte dir trotzdem rechtzeitig eine Nachricht schicken sollen. Als Zeichen meiner Entschuldigung lade ich dich zum Essen ein. Liebe Grüße, Sophia""",
+            exampleTranslation = """Dear Jonas, I am writing to you because I want to apologize sincerely. Unfortunately, I completely forgot our appointment. The reason was an unexpected emergency at work. I should have sent you a message anyway in time. As a sign of my apology, I invite you to dinner. Best regards, Sophia""",
+            usageTip = "Keywords: aufrichtig, übel nehmen, unerwarteter Notfall, rechtzeitig"
+        ),
+        LearnPhrase(
+            german = "3.3 Job-Anzeige: Kassierer/in",
+            english = "Application email for supermarket cashier job.",
+            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihrer Stellenanzeige. Mein Name ist Leila Bensalem, ich bin 28 Jahre alt. Ich habe bereits ein Jahr Erfahrung als Verkäuferin. Ich bin zuverlässig, pünktlich und lernbereit. Ich bitte um einen Vorstellungstermin. Mit freundlichen Grüßen, Leila Bensalem""",
+            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your job advertisement. My name is Leila Bensalem, I am 28 years old. I already have one year of experience as a saleswoman. I am reliable, punctual and willing to learn. I request an interview appointment. Sincerely, Leila Bensalem""",
+            usageTip = "Keywords: Stellenanzeige, geeignet, Erfahrung, lernbereit, Eignung"
+        ),
+        LearnPhrase(
+            german = "3.4 Englisch-Kurs-Anzeige",
+            english = "Email: Register for English course.",
+            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihres Englisch-Kurses für Anfänger. Mein Name ist Amira Hassan, ich benötige die Sprache dringend für meinen Beruf. Ich würde gerne wissen, ob noch freie Plätze verfügbar sind. Ich bitte um baldige Rückmeldung. Mit freundlichen Grüßen, Amira Hassan""",
+            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your English course for beginners. My name is Amira Hassan, I urgently need the language for my profession. I would like to know if there are still free places available. I request prompt feedback. Sincerely, Amira Hassan""",
+            usageTip = "Keywords: dringend, Abendkurs, verfügbar, Ratenzahlung"
+        ),
+        LearnPhrase(
+            german = "3.5 Schauspieler-Anzeige",
+            english = "Application email for theater role.",
+            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihrer Anzeige für Schauspieler/innen. Theater ist meine größte Leidenschaft. Ich habe drei Jahre lang in einer Laientheatergruppe mitgespielt. Ich bitte herzlich um einen Vorsprechtermin. Mit freundlichen Grüßen, Carlos Diaz""",
+            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your advertisement for actors. Theater is my greatest passion. I have played in an amateur theater group for three years. I warmly request an audition appointment. Sincerely, Carlos Diaz""",
+            usageTip = "Keywords: Leidenschaft, Laientheater, Hauptrolle, Vorsprechtermin"
+        ),
+        LearnPhrase(
+            german = "3.6 Wohnungs-Anzeige",
+            english = "Email to landlord: Request viewing.",
+            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihrer Anzeige für eine 2-Zimmer-Wohnung. Mein Name ist Nina Kowalski, ich bin berufstätig und zuverlässig. Ich würde gerne wissen, ob Haustiere erlaubt sind und wie hoch die Nebenkosten sind. Ich bitte um einen Besichtigungstermin. Mit freundlichen Grüßen, Nina Kowalski""",
+            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your advertisement for a 2-room apartment. My name is Nina Kowalski, I am employed and reliable. I would like to know if pets are allowed and how high the additional costs are. I request a viewing appointment. Sincerely, Nina Kowalski""",
+            usageTip = "Keywords: Immobilienportal, zentrale Lage, Nebenkosten, Kautionshöhe"
+        ),
+
+        // ─── USEFUL EXPRESSIONS ────────────────────────────────────────────────
+        LearnPhrase(
+            german = "Nützliche Ausdrücke: Einleitung",
+            english = "Useful Expressions: Introduction",
+            exampleSentence = """• ich möchte dir/Ihnen von ... erzählen • ich schreibe dir/Ihnen bezüglich • ich möchte meine Meinung zu ... äußern""",
+            exampleTranslation = """• I would like to tell you about... • I am writing to you regarding... • I would like to express my opinion on...""",
+            usageTip = "Start your text clearly."
+        ),
+        LearnPhrase(
+            german = "Nützliche Ausdrücke: Argumente",
+            english = "Useful Expressions: Arguments",
+            exampleSentence = """• Einerseits ... • Außerdem / Darüber hinaus ... • Ein weiterer Punkt ist ... • Zum Beispiel ...""",
+            exampleTranslation = """• On one hand... • Furthermore / Moreover... • Another point is... • For example...""",
+            usageTip = "Connect your ideas."
+        ),
+        LearnPhrase(
+            german = "Nützliche Ausdrücke: Einschränkung",
+            english = "Useful Expressions: Limitation",
+            exampleSentence = """• Natürlich ... , aber ... • Zwar ... , jedoch ... • Das stimmt, allerdings ...""",
+            exampleTranslation = """• Of course ..., but... • Admittedly ..., however... • That is true, however...""",
+            usageTip = "Show nuance in Part 2."
+        ),
+        LearnPhrase(
+            german = "Nützliche Ausdrücke: Meinung",
+            english = "Useful Expressions: Opinion",
+            exampleSentence = """• Meiner Meinung nach ... • Ich bin überzeugt, dass ... • Ich finde, dass ...""",
+            exampleTranslation = """• In my opinion... • I am convinced that... • I find that...""",
+            usageTip = "State your conclusion."
+        ),
+        LearnPhrase(
+            german = "Nützliche Ausdrücke: Schluss",
+            english = "Useful Expressions: Conclusion",
+            exampleSentence = """• Ich würde mich sehr freuen ... • Ich hoffe auf Ihre baldige Antwort • Ich empfehle es jedem!""",
+            exampleTranslation = """• I would be very happy... • I hope for your prompt answer • I recommend it to everyone!""",
+            usageTip = "Polite ending."
+        )
     )
 )
 
@@ -426,9 +653,9 @@ val allCategories = listOf(
     ),
     LearnCategory(
         id = "schreiben",
-        title = "Schreiben",
-        subtitle = "${SchreibenContent.phrases.size} Phrasen • Texte & E-Mails",
-        themes = listOf(SchreibenContent)
+        title = "Schreiben B1",
+        subtitle = "${SchreibenLearnContent.phrases.size} Phrasen • ÖSD Musterlösungen", // Updated subtitle
+        themes = listOf(SchreibenLearnContent)
     ),
     LearnCategory(
         id = "sprechen",

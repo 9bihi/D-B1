@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.R
+import com.deutschb1.data.ExamProvider
 import com.deutschb1.navigation.Screen
 import com.deutschb1.ui.theme.*
 
@@ -40,26 +41,23 @@ fun HomeScreen(navController: NavController) {
             "Goethe-Institut",
             "Offizielles Goethe-Zertifikat B1",
             R.drawable.ic_goethe,
-            // CHANGED TO GREEN GRADIENT
-            listOf(Color(0xFF2ECC71), Color(0xFF26cd42)), 
-            Screen.GoetheSkills.route
+            listOf(Color(0xFF2ECC71), Color(0xFF26cd42)),
+            Screen.ProviderSkillSelector.createRoute(ExamProvider.GOETHE)
         ),
-          CategoryCard(
-             "ÖSD",
-             "Österreichisches Sprachdiplom",
-             R.drawable.ic_osd,
-             // CHANGED TO BLUE GRADIENT
-             listOf(Color(0xFF007AFF), Color(0xFF0061ff)), 
-             Screen.OesdSkills.route
-          ),
-          CategoryCard(
-             "TELC",
-             "The European Language Certificates",
-             R.drawable.ic_telc,
-             // CHANGED TO RED GRADIENT
-             listOf(Color(0xFFFF3B30), Color(0xFFe82127)), 
-             Screen.TelcSkills.route
-          ),
+        CategoryCard(
+            "ÖSD",
+            "Österreichisches Sprachdiplom",
+            R.drawable.ic_osd,
+            listOf(Color(0xFF007AFF), Color(0xFF0061ff)),
+            Screen.ProviderSkillSelector.createRoute(ExamProvider.OESD)
+        ),
+        CategoryCard(
+            "TELC",
+            "The European Language Certificates",
+            R.drawable.ic_telc,
+            listOf(Color(0xFFFF3B30), Color(0xFFe82127)),
+            Screen.ProviderSkillSelector.createRoute(ExamProvider.TELC)
+        ),
         CategoryCard(
             "Learn",
             "B1 Phrases & Vocabulary",

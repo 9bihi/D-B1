@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,30 +22,34 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.allCategories
 import com.deutschb1.navigation.Screen
-import com.deutschb1.data.hexToColor
 
 @Composable
 fun LearnHomeScreen(navController: NavController) {
+    val totalPhrases = allCategories.sumOf { cat ->
+        cat.themes.sumOf { it.phrases.size }
+    }
+    val totalThemes = allCategories.sumOf { it.themes.size }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header (Kept same as before)
+        // Header
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Spacer(modifier = Modifier.height(60.dp))
-            Text("Learn", style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
-            Text("B1 Vokabular & Phrasen", style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                "Learn",
+                style = MaterialTheme.typography.displayLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                "Deutsch B1 lernen",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             Spacer(modifier = Modifier.height(6.dp))
-            
-            // Dynamic count based on categories
-            val totalPhrases = allCategories.sumOf { cat -> 
-                cat.themes.sumOf { theme -> theme.phrases.size } 
-            }
-            val totalThemes = allCategories.sumOf { it.themes.size }
-            
             Text(
                 "$totalPhrases Phrasen • $totalThemes Themen",
                 style = MaterialTheme.typography.labelLarge,
@@ -56,10 +59,10 @@ fun LearnHomeScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Grid showing CATEGORIES instead of Themes
+        // Categories grid
         LazyVerticalGrid(
-            columns = GridCells.Fixed(1), // 1 Column for big category cards
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+            columns = GridCells.Fixed(1),
+            contentPadding = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 80.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxSize()
@@ -67,13 +70,11 @@ fun LearnHomeScreen(navController: NavController) {
             items(allCategories) { category ->
                 CategoryCard(
                     category = category,
-                    onClick = { 
-                        // Navigate to the new screen that shows the themes
-                        navController.navigate(Screen.LearnCategory.createRoute(category.id)) 
+                    onClick = {
+                        navController.navigate(Screen.LearnCategory.createRoute(category.id))
                     }
                 )
             }
-            item { Spacer(modifier = Modifier.height(80.dp)) }
         }
     }
 }
@@ -101,7 +102,6 @@ fun CategoryCard(category: com.deutschb1.data.LearnCategory, onClick: () -> Unit
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon Placeholder (You can add an icon here later)
             Box(
                 modifier = Modifier
                     .size(60.dp)
@@ -111,21 +111,21 @@ fun CategoryCard(category: com.deutschb1.data.LearnCategory, onClick: () -> Unit
             ) {
                 Text("📚", fontSize = 30.sp)
             }
-            
+
             Spacer(modifier = Modifier.width(20.dp))
-            
+
             Column {
                 Text(
                     category.title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     category.subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
