@@ -14,17 +14,21 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.deutschb1.navigation.AppNavGraph
 import com.deutschb1.navigation.Screen
 import com.deutschb1.ui.theme.DeutschB1Theme
+import androidx.compose.ui.graphics.Color
 
 data class BottomNavItem(
     val label: String,
-    val icon: ImageVector,
+    val icon: Painter,
     val route: String
 )
 
@@ -44,12 +48,19 @@ class MainActivity : ComponentActivity() {
 fun DeutschB1App() {
     val navController = rememberNavController()
 
+    // Create painters for all icons
+    val homeIcon = rememberVectorPainter(Icons.Filled.Home)
+    val goetheIcon = painterResource(id = R.drawable.ic_goethe)
+    val osdIcon = painterResource(id = R.drawable.ic_osd)
+    val telcIcon = painterResource(id = R.drawable.ic_telc)
+    val learnIcon = rememberVectorPainter(Icons.Filled.School)
+
     val bottomNavItems = listOf(
-        BottomNavItem("Home", Icons.Filled.Home, Screen.Home.route),
-        BottomNavItem("Goethe", Icons.Filled.School, Screen.GoetheSkills.route),
-        BottomNavItem("ÖSD", Icons.Filled.Star, Screen.OesdSkills.route),
-        BottomNavItem("TELC", Icons.Filled.Book, Screen.TelcSkills.route),
-        BottomNavItem("Learn", Icons.Filled.School, Screen.LearnHome.route),
+        BottomNavItem("Home", homeIcon, Screen.Home.route),
+        BottomNavItem("Goethe", goetheIcon, Screen.GoetheSkills.route),
+        BottomNavItem("ÖSD", osdIcon, Screen.OesdSkills.route),
+        BottomNavItem("TELC", telcIcon, Screen.TelcSkills.route),
+        BottomNavItem("Learn", learnIcon, Screen.LearnHome.route),
     )
 
     Scaffold(
@@ -72,14 +83,14 @@ fun DeutschBottomBar(navController: NavController, items: List<BottomNavItem>) {
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = androidx.compose.ui.unit.Dp(0f)
+        tonalElevation = 0.dp
     ) {
         items.forEach { item ->
             val selected = currentRoute == item.route ||
-                (item.route == Screen.GoetheSkills.route && currentRoute?.startsWith("exam/goethe") == true) ||
-                (item.route == Screen.OesdSkills.route && currentRoute?.startsWith("exam/oesd") == true) ||
-                (item.route == Screen.TelcSkills.route && currentRoute?.startsWith("exam/telc") == true) ||
-                (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true)
+                    (item.route == Screen.GoetheSkills.route && currentRoute?.startsWith("exam/goethe") == true) ||
+                    (item.route == Screen.OesdSkills.route && currentRoute?.startsWith("exam/oesd") == true) ||
+                    (item.route == Screen.TelcSkills.route && currentRoute?.startsWith("exam/telc") == true) ||
+                    (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true)
 
             NavigationBarItem(
                 selected = selected,
@@ -92,14 +103,23 @@ fun DeutschBottomBar(navController: NavController, items: List<BottomNavItem>) {
                         }
                     }
                 },
-                icon = { Icon(item.icon, contentDescription = item.label) },
+                icon = { Icon(painter = item.icon, contentDescription = item.label) },
                 label = { Text(item.label, style = MaterialTheme.typography.labelSmall) },
+                
+                // REPLACE THE COLORS BLOCK BELOW WITH THIS:
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                    selectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    
+                    // Dynamic Background Color
+                    indicatorColor = when (item.route) {
+                        Screen.GoetheSkills.route -> Color(0xFF26cd42) // Green
+                        Screen.OesdSkills.route -> Color(0xFF0061ff)  // Blue
+                        Screen.TelcSkills.route -> Color(0xFFe82127)  // Red
+                        else -> MaterialTheme.colorScheme.primary.copy(alpha = 0.12f) // Default for Home/Learn
+                    }
                 )
             )
         }

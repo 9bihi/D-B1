@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.LearnPhrase
 import com.deutschb1.data.LearnThemeContent
+import com.deutschb1.data.hexToColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

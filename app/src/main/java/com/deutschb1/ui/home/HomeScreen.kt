@@ -16,17 +16,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.deutschb1.R
 import com.deutschb1.navigation.Screen
 import com.deutschb1.ui.theme.*
 
 data class CategoryCard(
     val title: String,
     val subtitle: String,
-    val emoji: String,
+    val iconRes: Int,
     val gradient: List<Color>,
     val route: String
 )
@@ -37,28 +39,31 @@ fun HomeScreen(navController: NavController) {
         CategoryCard(
             "Goethe-Institut",
             "Offizielles Goethe-Zertifikat B1",
-            "🏛️",
-            listOf(Color(0xFF003F7F), Color(0xFF0066CC)),
+            R.drawable.ic_goethe,
+            // CHANGED TO GREEN GRADIENT
+            listOf(Color(0xFF2ECC71), Color(0xFF26cd42)), 
             Screen.GoetheSkills.route
         ),
-        CategoryCard(
-            "ÖSD",
-            "Österreichisches Sprachdiplom",
-            "🇦🇹",
-            listOf(Color(0xFFAA0000), Color(0xFFDD3333)),
-            Screen.OesdSkills.route
-        ),
-        CategoryCard(
-            "TELC",
-            "The European Language Certificates",
-            "🇪🇺",
-            listOf(Color(0xFF005500), Color(0xFF228822)),
-            Screen.TelcSkills.route
-        ),
+          CategoryCard(
+             "ÖSD",
+             "Österreichisches Sprachdiplom",
+             R.drawable.ic_osd,
+             // CHANGED TO BLUE GRADIENT
+             listOf(Color(0xFF007AFF), Color(0xFF0061ff)), 
+             Screen.OesdSkills.route
+          ),
+          CategoryCard(
+             "TELC",
+             "The European Language Certificates",
+             R.drawable.ic_telc,
+             // CHANGED TO RED GRADIENT
+             listOf(Color(0xFFFF3B30), Color(0xFFe82127)), 
+             Screen.TelcSkills.route
+          ),
         CategoryCard(
             "Learn",
             "B1 Phrases & Vocabulary",
-            "📚",
+            R.drawable.ic_learn,
             listOf(Color(0xFF5856D6), Color(0xFF8E8CE1)),
             Screen.LearnHome.route
         )
@@ -73,7 +78,6 @@ fun HomeScreen(navController: NavController) {
     ) {
         Spacer(modifier = Modifier.height(60.dp))
 
-        // Header
         Text(
             text = "Deutsch B1",
             style = MaterialTheme.typography.displayLarge,
@@ -88,7 +92,6 @@ fun HomeScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Quote card
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -167,19 +170,31 @@ fun AnimatedCategoryCard(category: CategoryCard, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = category.emoji + "  " + category.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(id = category.iconRes),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = category.subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.85f)
-                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = category.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = category.subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
+                }
             }
             Text("›", fontSize = 28.sp, color = Color.White.copy(alpha = 0.8f))
         }

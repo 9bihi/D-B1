@@ -19,6 +19,7 @@ import com.deutschb1.ui.exam.sprechen.SprechenScreen
 import com.deutschb1.ui.home.HomeScreen
 import com.deutschb1.ui.learn.LearnHomeScreen
 import com.deutschb1.ui.learn.ThemePhraseListScreen
+import com.deutschb1.ui.learn.CategoryDetailScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -44,6 +45,12 @@ sealed class Screen(val route: String) {
     }
 
     object LearnHome : Screen("learn")
+    
+    // ADD THIS NEW OBJECT
+    object LearnCategory : Screen("learn/category/{categoryId}") {
+        fun createRoute(id: String) = "learn/category/$id"
+    }
+
     object LearnTheme : Screen("learn/{themeIndex}") {
         fun createRoute(index: Int) = "learn/$index"
     }
@@ -136,6 +143,12 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         // Learn
         composable(Screen.LearnHome.route) {
             LearnHomeScreen(navController = navController)
+        }
+
+        // ADD THIS NEW BLOCK
+        composable(Screen.LearnCategory.route) { backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getString("categoryId") ?: return@composable
+            CategoryDetailScreen(navController = navController, categoryId = categoryId)
         }
         composable(Screen.LearnTheme.route) { backStackEntry ->
             val themeIndex = backStackEntry.arguments?.getString("themeIndex")?.toIntOrNull() ?: 0

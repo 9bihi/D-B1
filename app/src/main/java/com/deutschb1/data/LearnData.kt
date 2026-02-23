@@ -2,6 +2,10 @@ package com.deutschb1.data
 
 import androidx.annotation.DrawableRes
 import com.deutschb1.R
+import androidx.compose.ui.graphics.painter.Painter
+// OR if you use Icons instead of Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
 
 // ─── Theme Enum ───────────────────────────────────────────────────────────────
 
@@ -315,3 +319,29 @@ val allLearnContent: List<LearnThemeContent> = listOf(
     UmweltContent,
     EssenContent
 )
+
+// Make sure this is only defined ONCE in the file
+data class LearnCategory(
+    val id: String,
+    val title: String,
+    val subtitle: String,
+    val themes: List<LearnThemeContent> // Use the correct type from your existing code
+)
+
+// Add this list at the end of the file
+val allCategories = listOf(
+    LearnCategory(
+        id = "vocab_phrases",
+        title = "Vokabular & Phrasen",
+        subtitle = "${allLearnContent.sumOf { it.phrases.size }} Phrasen • ${allLearnContent.size} Themen",
+        themes = allLearnContent
+    )
+)
+
+fun hexToColor(hex: String): Color {
+    val clean = hex.removePrefix("#")
+    val r = clean.substring(0, 2).toInt(16) / 255f
+    val g = clean.substring(2, 4).toInt(16) / 255f
+    val b = clean.substring(4, 6).toInt(16) / 255f
+    return Color(r, g, b)
+}

@@ -25,7 +25,6 @@ import androidx.navigation.NavController
 import com.deutschb1.data.ExamContent
 import com.deutschb1.data.HoerenPart
 import com.deutschb1.data.MultipleChoiceQuestion
-import com.deutschb1.ui.theme.IosBlue
 import com.deutschb1.ui.theme.IosGreen
 import com.deutschb1.ui.theme.IosRed
 import com.deutschb1.ui.theme.IosTeal
@@ -36,6 +35,7 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
     var currentPartIndex by remember { mutableStateOf(0) }
     var showTranscript by remember { mutableStateOf(false) }
     var showResults by remember { mutableStateOf(false) }
+    var showPartResults by remember { mutableStateOf(false) }
     val answers = remember { mutableStateMapOf<Int, Int>() }
     val parts = exam.hoerenParts
     val currentPart = parts.getOrNull(currentPartIndex) ?: return
@@ -65,7 +65,11 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
     ) { padding ->
         if (showResults) {
             HoerenResults(parts = parts, answers = answers, onRestart = {
-                answers.clear(); currentPartIndex = 0; showResults = false; showTranscript = false
+                answers.clear()
+                currentPartIndex = 0
+                showResults = false
+                showTranscript = false
+                showPartResults = false
             }, navController = navController)
         } else {
             Column(
@@ -75,36 +79,53 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
                     .padding(horizontal = 20.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                // Progress bar
                 LinearProgressIndicator(
                     progress = { (currentPartIndex + 1).toFloat() / parts.size },
-                    modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
-                    color = IosTeal, trackColor = IosTeal.copy(alpha = 0.2f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(2.dp)),
+                    color = IosTeal,
+                    trackColor = IosTeal.copy(alpha = 0.2f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Title card
                 Card(
-                    modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     elevation = CardDefaults.cardElevation(0.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(currentPart.title, fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.headlineSmall, color = IosTeal)
+                        Text(
+                            currentPart.title,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = IosTeal
+                        )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(currentPart.instruction, style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            currentPart.instruction,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Audio Player Mock
-                AudioPlayerMock(partTitle = currentPart.title)
+                // Audio placeholder (removed actual player)
+                Text(
+                    "Audio-Datei nicht verfügbar",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Toggle transcript
+                // Transcript toggle button
                 OutlinedButton(
                     onClick = { showTranscript = !showTranscript },
                     modifier = Modifier.fillMaxWidth(),
@@ -113,9 +134,15 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
                     Text(if (showTranscript) "📄 Transkript ausblenden" else "📄 Transkript anzeigen")
                 }
 
-                AnimatedVisibility(visible = showTranscript, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
+                AnimatedVisibility(
+                    visible = showTranscript,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = IosTeal.copy(alpha = 0.08f)),
                         elevation = CardDefaults.cardElevation(0.dp)
@@ -133,23 +160,51 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
                 Text("Fragen", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(8.dp))
 
-                currentPart.questions.forEach { q ->
-                    HoerenQuestionCard(q, answers[q.id]) { answers[q.id] = it }
+                // Questions
+                currentPart.questions.forEach { question ->
+                    HoerenQuestionCard(
+                        question = question,
+                        selectedIndex = answers[question.id],
+                        onSelect = { answers[question.id] = it },
+                        showCorrect = showPartResults
+                    )
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+
+                // Bottom row: correction + next/evaluate
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Correction button
+                    OutlinedButton(
+                        onClick = { showPartResults = !showPartResults },
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(if (showPartResults) "Korrektur ausblenden" else "Teil korrigieren")
+                    }
+
                     if (currentPartIndex < parts.size - 1) {
-                        Button(onClick = { currentPartIndex++; showTranscript = false },
+                        Button(
+                            onClick = {
+                                currentPartIndex++
+                                showTranscript = false
+                                showPartResults = false
+                            },
                             shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = IosTeal)) {
+                            colors = ButtonDefaults.buttonColors(containerColor = IosTeal)
+                        ) {
                             Text("Weiter")
                         }
                     } else {
-                        Button(onClick = { showResults = true },
+                        Button(
+                            onClick = { showResults = true },
                             shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = IosGreen)) {
+                            colors = ButtonDefaults.buttonColors(containerColor = IosGreen)
+                        ) {
                             Text("Auswerten")
                         }
                     }
@@ -161,88 +216,73 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
 }
 
 @Composable
-fun AudioPlayerMock(partTitle: String) {
-    var isPlaying by remember { mutableStateOf(false) }
-    val infiniteTransition = rememberInfiniteTransition(label = "audio")
-    val wave by infiniteTransition.animateFloat(
-        initialValue = 0.3f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(600), RepeatMode.Reverse), label = "wave"
-    )
-
+fun HoerenQuestionCard(
+    question: MultipleChoiceQuestion,
+    selectedIndex: Int?,
+    onSelect: (Int) -> Unit,
+    showCorrect: Boolean
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = IosTeal.copy(alpha = 0.1f)),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(IosTeal)
-                        .clickable { isPlaying = !isPlaying },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(if (isPlaying) "⏸" else "▶", fontSize = 22.sp)
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text("🎧 Audio-Simulation", fontWeight = FontWeight.Bold, color = IosTeal)
-                    Text(
-                        if (isPlaying) "Wird abgespielt..." else "Zum Abspielen tippen",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            if (isPlaying) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(3.dp),
-                    verticalAlignment = Alignment.CenterVertically) {
-                    repeat(20) { i ->
-                        val h = (20 + (i % 5) * 8) * wave
-                        Box(modifier = Modifier.width(4.dp).height(h.dp).clip(RoundedCornerShape(2.dp)).background(IosTeal.copy(alpha = 0.7f)))
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun HoerenQuestionCard(question: MultipleChoiceQuestion, selectedIndex: Int?, onSelect: (Int) -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(question.text, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
             Spacer(modifier = Modifier.height(12.dp))
+
             question.options.forEachIndexed { index, option ->
                 val isSelected = selectedIndex == index
+                val isCorrect = showCorrect && index == question.correctIndex
+                val isWrong = showCorrect && isSelected && index != question.correctIndex
+
+                val backgroundColor = when {
+                    isCorrect && isSelected -> IosGreen.copy(alpha = 0.2f)
+                    isCorrect && !isSelected -> IosGreen.copy(alpha = 0.1f)
+                    isWrong -> IosRed.copy(alpha = 0.2f)
+                    else -> Color.Transparent
+                }
+                val borderColor = when {
+                    isCorrect && isSelected -> IosGreen
+                    isCorrect && !isSelected -> IosGreen.copy(alpha = 0.5f)
+                    isWrong -> IosRed
+                    isSelected -> IosTeal
+                    else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
+                }
+
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
-                        .background(if (isSelected) IosTeal.copy(alpha = 0.12f) else Color.Transparent)
-                        .border(
-                            if (isSelected) 1.5.dp else 1.dp,
-                            if (isSelected) IosTeal else MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
-                            RoundedCornerShape(10.dp)
-                        )
+                        .background(backgroundColor)
+                        .border(1.5.dp, borderColor, RoundedCornerShape(10.dp))
                         .clickable { onSelect(index) }
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = Modifier.size(22.dp).clip(CircleShape)
+                        modifier = Modifier
+                            .size(22.dp)
+                            .clip(CircleShape)
                             .background(if (isSelected) IosTeal else Color.Transparent)
-                            .border(1.5.dp, if (isSelected) IosTeal else MaterialTheme.colorScheme.outline.copy(0.5f), CircleShape),
+                            .border(1.5.dp, if (isSelected) IosTeal else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), CircleShape),
                         contentAlignment = Alignment.Center
-                    ) { if (isSelected) Box(Modifier.size(8.dp).clip(CircleShape).background(Color.White)) }
+                    ) {
+                        if (isSelected) {
+                            Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color.White))
+                        }
+                    }
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(option, style = MaterialTheme.typography.bodyMedium)
+
+                    if (showCorrect && index == question.correctIndex) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text("✓", color = IosGreen, fontWeight = FontWeight.Bold)
+                    } else if (showCorrect && isSelected && index != question.correctIndex) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text("✗", color = IosRed, fontWeight = FontWeight.Bold)
+                    }
                 }
                 if (index < question.options.size - 1) Spacer(modifier = Modifier.height(6.dp))
             }
@@ -251,30 +291,103 @@ fun HoerenQuestionCard(question: MultipleChoiceQuestion, selectedIndex: Int?, on
 }
 
 @Composable
-fun HoerenResults(parts: List<HoerenPart>, answers: Map<Int, Int>, onRestart: () -> Unit, navController: NavController) {
-    val allQ = parts.flatMap { it.questions }
-    val correct = allQ.count { answers[it.id] == it.correctIndex }
-    val total = allQ.size
-    val pct = if (total > 0) (correct * 100) / total else 0
-    val passed = pct >= 60
+fun HoerenResults(
+    parts: List<HoerenPart>,
+    answers: Map<Int, Int>,
+    onRestart: () -> Unit,
+    navController: NavController
+) {
+    val allQuestions = parts.flatMap { it.questions }
+    val correct = allQuestions.count { answers[it.id] == it.correctIndex }
+    val total = allQuestions.size
+    val percentage = if (total > 0) (correct * 100) / total else 0
+    val passed = percentage >= 60
 
     Column(
-        Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         Text(if (passed) "🎉" else "📚", fontSize = 64.sp)
-        Spacer(Modifier.height(12.dp))
-        Text(if (passed) "Bestanden!" else "Weiter üben!", style = MaterialTheme.typography.displayMedium,
-            fontWeight = FontWeight.Bold, color = if (passed) IosGreen else IosRed)
-        Text("$correct / $total richtig ($pct%)", style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(Modifier.height(24.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedButton(onClick = { navController.popBackStack() }, shape = RoundedCornerShape(12.dp)) { Text("Zurück") }
-            Button(onClick = onRestart, shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = IosTeal)) { Text("Nochmal") }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            if (passed) "Bestanden!" else "Weiter üben!",
+            style = MaterialTheme.typography.displayMedium,
+            fontWeight = FontWeight.Bold,
+            color = if (passed) IosGreen else IosRed
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            "$correct / $total richtig ($percentage%)",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Per‑question breakdown
+        allQuestions.forEach { question ->
+            val userAnswer = answers[question.id]
+            val isCorrect = userAnswer == question.correctIndex
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isCorrect) IosGreen.copy(alpha = 0.1f) else IosRed.copy(alpha = 0.1f)
+                ),
+                elevation = CardDefaults.cardElevation(0.dp)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(if (isCorrect) "✅" else "❌", fontSize = 18.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            question.text,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (!isCorrect) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            "Richtig: ${question.options[question.correctIndex]}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = IosGreen,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (question.explanation.isNotEmpty()) {
+                            Text(
+                                question.explanation,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
         }
-        Spacer(Modifier.height(100.dp))
+
+        Spacer(modifier = Modifier.height(24.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedButton(
+                onClick = { navController.popBackStack() },
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("Zurück")
+            }
+            Button(
+                onClick = onRestart,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = IosTeal)
+            ) {
+                Text("Nochmal")
+            }
+        }
+        Spacer(modifier = Modifier.height(100.dp))
     }
 }

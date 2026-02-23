@@ -2,6 +2,7 @@ package com.deutschb1.ui.exam
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,10 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.deutschb1.R
 import com.deutschb1.data.ExamProvider
 import com.deutschb1.data.ExamSkill
 import com.deutschb1.ui.theme.*
@@ -89,7 +92,7 @@ fun SkillSelectorScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Provider badge
+            // Provider badge with icon
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -100,12 +103,15 @@ fun SkillSelectorScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        when (provider) {
-                            ExamProvider.GOETHE -> "🏛️"
-                            ExamProvider.OESD -> "🇦🇹"
-                            ExamProvider.TELC -> "🇪🇺"
-                        }, fontSize = 28.sp
+                    val iconRes = when (provider) {
+                        ExamProvider.GOETHE -> R.drawable.ic_goethe
+                        ExamProvider.OESD -> R.drawable.ic_osd
+                        ExamProvider.TELC -> R.drawable.ic_telc
+                    }
+                    Image(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
