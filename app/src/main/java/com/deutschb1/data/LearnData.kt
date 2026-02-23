@@ -25,7 +25,10 @@ enum class LearnTheme(
     EINKAUFEN("Einkaufen & Konsum", "🛍️", "Shops, Preise, Reklamation, Trends", "#98D8C8"),
     BILDUNG("Bildung & Schule", "📚", "Schule, Studium, Lernen, Prüfungen", "#F7DC6F"),
     UMWELT("Umwelt & Natur", "🌿", "Klimawandel, Natur, Nachhaltigkeit", "#82E0AA"),
-    ESSEN("Essen & Trinken", "🍽️", "Lebensmittel, Kochen, Restaurant, Rezepte", "#FAD7A0")
+    ESSEN("Essen & Trinken", "🍽️", "Lebensmittel, Kochen, Restaurant, Rezepte", "#FAD7A0"),
+    SCHREIBEN("Schreiben & Textproduktion", "✍️", "E-Mails, Briefe, Aufsätze schreiben", "#FF9F43"),
+    SPRECHEN("Sprechen & Kommunikation", "🗣️", "Präsentationen, Gespräche, Diskussionen", "#54A0FF"),
+    GRAMMATIK("Grammatik & Struktur", "📖", "Zeiten, Fälle, Satzstruktur", "#5F27CD")
 }
 
 // ─── Phrase Model ─────────────────────────────────────────────────────────────
@@ -305,6 +308,90 @@ val EssenContent = LearnThemeContent(
     )
 )
 
+// ─── Schreiben Content ────────────────────────────────────────────────────────
+
+val SchreibenContent = LearnThemeContent(
+    theme = LearnTheme.SCHREIBEN,
+    phrases = listOf(
+        LearnPhrase("eine E-Mail schreiben", "to write an email", "Ich muss eine formelle E-Mail an meinen Chef schreiben.", "I need to write a formal email to my boss.", "Formell vs. informell beachten"),
+        LearnPhrase("der Betreff", "subject line", "Der Betreff sollte kurz und klar sein.", "The subject line should be short and clear."),
+        LearnPhrase("Sehr geehrte Damen und Herren", "Dear Sir or Madam", "Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich...", "Dear Sir or Madam, I am writing to you regarding...", "Formelle Anrede"),
+        LearnPhrase("Liebe Grüße / Mit freundlichen Grüßen", "Best regards / Sincerely", "Mit freundlichen Grüßen, Max Müller", "Sincerely, Max Müller", "Grußformel am Ende"),
+        LearnPhrase("einen Aufsatz schreiben", "to write an essay", "Wir müssen einen Aufsatz über Umweltschutz schreiben.", "We have to write an essay about environmental protection."),
+        LearnPhrase("die Einleitung", "introduction", "Die Einleitung sollte das Thema vorstellen.", "The introduction should present the topic."),
+        LearnPhrase("der Hauptteil", "main body", "Im Hauptteil werden die Argumente präsentiert.", "In the main body, the arguments are presented."),
+        LearnPhrase("der Schluss", "conclusion", "Der Schluss fasst die wichtigsten Punkte zusammen.", "The conclusion summarizes the most important points."),
+        LearnPhrase("Meinung äußern", "to express opinion", "In diesem Abschnitt können Sie Ihre Meinung äußern.", "In this section, you can express your opinion."),
+        LearnPhrase("einerseits ... andererseits", "on one hand ... on the other hand", "Einerseits ist es teuer, andererseits ist es qualitativ hochwertig.", "On one hand it's expensive, on the other hand it's high quality."),
+        LearnPhrase("zusammenfassend kann man sagen", "in summary one can say", "Zusammenfassend kann man sagen, dass...", "In summary, one can say that..."),
+        LearnPhrase("ein Formular ausfüllen", "to fill out a form", "Bitte füllen Sie dieses Formular vollständig aus.", "Please fill out this form completely."),
+        LearnPhrase("eine Beschwerde schreiben", "to write a complaint", "Ich möchte eine Beschwerde über das Produkt schreiben.", "I want to write a complaint about the product."),
+        LearnPhrase("um Informationen bitten", "to request information", "Ich bitte Sie um weitere Informationen.", "I request further information from you.", "Formelle Formulierung"),
+        LearnPhrase("für etwas danken", "to thank for something", "Ich danke Ihnen für Ihre schnelle Antwort.", "I thank you for your quick response."),
+        LearnPhrase("eine Einladung schreiben", "to write an invitation", "Wir schreiben eine Einladung zur Geburtstagsparty.", "We're writing an invitation for the birthday party."),
+        LearnPhrase("Absender / Empfänger", "sender / recipient", "Tragen Sie Absender und Empfänger oben ein.", "Enter sender and recipient at the top."),
+        LearnPhrase("die Anrede", "salutation", "Die Anrede hängt vom Verhältnis zum Empfänger ab.", "The salutation depends on the relationship with the recipient."),
+        LearnPhrase("Rechtschreibung prüfen", "to check spelling", "Vergessen Sie nicht, die Rechtschreibung zu prüfen.", "Don't forget to check the spelling."),
+        LearnPhrase("einen Brief unterschreiben", "to sign a letter", "Unterschreiben Sie den Brief am Ende.", "Sign the letter at the end.")
+    )
+)
+
+// ─── Sprechen Content ─────────────────────────────────────────────────────────
+
+val SprechenContent = LearnThemeContent(
+    theme = LearnTheme.SPRECHEN,
+    phrases = listOf(
+        LearnPhrase("sich vorstellen", "to introduce oneself", "Darf ich mich vorstellen? Ich heiße Anna.", "May I introduce myself? My name is Anna.", "Typisch am ersten Tag"),
+        LearnPhrase("eine Präsentation halten", "to give a presentation", "Ich muss morgen eine Präsentation halten.", "I have to give a presentation tomorrow."),
+        LearnPhrase("das Wort ergreifen", "to take the floor", "Darf ich das Wort ergreifen?", "May I take the floor?", "Formell in Meetings"),
+        LearnPhrase("nachfragen", "to ask for clarification", "Könnten Sie das bitte wiederholen? Ich habe nicht verstanden.", "Could you please repeat that? I didn't understand."),
+        LearnPhrase("zustimmen / widersprechen", "to agree / disagree", "Ich stimme Ihnen voll zu. / Da muss ich widersprechen.", "I fully agree with you. / I have to disagree with that."),
+        LearnPhrase("eine Frage stellen", "to ask a question", "Darf ich eine Frage stellen?", "May I ask a question?"),
+        LearnPhrase("laut und deutlich sprechen", "to speak loudly and clearly", "Bitte sprechen Sie laut und deutlich.", "Please speak loudly and clearly."),
+        LearnPhrase("ins Stocken geraten", "to get stuck (while speaking)", "Ich bin beim Sprechen ins Stocken geraten.", "I got stuck while speaking."),
+        LearnPhrase("ein Gespräch beginnen", "to start a conversation", "Wie kann ich ein Gespräch auf Deutsch beginnen?", "How can I start a conversation in German?"),
+        LearnPhrase("das Gesprächsthema wechseln", "to change the topic", "Können wir das Gesprächsthema wechseln?", "Can we change the topic?"),
+        LearnPhrase("ausdrücken", "to express", "Wie kann ich das auf Deutsch ausdrücken?", "How can I express that in German?"),
+        LearnPhrase("unterbrechen", "to interrupt", "Entschuldigung, darf ich kurz unterbrechen?", "Excuse me, may I interrupt briefly?", "Höfliche Unterbrechung"),
+        LearnPhrase("weitermachen", "to continue", "Bitte machen Sie weiter.", "Please continue."),
+        LearnPhrase("etwas betonen", "to emphasize something", "Ich möchte diesen Punkt besonders betonen.", "I want to emphasize this point particularly."),
+        LearnPhrase("eine Pause machen", "to take a break", "Können wir eine kurze Pause machen?", "Can we take a short break?"),
+        LearnPhrase("zusammenfassen", "to summarize", "Lassen Sie mich das kurz zusammenfassen.", "Let me summarize that briefly."),
+        LearnPhrase("Beispiele nennen", "to give examples", "Können Sie ein Beispiel nennen?", "Can you give an example?"),
+        LearnPhrase("die Aussprache üben", "to practice pronunciation", "Ich muss meine Aussprache üben.", "I need to practice my pronunciation."),
+        LearnPhrase("frei sprechen", "to speak freely", "Bei der Prüfung müssen Sie frei sprechen.", "In the exam, you have to speak freely."),
+        LearnPhrase("Feedback geben", "to give feedback", "Können Sie mir Feedback zu meiner Präsentation geben?", "Can you give me feedback on my presentation?")
+    )
+)
+
+// ─── Grammatik Content ────────────────────────────────────────────────────────
+
+val GrammatikContent = LearnThemeContent(
+    theme = LearnTheme.GRAMMATIK,
+    phrases = listOf(
+        LearnPhrase("der Nominativ", "nominative case", "Der Nominativ ist der erste Fall im Deutschen.", "The nominative is the first case in German.", "Subjekt-Fall"),
+        LearnPhrase("der Akkusativ", "accusative case", "Den Akkusativ benutzt man für das direkte Objekt.", "The accusative is used for the direct object."),
+        LearnPhrase("der Dativ", "dative case", "Der Dativ ist der dritte Fall.", "The dative is the third case.", "Indirektes Objekt"),
+        LearnPhrase("der Genitiv", "genitive case", "Der Genitiv zeigt Besitz an.", "The genitive shows possession.", "Wessen-Fall"),
+        LearnPhrase("die Konjugation", "conjugation", "Die Konjugation von Verben ist wichtig.", "Conjugating verbs is important."),
+        LearnPhrase("das Präsens", "present tense", "Das Präsens beschreibt aktuelle Handlungen.", "The present tense describes current actions."),
+        LearnPhrase("das Perfekt", "perfect tense", "Das Perfekt wird für vergangene Handlungen benutzt.", "The perfect tense is used for past actions.", "Gesprochene Sprache"),
+        LearnPhrase("das Präteritum", "simple past", "Das Präteritum benutzt man oft in Geschichten.", "The simple past is often used in stories.", "Geschriebene Sprache"),
+        LearnPhrase("das Futur I", "future tense", "Das Futur I beschreibt zukünftige Handlungen.", "The future tense describes future actions."),
+        LearnPhrase("die Präpositionen", "prepositions", "Präpositionen stehen vor Nomen.", "Prepositions stand before nouns."),
+        LearnPhrase("die Artikel (der/die/das)", "articles", "Im Deutschen gibt es drei Artikel.", "There are three articles in German."),
+        LearnPhrase("die Pluralbildung", "plural formation", "Die Pluralbildung ist im Deutschen komplex.", "Plural formation is complex in German."),
+        LearnPhrase("die Adjektivdeklination", "adjective declension", "Adjektive werden nach Fall und Artikel dekliniert.", "Adjectives are declined according to case and article."),
+        LearnPhrase("die Nebensätze", "subordinate clauses", "Nebensätze haben das Verb am Ende.", "Subordinate clauses have the verb at the end."),
+        LearnPhrase("die Konjunktionen", "conjunctions", "Konjunktionen verbinden Sätze.", "Conjunctions connect sentences."),
+        LearnPhrase("weil / denn", "because", "Weil leitet einen Nebensatz ein, denn einen Hauptsatz.", "Weil introduces a subordinate clause, denn a main clause."),
+        LearnPhrase("obwohl / trotzdem", "although / nevertheless", "Obwohl es regnet, gehe ich spazieren.", "Although it's raining, I'm going for a walk."),
+        LearnPhrase("wenn / als", "when/if", "Wenn benutzt man für Gegenwart/Zukunft, als für Vergangenheit.", "Wenn is used for present/future, als for past."),
+        LearnPhrase("die Relativsätze", "relative clauses", "Relativsätze geben mehr Informationen über ein Nomen.", "Relative clauses give more information about a noun."),
+        LearnPhrase("Passiv bilden", "to form passive", "Das Passiv wird mit werden + Partizip II gebildet.", "The passive is formed with werden + past participle.")
+    )
+)
+
 // ─── All Learn Content ────────────────────────────────────────────────────────
 
 val allLearnContent: List<LearnThemeContent> = listOf(
@@ -328,13 +415,32 @@ data class LearnCategory(
     val themes: List<LearnThemeContent> // Use the correct type from your existing code
 )
 
-// Add this list at the end of the file
+// Replace the old allCategories with this:
+
 val allCategories = listOf(
     LearnCategory(
         id = "vocab_phrases",
         title = "Vokabular & Phrasen",
         subtitle = "${allLearnContent.sumOf { it.phrases.size }} Phrasen • ${allLearnContent.size} Themen",
         themes = allLearnContent
+    ),
+    LearnCategory(
+        id = "schreiben",
+        title = "Schreiben",
+        subtitle = "${SchreibenContent.phrases.size} Phrasen • Texte & E-Mails",
+        themes = listOf(SchreibenContent)
+    ),
+    LearnCategory(
+        id = "sprechen",
+        title = "Sprechen",
+        subtitle = "${SprechenContent.phrases.size} Phrasen • Präsentation & Gespräche",
+        themes = listOf(SprechenContent)
+    ),
+    LearnCategory(
+        id = "grammatik",
+        title = "Grammatik",
+        subtitle = "${GrammatikContent.phrases.size} Phrasen • Zeiten, Fälle & Struktur",
+        themes = listOf(GrammatikContent)
     )
 )
 
