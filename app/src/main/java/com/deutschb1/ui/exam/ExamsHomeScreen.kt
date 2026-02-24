@@ -1,18 +1,30 @@
 package com.deutschb1.ui.exams
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.R
 import com.deutschb1.data.ExamProvider
@@ -23,78 +35,167 @@ data class ProviderItem(
     val name: String,
     val description: String,
     val iconRes: Int,
-    val color: Color
+    val gradientColors: List<Color>
 )
 
 @Composable
 fun ExamsHomeScreen(navController: NavController) {
+    val iosBackgroundColor = Color(0xFF000000)
+    
     val providers = listOf(
         ProviderItem(
             ExamProvider.GOETHE,
             "Goethe-Institut",
             "Offizielles Goethe-Zertifikat B1",
             R.drawable.ic_goethe,
-            Color(0xFF003F7F)
+            listOf(Color(0xFF2ECC71), Color(0xFF27AE60))
         ),
         ProviderItem(
             ExamProvider.OESD,
             "ÖSD",
             "Österreichisches Sprachdiplom",
             R.drawable.ic_osd,
-            Color(0xFFAA0000)
+            listOf(Color(0xFF007AFF), Color(0xFF0056B3))
         ),
         ProviderItem(
             ExamProvider.TELC,
             "TELC",
             "The European Language Certificates",
             R.drawable.ic_telc,
-            Color(0xFF005500)
+            listOf(Color(0xFFFF3B30), Color(0xFFD32F2F))
         )
     )
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-        contentPadding = PaddingValues(top = 60.dp, bottom = 80.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(iosBackgroundColor)
     ) {
-        item {
+        Column(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)
+        ) {
             Text(
-                "Prüfungen",
-                style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.Bold
+                text = "Prüfungen",
+                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                color = Color.White,
+                fontSize = 34.sp
             )
             Text(
-                "Wähle einen Anbieter",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = "Wähle einen Anbieter",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
+                color = Color.Gray,
+                fontSize = 17.sp
             )
-            Spacer(modifier = Modifier.height(24.dp))
         }
 
-        items(providers) { provider ->
-            Card(
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(providers) { provider ->
+                GlassProviderCard(
+                    provider = provider,
+                    onClick = {
+                        navController.navigate(Screen.ProviderSkillSelector.createRoute(provider.provider))
+                    }
+                )
+            }
+            
+            item { Spacer(modifier = Modifier.height(100.dp)) }
+        }
+    }
+}
+
+@Composable
+fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.96f else 1f,
+        animationSpec = tween(100),
+        label = "scale"
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(84.dp)
+            .scale(scale)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) { 
+                onClick()
+            },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 1.dp,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.15f),
+                            Color.Transparent
+                        )
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
+        ) {
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { navController.navigate(Screen.ProviderSkillSelector.createRoute(provider.provider)) },
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = provider.color.copy(alpha = 0.1f))
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(20.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Brush.linearGradient(provider.gradientColors)),
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(id = provider.iconRes),
                         contentDescription = null,
-                        tint = provider.color,
-                        modifier = Modifier.size(40.dp)
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp)
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(provider.name, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = provider.color)
-                        Text(provider.description, style = MaterialTheme.typography.bodyMedium)
-                    }
                 }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = provider.name,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        color = Color.White,
+                        fontSize = 17.sp,
+                        maxLines = 1
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = provider.description,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal),
+                        color = Color.Gray,
+                        fontSize = 13.sp,
+                        maxLines = 1
+                    )
+                }
+
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = Color.White.copy(alpha = 0.3f),
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }

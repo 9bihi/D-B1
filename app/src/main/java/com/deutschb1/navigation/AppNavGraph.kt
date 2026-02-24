@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.deutschb1.data.ExamProvider
 import com.deutschb1.data.ExamSkill
 import com.deutschb1.data.allExams
+import com.deutschb1.data.allLearnContent
 import com.deutschb1.data.allCategories
 import com.deutschb1.ui.exam.hoeren.HoerenScreen
 import com.deutschb1.ui.exam.lesen.LesenScreen
@@ -15,16 +16,17 @@ import com.deutschb1.ui.exam.schreiben.SchreibenScreen
 import com.deutschb1.ui.exam.SkillSelectorScreen
 import com.deutschb1.ui.exam.ModelltestSelectorScreen
 import com.deutschb1.ui.exam.sprechen.SprechenScreen
-import com.deutschb1.ui.exams.ExamsHomeScreen
 import com.deutschb1.ui.home.HomeScreen
-import com.deutschb1.ui.learn.*
+import com.deutschb1.ui.exams.ExamsHomeScreen
+import com.deutschb1.ui.learn.LearnHomeScreen
+import com.deutschb1.ui.learn.CategoryDetailScreen
 import com.deutschb1.ui.learn.ThemePhraseListScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object ExamsHome : Screen("exams")
-    object ProviderSkillSelector : Screen("exams/{provider}") {
-        fun createRoute(provider: ExamProvider) = "exams/${provider.name}"
+    object ProviderSkillSelector : Screen("exam/{provider}/skills") {
+        fun createRoute(provider: ExamProvider) = "exam/${provider.name}/skills"
     }
     object ModelltestSelector : Screen("exam/{provider}/{skill}") {
         fun createRoute(provider: ExamProvider, skill: ExamSkill) = "exam/${provider.name}/${skill.name}"
@@ -71,7 +73,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         // Provider skill selector
         composable(Screen.ProviderSkillSelector.route) { backStackEntry ->
             val providerStr = backStackEntry.arguments?.getString("provider")
-            val provider = ExamProvider.valueOf(providerStr!!)
+            val provider = providerStr?.let { ExamProvider.valueOf(it) } ?: return@composable
             SkillSelectorScreen(
                 provider = provider,
                 navController = navController,
