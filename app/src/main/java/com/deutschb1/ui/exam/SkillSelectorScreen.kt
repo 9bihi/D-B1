@@ -4,11 +4,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -63,26 +65,31 @@ fun SkillSelectorScreen(
                         Text(
                             provider.displayName,
                             fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.headlineMedium
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color.White
                         )
                         Text(
                             "Deutsch B1 – Wähle eine Fertigkeit",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = Color.Gray
                         )
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Zurück",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = Color.Black
     ) { padding ->
         Column(
             modifier = Modifier
@@ -92,40 +99,61 @@ fun SkillSelectorScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Provider badge with icon
+            // Provider badge (glass)
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = providerColor.copy(alpha = 0.1f)),
-                elevation = CardDefaults.cardElevation(0.dp)
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+                ),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 1.dp,
+                            color = Color.White.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(16.dp)
                 ) {
-                    val iconRes = when (provider) {
-                        ExamProvider.GOETHE -> R.drawable.ic_goethe
-                        ExamProvider.OESD -> R.drawable.ic_osd
-                        ExamProvider.TELC -> R.drawable.ic_telc
-                    }
-                    Image(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            provider.displayName,
-                            fontWeight = FontWeight.Bold,
-                            color = providerColor,
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-                        Text(
-                            provider.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val iconRes = when (provider) {
+                            ExamProvider.GOETHE -> R.drawable.ic_goethe
+                            ExamProvider.OESD -> R.drawable.ic_osd
+                            ExamProvider.TELC -> R.drawable.ic_telc
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(providerColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                provider.displayName,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                            Text(
+                                provider.description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
             }
@@ -134,7 +162,8 @@ fun SkillSelectorScreen(
             Text(
                 "Fertigkeiten",
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -144,7 +173,7 @@ fun SkillSelectorScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(skillCards) { card ->
-                    SkillCard(data = card, onClick = { onSkillSelected(card.skill) })
+                    GlassSkillCard(data = card, onClick = { onSkillSelected(card.skill) })
                 }
             }
         }
@@ -152,52 +181,67 @@ fun SkillSelectorScreen(
 }
 
 @Composable
-fun SkillCard(data: SkillCardData, onClick: () -> Unit) {
+fun GlassSkillCard(data: SkillCardData, onClick: () -> Unit) {
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (pressed) 0.95f else 1f,
-        animationSpec = tween(100), label = "scale"
+        animationSpec = tween(100),
+        label = "scale"
     )
 
-    Box(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
             .scale(scale)
-            .clip(RoundedCornerShape(20.dp))
-            .background(data.color.copy(alpha = 0.12f))
             .clickable {
                 pressed = true
                 onClick()
-            }
+            },
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(20.dp)
+                )
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(data.color.copy(alpha = 0.2f)),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(data.skill.icon, fontSize = 22.sp)
-            }
-            Column {
-                Text(
-                    data.skill.displayName,
-                    fontWeight = FontWeight.Bold,
-                    color = data.color,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Text(
-                    "${data.skill.durationMin} Min.",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                // Icon in colored circle
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(data.color),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(data.skill.icon, fontSize = 22.sp, color = Color.White)
+                }
+                Column {
+                    Text(
+                        data.skill.displayName,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Text(
+                        "${data.skill.durationMin} Min.",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.Gray
+                    )
+                }
             }
         }
     }

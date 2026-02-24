@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -40,49 +41,24 @@ data class ProviderItem(
 
 @Composable
 fun ExamsHomeScreen(navController: NavController) {
-    val iosBackgroundColor = Color(0xFF000000)
-    
-    val providers = listOf(
-        ProviderItem(
-            ExamProvider.GOETHE,
-            "Goethe-Institut",
-            "Offizielles Goethe-Zertifikat B1",
-            R.drawable.ic_goethe,
-            listOf(Color(0xFF2ECC71), Color(0xFF27AE60))
-        ),
-        ProviderItem(
-            ExamProvider.OESD,
-            "ÖSD",
-            "Österreichisches Sprachdiplom",
-            R.drawable.ic_osd,
-            listOf(Color(0xFF007AFF), Color(0xFF0056B3))
-        ),
-        ProviderItem(
-            ExamProvider.TELC,
-            "TELC",
-            "The European Language Certificates",
-            R.drawable.ic_telc,
-            listOf(Color(0xFFFF3B30), Color(0xFFD32F2F))
-        )
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(iosBackgroundColor)
+            .background(Color.Black)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)
         ) {
             Text(
                 text = "Prüfungen",
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 34.sp
             )
             Text(
                 text = "Wähle einen Anbieter",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
+                style = MaterialTheme.typography.titleMedium,
                 color = Color.Gray,
                 fontSize = 17.sp
             )
@@ -101,17 +77,39 @@ fun ExamsHomeScreen(navController: NavController) {
                     }
                 )
             }
-            
             item { Spacer(modifier = Modifier.height(100.dp)) }
         }
     }
 }
 
+val providers = listOf(
+    ProviderItem(
+        ExamProvider.GOETHE,
+        "Goethe-Institut",
+        "Offizielles Goethe-Zertifikat B1",
+        R.drawable.ic_goethe,
+        listOf(Color(0xFF2ECC71), Color(0xFF27AE60))
+    ),
+    ProviderItem(
+        ExamProvider.OESD,
+        "ÖSD",
+        "Österreichisches Sprachdiplom",
+        R.drawable.ic_osd,
+        listOf(Color(0xFF007AFF), Color(0xFF0056B3))
+    ),
+    ProviderItem(
+        ExamProvider.TELC,
+        "TELC",
+        "The European Language Certificates",
+        R.drawable.ic_telc,
+        listOf(Color(0xFFFF3B30), Color(0xFFD32F2F))
+    )
+)
+
 @Composable
 fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.96f else 1f,
         animationSpec = tween(100),
@@ -126,14 +124,12 @@ fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
-            ) { 
-                onClick()
-            },
+            ) { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
             modifier = Modifier
@@ -155,10 +151,11 @@ fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Icon circle with gradient background
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(CircleShape)
                         .background(Brush.linearGradient(provider.gradientColors)),
                     contentAlignment = Alignment.Center
                 ) {
@@ -175,7 +172,8 @@ fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = provider.name,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold,
                         color = Color.White,
                         fontSize = 17.sp,
                         maxLines = 1
@@ -183,7 +181,7 @@ fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = provider.description,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal),
+                        style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray,
                         fontSize = 13.sp,
                         maxLines = 1

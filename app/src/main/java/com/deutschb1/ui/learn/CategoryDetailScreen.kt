@@ -1,10 +1,12 @@
 package com.deutschb1.ui.learn
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.LearnThemeContent
 import com.deutschb1.data.allCategories
+import com.deutschb1.data.hexToColor
 import com.deutschb1.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +33,6 @@ fun CategoryDetailScreen(navController: NavController, categoryId: String) {
 
     if (category == null) return
 
-    // Compute starting global index for this category
     val startGlobalIndex = allCategories
         .takeWhile { it.id != categoryId }
         .sumOf { it.themes.size }
@@ -39,14 +40,22 @@ fun CategoryDetailScreen(navController: NavController, categoryId: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(category.title) },
+                title = { Text(category.title, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Zurück",
+                            tint = Color.White
+                        )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
-        }
+        },
+        containerColor = Color.Black
     ) { padding ->
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
@@ -54,7 +63,7 @@ fun CategoryDetailScreen(navController: NavController, categoryId: String) {
             modifier = Modifier.padding(padding)
         ) {
             items(category.themes) { themeContent ->
-                SubThemeCard(
+                GlassSubThemeCard(
                     themeContent = themeContent,
                     onClick = {
                         val globalIndex = startGlobalIndex + category.themes.indexOf(themeContent)
@@ -67,29 +76,26 @@ fun CategoryDetailScreen(navController: NavController, categoryId: String) {
 }
 
 @Composable
-fun SubThemeCard(themeContent: LearnThemeContent, onClick: () -> Unit) {
-    // Predefined gradient for all sub‑themes (you can vary per theme if desired)
-    val gradient = listOf(
-        Color(0xFF667EEA),
-        Color(0xFF764BA2)
-    )
+fun GlassSubThemeCard(themeContent: LearnThemeContent, onClick: () -> Unit) {
+    val accentColor = hexToColor(themeContent.theme.colorHex)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+        ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = gradient,
-                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                        end = androidx.compose.ui.geometry.Offset(Float.POSITIVE_INFINITY, 0f)
-                    )
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(20.dp)
                 )
                 .padding(20.dp)
         ) {
@@ -102,12 +108,21 @@ fun SubThemeCard(themeContent: LearnThemeContent, onClick: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(1f)
                 ) {
-                    // Emoji from theme
-                    Text(
-                        text = themeContent.theme.emoji,
-                        fontSize = 48.sp,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
+                    // Emoji in colored circle
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(accentColor),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = themeContent.theme.emoji,
+                            fontSize = 24.sp,
+                            color = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
                             text = themeContent.theme.displayName,
@@ -118,29 +133,27 @@ fun SubThemeCard(themeContent: LearnThemeContent, onClick: () -> Unit) {
                         Text(
                             text = themeContent.theme.description,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.9f)
+                            color = Color.Gray
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        // Phrase count badge
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            color = Color.White.copy(alpha = 0.2f),
+                            color = accentColor.copy(alpha = 0.2f),
                             modifier = Modifier.padding(top = 4.dp)
                         ) {
                             Text(
                                 text = "${themeContent.phrases.size} Phrasen",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = Color.White,
+                                color = accentColor,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }
                     }
                 }
-                // Arrow icon
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color.White.copy(alpha = 0.3f),
                     modifier = Modifier.size(24.dp)
                 )
             }

@@ -3,10 +3,12 @@ package com.deutschb1.ui.learn
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -27,7 +29,7 @@ import com.deutschb1.data.LearnCategory
 import com.deutschb1.data.allCategories
 import com.deutschb1.navigation.Screen
 
-// Predefined gradient pairs for categories
+// Predefined gradient pairs for icon circles
 val categoryGradients = listOf(
     listOf(Color(0xFF667EEA), Color(0xFF764BA2)), // Purple
     listOf(Color(0xFFF0933B), Color(0xFFF5576C)), // Orange-Red
@@ -56,61 +58,34 @@ fun LearnHomeScreen(navController: NavController) {
         contentPadding = PaddingValues(top = 60.dp, bottom = 80.dp, start = 20.dp, end = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Header
+        // Header with glass card
         item {
             Column {
                 Text(
                     "Learn",
                     style = MaterialTheme.typography.displayLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = Color.White
                 )
                 Text(
                     "Deutsch B1 lernen",
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                "Lernstatistik",
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                "$totalPhrases Phrasen • $totalThemes Themen",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
+                GlassStatCard(
+                    totalPhrases = totalPhrases,
+                    totalThemes = totalThemes
+                )
             }
         }
 
-        // Category cards
+        // Category cards (glass style)
         itemsIndexed(allCategories) { index, category ->
             val gradient = categoryGradients[index % categoryGradients.size]
             val emoji = categoryEmoji[category.id] ?: "📘"
 
-            CategoryCard(
+            GlassCategoryCard(
                 category = category,
                 gradient = gradient,
                 emoji = emoji,
@@ -123,7 +98,55 @@ fun LearnHomeScreen(navController: NavController) {
 }
 
 @Composable
-fun CategoryCard(
+fun GlassStatCard(totalPhrases: Int, totalThemes: Int) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(16.dp)
+                )
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = Color.White.copy(alpha = 0.7f),
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        "Lernstatistik",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                    Text(
+                        "$totalPhrases Phrasen • $totalThemes Themen",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun GlassCategoryCard(
     category: LearnCategory,
     gradient: List<Color>,
     emoji: String,
@@ -145,17 +168,18 @@ fun CategoryCard(
                 onClick()
             },
         shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+        ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = gradient,
-                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                        end = androidx.compose.ui.geometry.Offset(Float.POSITIVE_INFINITY, 0f)
-                    )
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(20.dp)
                 )
                 .padding(20.dp)
         ) {
@@ -168,12 +192,20 @@ fun CategoryCard(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(1f)
                 ) {
-                    // Large emoji
-                    Text(
-                        text = emoji,
-                        fontSize = 48.sp,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
+                    // Emoji in colored circle
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Brush.linearGradient(gradient)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = emoji,
+                            fontSize = 24.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
                             text = category.title,
@@ -184,15 +216,14 @@ fun CategoryCard(
                         Text(
                             text = category.subtitle,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.9f)
+                            color = Color.Gray
                         )
                     }
                 }
-                // Arrow icon
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color.White.copy(alpha = 0.3f),
                     modifier = Modifier.size(24.dp)
                 )
             }

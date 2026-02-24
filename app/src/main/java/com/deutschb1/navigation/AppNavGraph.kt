@@ -144,7 +144,8 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         }
         composable(Screen.LearnTheme.route) { backStackEntry ->
             val themeIndex = backStackEntry.arguments?.getString("themeIndex")?.toIntOrNull() ?: 0
-            val content = allCategories.flatMap { it.themes }.getOrNull(themeIndex)
+            val allThemes = allCategories.flatMap { category -> category.themes }
+            val content = allThemes.getOrNull(themeIndex)
             if (content != null) {
                 ThemePhraseListScreen(content = content, navController = navController)
             }

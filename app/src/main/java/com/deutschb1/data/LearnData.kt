@@ -48,7 +48,34 @@ enum class LearnTheme(
     GRAM_TRENNBARE_VERBEN("Trennbare Verben", "✂️", "Separable and Inseparable Prefixes", "#EF6C00"),
     GRAM_GENITIV("Genitiv", "👑", "Genitive Case", "#4A148C"),
     GRAM_IMPERATIV("Imperativ", "❗", "Commands and Requests", "#B71C1C"),
-    SPRECHEN_B1("Sprechen B1", "🗣️", "Dialoge und Präsentationen für die mündliche Prüfung", "#E67E22")
+    SPRECHEN_B1("Sprechen B1", "🗣️", "Dialoge und Präsentationen für die mündliche Prüfung", "#E67E22"),
+    // Wortschatz themes
+    WORTSCHATZ_FAMILIE("Familie", "👨‍👩‍👧‍👦", "Wortschatz zum Thema Familie und Beziehungen", "#FF6B6B"),
+    WORTSCHATZ_ARBEIT("Arbeit", "💼", "Wortschatz zum Thema Beruf und Arbeitsleben", "#4ECDC4"),
+    WORTSCHATZ_FREIZEIT("Freizeit", "🎨", "Wortschatz zu Hobbys und Freizeitaktivitäten", "#45B7D1"),
+    WORTSCHATZ_REISEN("Reisen", "✈️", "Wortschatz für Urlaub und Verkehr", "#96CEB4"),
+    WORTSCHATZ_GESUNDHEIT("Gesundheit", "🏥", "Wortschatz zu Gesundheit und Körper", "#FFEAA7"),
+    WORTSCHATZ_WOHNEN("Wohnen", "🏠", "Wortschatz rund um Wohnung und Haushalt", "#DDA0DD"),
+    WORTSCHATZ_EINKAUFEN("Einkaufen", "🛍️", "Wortschatz für Einkäufe und Konsum", "#98D8C8"),
+    WORTSCHATZ_BILDUNG("Bildung", "📚", "Wortschatz zu Schule und Lernen", "#F7DC6F"),
+    WORTSCHATZ_UMWELT("Umwelt", "🌿", "Wortschatz zu Natur und Klima", "#82E0AA"),
+    WORTSCHATZ_ESSEN("Essen", "🍽️", "Wortschatz zu Lebensmitteln und Kochen", "#FAD7A0"),
+    // Additional Wortschatz themes
+    WORTSCHATZ_KLEIDUNG("Kleidung", "👗", "Wortschatz rund um Kleidung und Mode", "#FFB6C1"),
+    WORTSCHATZ_VERKEHR("Verkehr", "🚗", "Wortschatz zu Verkehrsmitteln und Mobilität", "#A9A9A9"),
+    WORTSCHATZ_MEDIEN("Medien", "📱", "Wortschatz zu Internet, Fernsehen und Presse", "#87CEEB"),
+    WORTSCHATZ_GEFÜHLE("Gefühle", "😊", "Wortschatz zu Emotionen und Stimmungen", "#FFD700"),
+    WORTSCHATZ_BEZIEHUNGEN("Beziehungen", "💞", "Wortschatz zu Freundschaft und Partnerschaft", "#FF69B4"),
+    WORTSCHATZ_KULTUR("Kultur", "🎭", "Wortschatz zu Kunst, Musik und Traditionen", "#9370DB"),
+    WORTSCHATZ_STADT("Stadt", "🏙️", "Wortschatz zu städtischem Leben und Einrichtungen", "#708090"),
+    WORTSCHATZ_LAND("Land", "🌾", "Wortschatz zu ländlichen Gegenden und Natur", "#9ACD32"),
+    WORTSCHATZ_WETTER("Wetter", "☀️", "Wortschatz zu Wetter und Klima", "#87CEEB"),
+    WORTSCHATZ_ZEIT("Zeit", "⏰", "Wortschatz zu Zeitangaben und Zeiträumen", "#4682B4"),
+    WORTSCHATZ_ZAHLEN("Zahlen", "🔢", "Wortschatz zu Zahlen und Mengen", "#2E8B57"),
+    WORTSCHATZ_FARBEN("Farben", "🎨", "Wortschatz zu Farben", "#FF6346"),
+    WORTSCHATZ_KÖRPER("Körper", "💪", "Wortschatz zu Körperteilen und Gesundheit", "#CD5C5C"),
+    WORTSCHATZ_TIERE("Tiere", "🐶", "Wortschatz zu Tieren", "#8B4513"),
+    WORTSCHATZ_PFLANZEN("Pflanzen", "🌻", "Wortschatz zu Pflanzen und Natur", "#32CD32")
 }
 
 
@@ -1287,6 +1314,586 @@ val SprechenB1Content = LearnThemeContent(
         )
     )
 )
+// ============================================================================
+// WORTSCHATZ THEMES (B1 vocabulary)
+// ============================================================================
+
+val WortschatzFamilie = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_FAMILIE,
+    phrases = listOf(
+        LearnPhrase("die Familie", "family", "Meine Familie ist sehr wichtig für mich.", "My family is very important to me."),
+        LearnPhrase("die Mutter", "mother", "Meine Mutter kocht am liebsten.", "My mother loves to cook."),
+        LearnPhrase("der Vater", "father", "Mein Vater arbeitet als Ingenieur.", "My father works as an engineer."),
+        LearnPhrase("die Eltern", "parents", "Meine Eltern wohnen in Berlin.", "My parents live in Berlin."),
+        LearnPhrase("der Bruder", "brother", "Mein Bruder ist zwei Jahre jünger.", "My brother is two years younger."),
+        LearnPhrase("die Schwester", "sister", "Ich habe eine Schwester.", "I have one sister."),
+        LearnPhrase("die Großeltern", "grandparents", "Meine Großeltern besuchen uns oft.", "My grandparents often visit us."),
+        LearnPhrase("der Opa", "grandpa", "Mein Opa erzählt gerne Geschichten.", "My grandpa likes to tell stories."),
+        LearnPhrase("die Oma", "grandma", "Meine Oma backt den besten Kuchen.", "My grandma bakes the best cake."),
+        LearnPhrase("der Onkel", "uncle", "Mein Onkel lebt in München.", "My uncle lives in Munich."),
+        LearnPhrase("die Tante", "aunt", "Meine Tante hat mich zum Geburtstag eingeladen.", "My aunt invited me to her birthday."),
+        LearnPhrase("der Cousin", "cousin (male)", "Mein Cousin studiert Medizin.", "My cousin studies medicine."),
+        LearnPhrase("die Cousine", "cousin (female)", "Meine Cousine ist sehr sportlich.", "My cousin is very athletic."),
+        LearnPhrase("das Kind", "child", "Die Kinder spielen im Garten.", "The children are playing in the garden."),
+        LearnPhrase("der Sohn", "son", "Ihr Sohn geht schon zur Schule.", "Her son already goes to school."),
+        LearnPhrase("die Tochter", "daughter", "Unsere Tochter lernt Klavier.", "Our daughter is learning piano."),
+        LearnPhrase("die Verwandten", "relatives", "Zu Weihnachten besuchen wir unsere Verwandten.", "At Christmas we visit our relatives."),
+        LearnPhrase("die Hochzeit", "wedding", "Die Hochzeit findet im Sommer statt.", "The wedding takes place in summer."),
+        LearnPhrase("geschieden", "divorced", "Meine Eltern sind seit fünf Jahren geschieden.", "My parents have been divorced for five years."),
+        LearnPhrase("verheiratet", "married", "Sie ist seit drei Jahren verheiratet.", "She has been married for three years.")
+    )
+)
+
+val WortschatzArbeit = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_ARBEIT,
+    phrases = listOf(
+        LearnPhrase("der Beruf", "profession", "Was ist dein Beruf?", "What is your profession?"),
+        LearnPhrase("die Arbeit", "work", "Die Arbeit macht mir viel Spaß.", "I enjoy my work a lot."),
+        LearnPhrase("der Job", "job", "Er sucht einen neuen Job.", "He is looking for a new job."),
+        LearnPhrase("arbeiten", "to work", "Ich arbeite in einer Bank.", "I work in a bank."),
+        LearnPhrase("der Chef", "boss", "Mein Chef ist sehr nett.", "My boss is very nice."),
+        LearnPhrase("die Chefin", "boss (female)", "Unsere Chefin kommt aus Spanien.", "Our boss comes from Spain."),
+        LearnPhrase("der Kollege", "colleague", "Meine Kollegen sind hilfsbereit.", "My colleagues are helpful."),
+        LearnPhrase("die Firma", "company", "Die Firma hat 200 Mitarbeiter.", "The company has 200 employees."),
+        LearnPhrase("das Büro", "office", "Wir arbeiten in einem modernen Büro.", "We work in a modern office."),
+        LearnPhrase("der Termin", "appointment", "Ich habe morgen einen wichtigen Termin.", "I have an important appointment tomorrow."),
+        LearnPhrase("die Besprechung", "meeting", "Die Besprechung dauert eine Stunde.", "The meeting lasts one hour."),
+        LearnPhrase("das Gehalt", "salary", "Das Gehalt wird am Ende des Monats überwiesen.", "The salary is transferred at the end of the month."),
+        LearnPhrase("die Bewerbung", "application", "Ich habe meine Bewerbung abgeschickt.", "I sent my application."),
+        LearnPhrase("das Vorstellungsgespräch", "job interview", "Morgen habe ich ein Vorstellungsgespräch.", "Tomorrow I have a job interview."),
+        LearnPhrase("die Kündigung", "resignation", "Er hat seine Kündigung eingereicht.", "He handed in his resignation."),
+        LearnPhrase("die Überstunden", "overtime", "Diese Woche habe ich viele Überstunden gemacht.", "I worked a lot of overtime this week."),
+        LearnPhrase("die Pause", "break", "In der Pause gehe ich oft spazieren.", "During the break I often go for a walk."),
+        LearnPhrase("der Urlaub", "vacation", "Nächste Woche habe ich Urlaub.", "Next week I have vacation."),
+        LearnPhrase("die Weiterbildung", "further education", "Die Firma bezahlt meine Weiterbildung.", "The company pays for my further education."),
+        LearnPhrase("selbstständig", "self-employed", "Er ist selbstständig und hat eine kleine Firma.", "He is self-employed and has a small company.")
+    )
+)
+
+val WortschatzFreizeit = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_FREIZEIT,
+    phrases = listOf(
+        LearnPhrase("die Freizeit", "free time", "In meiner Freizeit lese ich gern.", "In my free time I like to read."),
+        LearnPhrase("das Hobby", "hobby", "Mein Hobby ist Fotografieren.", "My hobby is photography."),
+        LearnPhrase("spielen", "to play", "Die Kinder spielen im Park.", "The children are playing in the park."),
+        LearnPhrase("lesen", "to read", "Ich lese gerade einen spannenden Roman.", "I'm currently reading an exciting novel."),
+        LearnPhrase("das Buch", "book", "Das Buch hat mir sehr gut gefallen.", "I really liked the book."),
+        LearnPhrase("der Film", "movie", "Hast du den neuen Film gesehen?", "Have you seen the new movie?"),
+        LearnPhrase("das Kino", "cinema", "Wir gehen heute Abend ins Kino.", "We're going to the cinema tonight."),
+        LearnPhrase("das Theater", "theater", "Im Theater gibt es eine neue Aufführung.", "There's a new performance at the theater."),
+        LearnPhrase("das Konzert", "concert", "Das Konzert war fantastisch.", "The concert was fantastic."),
+        LearnPhrase("der Sport", "sport", "Sport hält fit und gesund.", "Sport keeps you fit and healthy."),
+        LearnPhrase("Fußball", "soccer", "Er spielt jeden Samstag Fußball.", "He plays soccer every Saturday."),
+        LearnPhrase("schwimmen", "to swim", "Im Sommer gehe ich oft schwimmen.", "In summer I often go swimming."),
+        LearnPhrase("wandern", "to hike", "Am Wochenende wandern wir in den Bergen.", "On weekends we hike in the mountains."),
+        LearnPhrase("reisen", "to travel", "Ich reise sehr gerne und entdecke neue Orte.", "I love to travel and discover new places."),
+        LearnPhrase("das Museum", "museum", "Im Museum gibt es eine interessante Ausstellung.", "There's an interesting exhibition at the museum."),
+        LearnPhrase("die Musik", "music", "Ich höre gern klassische Musik.", "I like listening to classical music."),
+        LearnPhrase("das Instrument", "instrument", "Kannst du ein Instrument spielen?", "Can you play an instrument?"),
+        LearnPhrase("das Klavier", "piano", "Sie spielt sehr gut Klavier.", "She plays the piano very well."),
+        LearnPhrase("die Gitarre", "guitar", "Er lernt gerade Gitarre.", "He's currently learning guitar."),
+        LearnPhrase("der Verein", "club", "Ich bin in einem Sportverein.", "I'm in a sports club.")
+    )
+)
+
+val WortschatzReisen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_REISEN,
+    phrases = listOf(
+        LearnPhrase("die Reise", "trip", "Die Reise nach Italien war wunderschön.", "The trip to Italy was beautiful."),
+        LearnPhrase("reisen", "to travel", "Wir reisen nächste Woche nach Spanien.", "We're traveling to Spain next week."),
+        LearnPhrase("der Urlaub", "vacation", "Im Urlaub fahre ich ans Meer.", "On vacation I go to the sea."),
+        LearnPhrase("das Hotel", "hotel", "Das Hotel hat einen Pool.", "The hotel has a pool."),
+        LearnPhrase("die Unterkunft", "accommodation", "Wir suchen eine günstige Unterkunft.", "We're looking for affordable accommodation."),
+        LearnPhrase("das Flugzeug", "airplane", "Wir fliegen mit dem Flugzeug.", "We're flying by plane."),
+        LearnPhrase("der Flughafen", "airport", "Am Flughafen müssen wir lange warten.", "At the airport we have to wait a long time."),
+        LearnPhrase("der Zug", "train", "Der Zug hat Verspätung.", "The train is delayed."),
+        LearnPhrase("der Bahnhof", "train station", "Vom Bahnhof sind es nur fünf Minuten.", "From the train station it's only five minutes."),
+        LearnPhrase("das Auto", "car", "Wir fahren mit dem Auto in den Urlaub.", "We're going on vacation by car."),
+        LearnPhrase("der Bus", "bus", "Der Bus fährt alle 20 Minuten.", "The bus runs every 20 minutes."),
+        LearnPhrase("das Ticket", "ticket", "Hast du schon ein Ticket gekauft?", "Have you already bought a ticket?"),
+        LearnPhrase("die Fahrkarte", "train ticket", "Die Fahrkarte kostet 20 Euro.", "The train ticket costs 20 euros."),
+        LearnPhrase("der Pass", "passport", "Vergiss deinen Pass nicht!", "Don't forget your passport!"),
+        LearnPhrase("das Gepäck", "luggage", "Mein Gepäck ist zu schwer.", "My luggage is too heavy."),
+        LearnPhrase("der Koffer", "suitcase", "Ich packe meinen Koffer.", "I'm packing my suitcase."),
+        LearnPhrase("die Sehenswürdigkeit", "sight", "Der Eiffelturm ist die bekannteste Sehenswürdigkeit.", "The Eiffel Tower is the most famous sight."),
+        LearnPhrase("der Stadtplan", "city map", "Mit dem Stadtplan finden wir uns zurecht.", "With the city map we find our way around."),
+        LearnPhrase("die Reservierung", "reservation", "Ich habe eine Reservierung im Hotel.", "I have a reservation at the hotel."),
+        LearnPhrase("der Strand", "beach", "Der Strand ist sehr sauber.", "The beach is very clean.")
+    )
+)
+
+val WortschatzGesundheit = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_GESUNDHEIT,
+    phrases = listOf(
+        LearnPhrase("die Gesundheit", "health", "Gesundheit ist das Wichtigste.", "Health is the most important thing."),
+        LearnPhrase("der Arzt", "doctor", "Ich muss zum Arzt gehen.", "I have to go to the doctor."),
+        LearnPhrase("die Ärztin", "doctor (female)", "Meine Ärztin ist sehr freundlich.", "My doctor is very friendly."),
+        LearnPhrase("das Krankenhaus", "hospital", "Er wurde ins Krankenhaus gebracht.", "He was taken to the hospital."),
+        LearnPhrase("die Krankheit", "illness", "Die Krankheit dauert schon eine Woche.", "The illness has lasted a week."),
+        LearnPhrase("krank", "sick", "Ich bin heute krank und bleibe zu Hause.", "I'm sick today and staying home."),
+        LearnPhrase("die Medizin", "medicine", "Die Medizin hat mir schnell geholfen.", "The medicine helped me quickly."),
+        LearnPhrase("das Rezept", "prescription", "Der Arzt hat mir ein Rezept gegeben.", "The doctor gave me a prescription."),
+        LearnPhrase("die Apotheke", "pharmacy", "In der Apotheke kaufe ich Medikamente.", "I buy medicine at the pharmacy."),
+        LearnPhrase("der Schmerz", "pain", "Ich habe starke Kopfschmerzen.", "I have a strong headache."),
+        LearnPhrase("der Kopf", "head", "Mir tut der Kopf weh.", "My head hurts."),
+        LearnPhrase("der Rücken", "back", "Ich habe Rückenschmerzen vom langen Sitzen.", "I have back pain from sitting too long."),
+        LearnPhrase("das Fieber", "fever", "Das Kind hat hohes Fieber.", "The child has a high fever."),
+        LearnPhrase("der Husten", "cough", "Der Husten will einfach nicht aufhören.", "The cough just won't stop."),
+        LearnPhrase("der Schnupfen", "cold", "Mit Schnupfen kann ich nicht gut riechen.", "With a cold I can't smell well."),
+        LearnPhrase("die Allergie", "allergy", "Ich habe eine Allergie gegen Pollen.", "I have an allergy to pollen."),
+        LearnPhrase("gesund", "healthy", "Gesunde Ernährung ist wichtig.", "Healthy eating is important."),
+        LearnPhrase("sich wohlfühlen", "to feel well", "In diesem Kurs fühle ich mich wohl.", "I feel comfortable in this course."),
+        LearnPhrase("die Versicherung", "insurance", "Hast du eine Krankenversicherung?", "Do you have health insurance?"),
+        LearnPhrase("der Notfall", "emergency", "Im Notfall rufe ich den Notarzt.", "In an emergency I call the emergency doctor.")
+    )
+)
+val WortschatzWohnen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_WOHNEN,
+    phrases = listOf(
+        LearnPhrase("die Wohnung", "apartment", "Wir suchen eine neue Wohnung.", "We're looking for a new apartment."),
+        LearnPhrase("das Haus", "house", "Sie wohnen in einem Haus mit Garten.", "They live in a house with a garden."),
+        LearnPhrase("das Zimmer", "room", "Mein Zimmer ist 20 Quadratmeter groß.", "My room is 20 square meters."),
+        LearnPhrase("die Küche", "kitchen", "In der Küche kochen wir gemeinsam.", "In the kitchen we cook together."),
+        LearnPhrase("das Bad", "bathroom", "Das Bad ist neu renoviert.", "The bathroom is newly renovated."),
+        LearnPhrase("das Schlafzimmer", "bedroom", "Im Schlafzimmer steht ein großes Bett.", "In the bedroom there is a large bed."),
+        LearnPhrase("das Wohnzimmer", "living room", "Im Wohnzimmer sitzen wir abends zusammen.", "In the living room we sit together in the evening."),
+        LearnPhrase("der Balkon", "balcony", "Vom Balkon aus sieht man den Park.", "From the balcony you can see the park."),
+        LearnPhrase("die Miete", "rent", "Die Miete ist ziemlich hoch.", "The rent is quite high."),
+        LearnPhrase("der Vermieter", "landlord", "Der Vermieter ist sehr nett.", "The landlord is very nice."),
+        LearnPhrase("die Nachbarn", "neighbors", "Meine Nachbarn sind sehr freundlich.", "My neighbors are very friendly."),
+        LearnPhrase("der Umzug", "move", "Der Umzug war anstrengend.", "The move was exhausting."),
+        LearnPhrase("die Möbel", "furniture", "Wir brauchen neue Möbel für die Wohnung.", "We need new furniture for the apartment."),
+        LearnPhrase("der Tisch", "table", "Der Tisch ist aus Holz.", "The table is made of wood."),
+        LearnPhrase("der Stuhl", "chair", "Kannst du mir einen Stuhl bringen?", "Can you bring me a chair?"),
+        LearnPhrase("das Bett", "bed", "Ich gehe jetzt ins Bett.", "I'm going to bed now."),
+        LearnPhrase("der Schrank", "wardrobe", "Im Schrank hängen meine Kleider.", "My clothes hang in the wardrobe."),
+        LearnPhrase("die Lampe", "lamp", "Die Lampe gibt helles Licht.", "The lamp gives bright light."),
+        LearnPhrase("der Boden", "floor", "Der Boden ist aus Parkett.", "The floor is parquet."),
+        LearnPhrase("die Wand", "wall", "Die Wände sind weiß gestrichen.", "The walls are painted white.")
+    )
+)
+val WortschatzEinkaufen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_EINKAUFEN,
+    phrases = listOf(
+        LearnPhrase("einkaufen", "to shop", "Ich gehe heute einkaufen.", "I'm going shopping today."),
+        LearnPhrase("der Supermarkt", "supermarket", "Der Supermarkt hat lange geöffnet.", "The supermarket is open late."),
+        LearnPhrase("das Geschäft", "shop", "In der Stadt gibt es viele Geschäfte.", "There are many shops in the city."),
+        LearnPhrase("der Laden", "small shop", "Der kleine Laden verkauft Bio-Produkte.", "The small shop sells organic products."),
+        LearnPhrase("das Einkaufszentrum", "shopping mall", "Das Einkaufszentrum ist am Wochenende voll.", "The shopping mall is full on weekends."),
+        LearnPhrase("der Markt", "market", "Auf dem Markt kaufe ich frisches Gemüse.", "I buy fresh vegetables at the market."),
+        LearnPhrase("das Geld", "money", "Ich habe nicht genug Geld dabei.", "I don't have enough money with me."),
+        LearnPhrase("bezahlen", "to pay", "Wie möchten Sie bezahlen?", "How would you like to pay?"),
+        LearnPhrase("bar", "cash", "Ich bezahle lieber bar.", "I prefer to pay cash."),
+        LearnPhrase("mit Karte", "by card", "Kann ich mit Karte bezahlen?", "Can I pay by card?"),
+        LearnPhrase("der Preis", "price", "Der Preis ist zu hoch für mich.", "The price is too high for me."),
+        LearnPhrase("billig", "cheap", "Das ist ein billiges Angebot.", "That's a cheap offer."),
+        LearnPhrase("teuer", "expensive", "Diese Schuhe sind sehr teuer.", "These shoes are very expensive."),
+        LearnPhrase("das Angebot", "offer", "Es gibt ein Sonderangebot im Supermarkt.", "There's a special offer in the supermarket."),
+        LearnPhrase("der Rabatt", "discount", "Mit diesem Coupon bekommst du Rabatt.", "With this coupon you get a discount."),
+        LearnPhrase("die Tüte", "bag", "Brauchen Sie eine Tüte?", "Do you need a bag?"),
+        LearnPhrase("der Einkaufswagen", "shopping cart", "Wo finde ich einen Einkaufswagen?", "Where do I find a shopping cart?"),
+        LearnPhrase("die Kasse", "checkout", "Die Kasse ist gleich da vorne.", "The checkout is right there."),
+        LearnPhrase("das Wechselgeld", "change", "Hier ist Ihr Wechselgeld.", "Here is your change."),
+        LearnPhrase("der Bon", "receipt", "Ich brauche keinen Bon, danke.", "I don't need a receipt, thanks.")
+    )
+)
+val WortschatzBildung = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_BILDUNG,
+    phrases = listOf(
+        LearnPhrase("die Bildung", "education", "Bildung ist sehr wichtig für die Zukunft.", "Education is very important for the future."),
+        LearnPhrase("die Schule", "school", "Die Kinder gehen jeden Tag zur Schule.", "The children go to school every day."),
+        LearnPhrase("das Gymnasium", "grammar school", "Er besucht das Gymnasium in der Stadt.", "He attends the grammar school in the city."),
+        LearnPhrase("die Universität", "university", "Sie studiert Medizin an der Universität.", "She studies medicine at the university."),
+        LearnPhrase("das Studium", "studies", "Mein Studium dauert drei Jahre.", "My studies take three years."),
+        LearnPhrase("der Student", "student (male)", "Der Student lernt viel für die Prüfung.", "The student studies a lot for the exam."),
+        LearnPhrase("die Studentin", "student (female)", "Die Studentin schreibt ihre Abschlussarbeit.", "The student is writing her thesis."),
+        LearnPhrase("der Lehrer", "teacher (male)", "Der Lehrer erklärt die Grammatik gut.", "The teacher explains the grammar well."),
+        LearnPhrase("die Lehrerin", "teacher (female)", "Die Lehrerin gibt uns Hausaufgaben.", "The teacher gives us homework."),
+        LearnPhrase("das Klassenzimmer", "classroom", "Im Klassenzimmer sitzen 25 Schüler.", "There are 25 students in the classroom."),
+        LearnPhrase("die Klasse", "class", "Unsere Klasse macht einen Ausflug.", "Our class is going on a trip."),
+        LearnPhrase("das Fach", "subject", "Welches Fach magst du am liebsten?", "Which subject do you like best?"),
+        LearnPhrase("die Prüfung", "exam", "Ich habe nächste Woche eine wichtige Prüfung.", "I have an important exam next week."),
+        LearnPhrase("lernen", "to learn", "Ich lerne jeden Tag Deutsch.", "I learn German every day."),
+        LearnPhrase("studieren", "to study (at university)", "Er studiert Informatik.", "He studies computer science."),
+        LearnPhrase("unterrichten", "to teach", "Frau Müller unterrichtet Englisch.", "Mrs. Müller teaches English."),
+        LearnPhrase("das Wissen", "knowledge", "Durch das Lernen erweitere ich mein Wissen.", "Through learning I expand my knowledge."),
+        LearnPhrase("die Fähigkeit", "skill", "Man braucht viele Fähigkeiten für diesen Beruf.", "One needs many skills for this job."),
+        LearnPhrase("der Kurs", "course", "Ich besuche einen Deutschkurs.", "I attend a German course."),
+        LearnPhrase("das Zertifikat", "certificate", "Am Ende bekommst du ein Zertifikat.", "At the end you will receive a certificate.")
+    )
+)
+val WortschatzUmwelt = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_UMWELT,
+    phrases = listOf(
+        LearnPhrase("die Umwelt", "environment", "Wir müssen die Umwelt schützen.", "We must protect the environment."),
+        LearnPhrase("die Natur", "nature", "In der Natur kann ich mich entspannen.", "In nature I can relax."),
+        LearnPhrase("der Wald", "forest", "Wir machen einen Spaziergang im Wald.", "We're taking a walk in the forest."),
+        LearnPhrase("der Fluss", "river", "Der Fluss fließt durch die Stadt.", "The river flows through the city."),
+        LearnPhrase("der See", "lake", "Am See können wir schwimmen gehen.", "At the lake we can go swimming."),
+        LearnPhrase("das Meer", "sea", "Wir fahren ans Meer in den Urlaub.", "We're going to the sea for vacation."),
+        LearnPhrase("die Luft", "air", "Die Luft hier ist sehr sauber.", "The air here is very clean."),
+        LearnPhrase("das Wetter", "weather", "Das Wetter ist heute wunderschön.", "The weather is beautiful today."),
+        LearnPhrase("die Sonne", "sun", "Die Sonne scheint und es ist warm.", "The sun is shining and it's warm."),
+        LearnPhrase("der Regen", "rain", "Ich mag den Regen nicht so gern.", "I don't like the rain very much."),
+        LearnPhrase("der Wind", "wind", "Der Wind weht stark heute.", "The wind is blowing strongly today."),
+        LearnPhrase("die Temperatur", "temperature", "Die Temperatur ist angenehm.", "The temperature is pleasant."),
+        LearnPhrase("die Energie", "energy", "Wir sparen Energie zu Hause.", "We save energy at home."),
+        LearnPhrase("die erneuerbare Energie", "renewable energy", "Windkraft ist eine erneuerbare Energie.", "Wind power is a renewable energy."),
+        LearnPhrase("die Umweltverschmutzung", "pollution", "Umweltverschmutzung ist ein großes Problem.", "Pollution is a big problem."),
+        LearnPhrase("der Müll", "trash", "Bitte trenne deinen Müll.", "Please separate your trash."),
+        LearnPhrase("das Recycling", "recycling", "Recycling hilft der Umwelt.", "Recycling helps the environment."),
+        LearnPhrase("die Plastikflasche", "plastic bottle", "Bitte wirf die Plastikflasche in den gelben Sack.", "Please throw the plastic bottle in the yellow bag."),
+        LearnPhrase("der Umweltschutz", "environmental protection", "Umweltschutz ist wichtig für uns alle.", "Environmental protection is important for all of us."),
+        LearnPhrase("nachhaltig", "sustainable", "Wir leben nachhaltiger.", "We live more sustainably.")
+    )
+)
+val WortschatzEssen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_ESSEN,
+    phrases = listOf(
+        LearnPhrase("das Essen", "food", "Das Essen schmeckt sehr gut.", "The food tastes very good."),
+        LearnPhrase("trinken", "to drink", "Ich trinke gerne Tee.", "I like to drink tea."),
+        LearnPhrase("der Teller", "plate", "Der Teller ist leer.", "The plate is empty."),
+        LearnPhrase("die Gabel", "fork", "Kannst du mir eine Gabel geben?", "Can you give me a fork?"),
+        LearnPhrase("das Messer", "knife", "Das Messer ist scharf.", "The knife is sharp."),
+        LearnPhrase("der Löffel", "spoon", "Ich esse Suppe mit dem Löffel.", "I eat soup with a spoon."),
+        LearnPhrase("das Glas", "glass", "Das Glas ist voll Wasser.", "The glass is full of water."),
+        LearnPhrase("die Tasse", "cup", "Ich trinke Kaffee aus einer Tasse.", "I drink coffee from a cup."),
+        LearnPhrase("das Frühstück", "breakfast", "Zum Frühstück esse ich Müsli.", "For breakfast I eat cereal."),
+        LearnPhrase("das Mittagessen", "lunch", "Mittagessen gibt es um 12 Uhr.", "Lunch is at 12 o'clock."),
+        LearnPhrase("das Abendessen", "dinner", "Zum Abendessen gibt es Brot.", "For dinner there is bread."),
+        LearnPhrase("kochen", "to cook", "Ich koche heute Abend Pasta.", "I'm cooking pasta tonight."),
+        LearnPhrase("backen", "to bake", "Meine Oma backt Kuchen.", "My grandma bakes cake."),
+        LearnPhrase("salzig", "salty", "Die Suppe ist zu salzig.", "The soup is too salty."),
+        LearnPhrase("süß", "sweet", "Ich mag süße Dinge.", "I like sweet things."),
+        LearnPhrase("der Hunger", "hunger", "Ich habe großen Hunger.", "I'm very hungry."),
+        LearnPhrase("der Durst", "thirst", "Nach dem Sport habe ich Durst.", "After sports I'm thirsty."),
+        LearnPhrase("das Rezept", "recipe", "Das Rezept ist einfach.", "The recipe is simple."),
+        LearnPhrase("die Zutat", "ingredient", "Welche Zutaten brauchen wir?", "Which ingredients do we need?"),
+        LearnPhrase("der Geschmack", "taste", "Der Kuchen hat einen guten Geschmack.", "The cake has a good taste.")
+    )
+)
+
+val WortschatzKleidung = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_KLEIDUNG,
+    phrases = listOf(
+        LearnPhrase("die Kleidung", "clothing", "Ich kaufe neue Kleidung.", "I'm buying new clothes."),
+        LearnPhrase("das Hemd", "shirt", "Er trägt ein weißes Hemd.", "He wears a white shirt."),
+        LearnPhrase("die Hose", "pants", "Die Hose ist zu lang.", "The pants are too long."),
+        LearnPhrase("das Kleid", "dress", "Sie hat ein schönes Kleid an.", "She is wearing a beautiful dress."),
+        LearnPhrase("der Rock", "skirt", "Der Rock ist kurz.", "The skirt is short."),
+        LearnPhrase("die Jacke", "jacket", "Zieh deine Jacke an, es ist kalt.", "Put on your jacket, it's cold."),
+        LearnPhrase("der Mantel", "coat", "Im Winter trage ich einen Mantel.", "In winter I wear a coat."),
+        LearnPhrase("die Schuhe", "shoes", "Meine Schuhe sind neu.", "My shoes are new."),
+        LearnPhrase("die Socken", "socks", "Ich brauche neue Socken.", "I need new socks."),
+        LearnPhrase("der Hut", "hat", "Der Hut steht dir gut.", "The hat looks good on you."),
+        LearnPhrase("die Mütze", "cap", "Im Sommer trage ich eine Mütze.", "In summer I wear a cap."),
+        LearnPhrase("der Schal", "scarf", "Der Schal ist aus Wolle.", "The scarf is made of wool."),
+        LearnPhrase("die Handschuhe", "gloves", "Ohne Handschuhe frieren meine Hände.", "Without gloves my hands get cold."),
+        LearnPhrase("anziehen", "to put on", "Ich ziehe mich schnell an.", "I get dressed quickly."),
+        LearnPhrase("ausziehen", "to take off", "Zieh die Schuhe aus!", "Take off your shoes!"),
+        LearnPhrase("tragen", "to wear", "Was trägst du heute?", "What are you wearing today?"),
+        LearnPhrase("passen", "to fit", "Die Hose passt mir gut.", "The pants fit me well."),
+        LearnPhrase("die Größe", "size", "Welche Größe hast du?", "What size do you have?"),
+        LearnPhrase("die Farbe", "color", "Die Farbe gefällt mir.", "I like the color."),
+        LearnPhrase("modisch", "fashionable", "Sie kleidet sich sehr modisch.", "She dresses very fashionably.")
+    )
+)
+val WortschatzVerkehr = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_VERKEHR,
+    phrases = listOf(
+        LearnPhrase("das Auto", "car", "Das Auto ist rot.", "The car is red."),
+        LearnPhrase("der Bus", "bus", "Der Bus kommt pünktlich.", "The bus arrives on time."),
+        LearnPhrase("der Zug", "train", "Der Zug fährt nach Berlin.", "The train goes to Berlin."),
+        LearnPhrase("die Straßenbahn", "tram", "Ich fahre mit der Straßenbahn zur Arbeit.", "I take the tram to work."),
+        LearnPhrase("das Fahrrad", "bicycle", "Er fährt mit dem Fahrrad.", "He rides a bicycle."),
+        LearnPhrase("der Fußgänger", "pedestrian", "Achtung Fußgänger!", "Caution pedestrians!"),
+        LearnPhrase("die Ampel", "traffic light", "Die Ampel ist rot.", "The traffic light is red."),
+        LearnPhrase("die Straße", "street", "Die Straße ist eng.", "The street is narrow."),
+        LearnPhrase("der Verkehr", "traffic", "Im Berufsverkehr ist viel los.", "There's a lot of traffic during rush hour."),
+        LearnPhrase("parken", "to park", "Wo kann ich parken?", "Where can I park?")
+    )
+)
+
+val WortschatzMedien = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_MEDIEN,
+    phrases = listOf(
+        LearnPhrase("das Internet", "internet", "Im Internet finde ich viele Informationen.", "On the internet I find a lot of information."),
+        LearnPhrase("der Computer", "computer", "Ich arbeite am Computer.", "I work on the computer."),
+        LearnPhrase("das Handy", "mobile phone", "Mein Handy ist neu.", "My mobile phone is new."),
+        LearnPhrase("das Fernsehen", "television", "Abends sehe ich fern.", "In the evening I watch TV."),
+        LearnPhrase("der Film", "movie", "Der Film war spannend.", "The movie was exciting."),
+        LearnPhrase("die Zeitung", "newspaper", "Liest du täglich Zeitung?", "Do you read the newspaper daily?"),
+        LearnPhrase("das Radio", "radio", "Im Auto höre ich Radio.", "In the car I listen to the radio."),
+        LearnPhrase("die Nachrichten", "news", "Die Nachrichten sind um 20 Uhr.", "The news is at 8 p.m."),
+        LearnPhrase("die Website", "website", "Die Website ist sehr nützlich.", "The website is very useful."),
+        LearnPhrase("die App", "app", "Ich nutze eine App zum Deutschlernen.", "I use an app to learn German.")
+    )
+)
+val WortschatzGefühle = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_GEFÜHLE,
+    phrases = listOf(
+        LearnPhrase("die Freude", "joy", "Die Freude war groß, als wir uns wiedersahen.", "The joy was great when we saw each other again."),
+        LearnPhrase("die Trauer", "sadness", "Nach dem Abschied spürte ich tiefe Trauer.", "After the goodbye I felt deep sadness."),
+        LearnPhrase("die Wut", "anger", "Er konnte seine Wut kaum kontrollieren.", "He could hardly control his anger."),
+        LearnPhrase("die Angst", "fear", "Sie hat Angst vor Spinnen.", "She is afraid of spiders."),
+        LearnPhrase("die Liebe", "love", "Die Liebe zu meiner Familie ist sehr wichtig.", "Love for my family is very important."),
+        LearnPhrase("das Glück", "happiness", "Ich wünsche dir viel Glück!", "I wish you lots of happiness!"),
+        LearnPhrase("die Enttäuschung", "disappointment", "Die Enttäuschung war groß, als das Konzert ausfiel.", "The disappointment was great when the concert was cancelled."),
+        LearnPhrase("die Überraschung", "surprise", "Was für eine schöne Überraschung!", "What a nice surprise!"),
+        LearnPhrase("die Aufregung", "excitement", "Vor der Prüfung spürte ich große Aufregung.", "Before the exam I felt great excitement."),
+        LearnPhrase("die Zufriedenheit", "contentment", "Zufriedenheit ist wichtig für ein glückliches Leben.", "Contentment is important for a happy life."),
+        LearnPhrase("die Sehnsucht", "longing", "Ich habe Sehnsucht nach der Heimat.", "I long for home."),
+        LearnPhrase("das Mitgefühl", "compassion", "Sie zeigte viel Mitgefühl für die Kranken.", "She showed a lot of compassion for the sick."),
+        LearnPhrase("die Eifersucht", "jealousy", "Eifersucht kann Beziehungen zerstören.", "Jealousy can destroy relationships."),
+        LearnPhrase("die Scham", "shame", "Er fühlte große Scham wegen seines Fehlers.", "He felt great shame because of his mistake."),
+        LearnPhrase("der Stolz", "pride", "Sie blickte voller Stolz auf ihre Kinder.", "She looked at her children with pride.")
+    )
+)
+
+val WortschatzBeziehungen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_BEZIEHUNGEN,
+    phrases = listOf(
+        LearnPhrase("die Freundschaft", "friendship", "Unsere Freundschaft hält schon viele Jahre.", "Our friendship has lasted many years."),
+        LearnPhrase("der Freund / die Freundin", "friend (male/female)", "Mein bester Freund heißt Tom.", "My best friend's name is Tom."),
+        LearnPhrase("die Bekanntschaft", "acquaintance", "Wir haben eine flüchtige Bekanntschaft gemacht.", "We made a casual acquaintance."),
+        LearnPhrase("die Partnerschaft", "partnership", "Sie führen eine glückliche Partnerschaft.", "They have a happy partnership."),
+        LearnPhrase("der Partner / die Partnerin", "partner", "Mein Partner unterstützt mich immer.", "My partner always supports me."),
+        LearnPhrase("die Ehe", "marriage", "Sie sind seit zehn Jahren in der Ehe.", "They have been married for ten years."),
+        LearnPhrase("der Ehemann", "husband", "Ihr Ehemann arbeitet im Ausland.", "Her husband works abroad."),
+        LearnPhrase("die Ehefrau", "wife", "Seine Ehefrau ist Ärztin.", "His wife is a doctor."),
+        LearnPhrase("die Verlobung", "engagement", "Die Verlobung wurde letzte Woche bekannt gegeben.", "The engagement was announced last week."),
+        LearnPhrase("die Scheidung", "divorce", "Nach der Scheidung zog er in eine andere Stadt.", "After the divorce he moved to another city."),
+        LearnPhrase("sich trennen", "to separate", "Das Paar hat sich nach fünf Jahren getrennt.", "The couple separated after five years."),
+        LearnPhrase("vertrauen", "to trust", "Ich vertraue meiner besten Freundin vollkommen.", "I completely trust my best friend."),
+        LearnPhrase("sich streiten", "to argue", "Geschwister streiten sich manchmal um Kleinigkeiten.", "Siblings sometimes argue about small things."),
+        LearnPhrase("sich versöhnen", "to reconcile", "Nach dem Streit haben sie sich schnell versöhnt.", "After the argument they quickly reconciled."),
+        LearnPhrase("gemeinsam", "together", "Wir verbringen viel Zeit gemeinsam.", "We spend a lot of time together."),
+        LearnPhrase("der Kontakt", "contact", "Ich habe noch Kontakt zu meinen alten Schulfreunden.", "I'm still in contact with my old school friends.")
+    )
+)
+
+val WortschatzKultur = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_KULTUR,
+    phrases = listOf(
+        LearnPhrase("die Kultur", "culture", "Die deutsche Kultur ist vielfältig.", "German culture is diverse."),
+        LearnPhrase("die Kunst", "art", "Moderne Kunst gefällt mir nicht immer.", "I don't always like modern art."),
+        LearnPhrase("das Museum", "museum", "Im Museum gibt es eine neue Ausstellung.", "There's a new exhibition at the museum."),
+        LearnPhrase("die Ausstellung", "exhibition", "Die Ausstellung war sehr interessant.", "The exhibition was very interesting."),
+        LearnPhrase("das Theater", "theater", "Wir gehen morgen ins Theater.", "We're going to the theater tomorrow."),
+        LearnPhrase("das Konzert", "concert", "Das Konzert war ausverkauft.", "The concert was sold out."),
+        LearnPhrase("die Oper", "opera", "Sie singt in der Oper.", "She sings in the opera."),
+        LearnPhrase("das Ballett", "ballet", "Ballett erfordert viel Disziplin.", "Ballet requires a lot of discipline."),
+        LearnPhrase("der Film", "movie", "Der Film hat einen Oscar gewonnen.", "The movie won an Oscar."),
+        LearnPhrase("die Musik", "music", "Klassische Musik entspannt mich.", "Classical music relaxes me."),
+        LearnPhrase("das Instrument", "instrument", "Kannst du ein Instrument spielen?", "Can you play an instrument?"),
+        LearnPhrase("der Künstler", "artist", "Der Künstler malt abstrakte Bilder.", "The artist paints abstract pictures."),
+        LearnPhrase("die Tradition", "tradition", "Zu Weihnachten haben wir viele Traditionen.", "At Christmas we have many traditions."),
+        LearnPhrase("das Fest", "festival", "Das Oktoberfest ist ein berühmtes Fest.", "Oktoberfest is a famous festival."),
+        LearnPhrase("der Brauch", "custom", "In meiner Heimat gibt es einen alten Brauch.", "In my homeland there is an old custom."),
+        LearnPhrase("die Literatur", "literature", "Deutsche Literatur ist weltbekannt.", "German literature is world-famous.")
+    )
+)
+
+val WortschatzStadt = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_STADT,
+    phrases = listOf(
+        LearnPhrase("die Stadt", "city", "Berlin ist eine große Stadt.", "Berlin is a big city."),
+        LearnPhrase("die Innenstadt", "city center", "In der Innenstadt gibt es viele Geschäfte.", "There are many shops in the city center."),
+        LearnPhrase("das Zentrum", "center", "Das Zentrum ist leicht zu erreichen.", "The center is easy to reach."),
+        LearnPhrase("der Stadtteil", "district", "Welcher Stadtteil gefällt dir am besten?", "Which district do you like best?"),
+        LearnPhrase("die Straße", "street", "In dieser Straße wohnen viele Leute.", "Many people live on this street."),
+        LearnPhrase("der Platz", "square", "Der Marktplatz ist sehr belebt.", "The market square is very lively."),
+        LearnPhrase("die Ampel", "traffic light", "Warte auf die grüne Ampel!", "Wait for the green light!"),
+        LearnPhrase("die Kreuzung", "intersection", "An der Kreuzung musst du links abbiegen.", "At the intersection you have to turn left."),
+        LearnPhrase("die Bushaltestelle", "bus stop", "Die Bushaltestelle ist gleich um die Ecke.", "The bus stop is just around the corner."),
+        LearnPhrase("der Bahnhof", "train station", "Vom Bahnhof fahren Züge in alle Richtungen.", "Trains depart from the station in all directions."),
+        LearnPhrase("das Rathaus", "town hall", "Das Rathaus ist ein altes Gebäude.", "The town hall is an old building."),
+        LearnPhrase("die Kirche", "church", "Die Kirche hat einen hohen Turm.", "The church has a high tower."),
+        LearnPhrase("das Krankenhaus", "hospital", "Das Krankenhaus ist nicht weit von hier.", "The hospital is not far from here."),
+        LearnPhrase("die Schule", "school", "Die Kinder gehen zu Fuß zur Schule.", "The children walk to school."),
+        LearnPhrase("der Park", "park", "Im Park kann man spazieren gehen.", "You can go for a walk in the park."),
+        LearnPhrase("die Fußgängerzone", "pedestrian zone", "In der Fußgängerzone darf man nicht Auto fahren.", "You're not allowed to drive in the pedestrian zone.")
+    )
+)
+
+val WortschatzLand = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_LAND,
+    phrases = listOf(
+        LearnPhrase("das Land", "countryside / country", "Auf dem Land ist es ruhiger.", "It's quieter in the countryside."),
+        LearnPhrase("das Dorf", "village", "Wir wohnen in einem kleinen Dorf.", "We live in a small village."),
+        LearnPhrase("die Natur", "nature", "Ich liebe die Natur und die frische Luft.", "I love nature and the fresh air."),
+        LearnPhrase("der Wald", "forest", "Im Wald kann man gut spazieren gehen.", "You can go for a good walk in the forest."),
+        LearnPhrase("die Wiese", "meadow", "Auf der Wiese blühen viele Blumen.", "Many flowers bloom in the meadow."),
+        LearnPhrase("das Feld", "field", "Die Bauern arbeiten auf dem Feld.", "The farmers work in the field."),
+        LearnPhrase("der Berg", "mountain", "Im Sommer wandern wir in den Bergen.", "In summer we hike in the mountains."),
+        LearnPhrase("der Hügel", "hill", "Der Hügel bietet eine schöne Aussicht.", "The hill offers a nice view."),
+        LearnPhrase("der Fluss", "river", "Der Fluss fließt durch die Stadt.", "The river flows through the city."),
+        LearnPhrase("der See", "lake", "Am See kann man baden.", "You can swim in the lake."),
+        LearnPhrase("das Meer", "sea", "Im Urlaub fahren wir ans Meer.", "On vacation we go to the sea."),
+        LearnPhrase("die Luft", "air", "Hier auf dem Land ist die Luft sauber.", "Here in the countryside the air is clean."),
+        LearnPhrase("der Bauer", "farmer", "Der Bauer hat viele Kühe.", "The farmer has many cows."),
+        LearnPhrase("die Ernte", "harvest", "Im Herbst ist die Erntezeit.", "In autumn it's harvest time."),
+        LearnPhrase("das Vieh", "livestock", "Das Vieh steht auf der Weide.", "The livestock is in the pasture."),
+        LearnPhrase("ruhig", "quiet", "Auf dem Land ist es sehr ruhig.", "In the countryside it's very quiet.")
+    )
+)
+
+val WortschatzWetter = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_WETTER,
+    phrases = listOf(
+        LearnPhrase("das Wetter", "weather", "Das Wetter ist heute schön.", "The weather is nice today."),
+        LearnPhrase("die Sonne", "sun", "Die Sonne scheint warm.", "The sun is shining warmly."),
+        LearnPhrase("der Regen", "rain", "Der Regen hört bald auf.", "The rain will stop soon."),
+        LearnPhrase("der Schnee", "snow", "Im Winter liegt Schnee.", "In winter there is snow."),
+        LearnPhrase("der Wind", "wind", "Ein starker Wind weht vom Meer.", "A strong wind is blowing from the sea."),
+        LearnPhrase("die Wolke", "cloud", "Am Himmel sind viele Wolken.", "There are many clouds in the sky."),
+        LearnPhrase("der Sturm", "storm", "Der Sturm hat Bäume umgeworfen.", "The storm knocked down trees."),
+        LearnPhrase("das Gewitter", "thunderstorm", "Nach dem Gewitter ist die Luft frisch.", "After the thunderstorm the air is fresh."),
+        LearnPhrase("der Nebel", "fog", "Im Herbst gibt es oft Nebel.", "In autumn there is often fog."),
+        LearnPhrase("die Temperatur", "temperature", "Die Temperatur steigt auf 25 Grad.", "The temperature rises to 25 degrees."),
+        LearnPhrase("kalt", "cold", "Heute ist es sehr kalt.", "Today it's very cold."),
+        LearnPhrase("warm", "warm", "Im Sommer ist es warm.", "In summer it's warm."),
+        LearnPhrase("heiß", "hot", "Bei diesem heißen Wetter gehe ich nicht raus.", "In this hot weather I'm not going out."),
+        LearnPhrase("kühl", "cool", "Abends wird es kühl.", "In the evening it gets cool."),
+        LearnPhrase("regnerisch", "rainy", "Der Tag ist regnerisch.", "The day is rainy."),
+        LearnPhrase("sonnig", "sunny", "Morgen wird es sonnig.", "Tomorrow will be sunny.")
+    )
+)
+
+val WortschatzZeit = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_ZEIT,
+    phrases = listOf(
+        LearnPhrase("die Zeit", "time", "Ich habe leider keine Zeit.", "Unfortunately I have no time."),
+        LearnPhrase("die Uhr", "clock/watch", "Meine Uhr geht fünf Minuten vor.", "My watch is five minutes fast."),
+        LearnPhrase("die Stunde", "hour", "Der Film dauert zwei Stunden.", "The movie lasts two hours."),
+        LearnPhrase("die Minute", "minute", "Ich komme in zehn Minuten.", "I'll come in ten minutes."),
+        LearnPhrase("die Sekunde", "second", "Warte eine Sekunde!", "Wait a second!"),
+        LearnPhrase("der Tag", "day", "Heute ist ein schöner Tag.", "Today is a nice day."),
+        LearnPhrase("die Woche", "week", "Nächste Woche habe ich Urlaub.", "Next week I have vacation."),
+        LearnPhrase("der Monat", "month", "Im Mai fängt der Kurs an.", "The course starts in May."),
+        LearnPhrase("das Jahr", "year", "Dieses Jahr möchte ich mehr reisen.", "This year I want to travel more."),
+        LearnPhrase("die Jahreszeit", "season", "Der Herbst ist meine Lieblingsjahreszeit.", "Autumn is my favorite season."),
+        LearnPhrase("der Frühling", "spring", "Im Frühling blühen die Blumen.", "In spring the flowers bloom."),
+        LearnPhrase("der Sommer", "summer", "Im Sommer gehe ich oft schwimmen.", "In summer I often go swimming."),
+        LearnPhrase("der Herbst", "autumn", "Im Herbst fallen die Blätter.", "In autumn the leaves fall."),
+        LearnPhrase("der Winter", "winter", "Im Winter ist es kalt.", "In winter it's cold."),
+        LearnPhrase("heute", "today", "Heute habe ich viel zu tun.", "Today I have a lot to do."),
+        LearnPhrase("morgen", "tomorrow", "Morgen fahre ich nach Berlin.", "Tomorrow I'm going to Berlin."),
+        LearnPhrase("gestern", "yesterday", "Gestern war ich im Kino.", "Yesterday I was at the cinema."),
+        LearnPhrase("früh", "early", "Ich stehe immer früh auf.", "I always get up early."),
+        LearnPhrase("spät", "late", "Entschuldigung, ich bin zu spät.", "Sorry, I'm too late.")
+    )
+)
+
+val WortschatzZahlen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_ZAHLEN,
+    phrases = listOf(
+        LearnPhrase("null", "zero", "Die Temperatur fällt auf null Grad.", "The temperature drops to zero degrees."),
+        LearnPhrase("eins", "one", "Ich habe einen Bruder.", "I have one brother."),
+        LearnPhrase("zwei", "two", "Wir haben zwei Katzen.", "We have two cats."),
+        LearnPhrase("drei", "three", "Der Kurs dauert drei Monate.", "The course lasts three months."),
+        LearnPhrase("vier", "four", "Die Wohnung hat vier Zimmer.", "The apartment has four rooms."),
+        LearnPhrase("fünf", "five", "Ich bin vor fünf Minuten angekommen.", "I arrived five minutes ago."),
+        LearnPhrase("sechs", "six", "Er hat sechs Geschwister.", "He has six siblings."),
+        LearnPhrase("sieben", "seven", "Die Woche hat sieben Tage.", "The week has seven days."),
+        LearnPhrase("acht", "eight", "Um acht Uhr beginnt der Unterricht.", "Class starts at eight o'clock."),
+        LearnPhrase("neun", "nine", "Das Kind ist neun Jahre alt.", "The child is nine years old."),
+        LearnPhrase("zehn", "ten", "Zehn Euro kostet das Buch.", "The book costs ten euros."),
+        LearnPhrase("elf", "eleven", "Die Mannschaft hat elf Spieler.", "The team has eleven players."),
+        LearnPhrase("zwölf", "twelve", "Zwölf Monate hat ein Jahr.", "A year has twelve months."),
+        LearnPhrase("hundert", "hundred", "Die Rechnung beträgt hundert Euro.", "The bill is a hundred euros."),
+        LearnPhrase("tausend", "thousand", "Tausend Dank für deine Hilfe!", "A thousand thanks for your help!"),
+        LearnPhrase("die Zahl", "number", "Kannst du die Zahl lesen?", "Can you read the number?"),
+        LearnPhrase("zählen", "to count", "Das Kind kann schon bis zehn zählen.", "The child can already count to ten.")
+    )
+)
+
+val WortschatzFarben = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_FARBEN,
+    phrases = listOf(
+        LearnPhrase("rot", "red", "Ihr Auto ist rot.", "Her car is red."),
+        LearnPhrase("blau", "blue", "Der Himmel ist blau.", "The sky is blue."),
+        LearnPhrase("grün", "green", "Die Wiese ist grün.", "The meadow is green."),
+        LearnPhrase("gelb", "yellow", "Die Sonne ist gelb.", "The sun is yellow."),
+        LearnPhrase("orange", "orange", "Die Bluse ist orange.", "The blouse is orange."),
+        LearnPhrase("lila", "purple", "Sie trägt ein lila Kleid.", "She wears a purple dress."),
+        LearnPhrase("rosa", "pink", "Das Kinderzimmer ist rosa gestrichen.", "The nursery is painted pink."),
+        LearnPhrase("braun", "brown", "Er hat braune Augen.", "He has brown eyes."),
+        LearnPhrase("schwarz", "black", "Nachts ist alles schwarz.", "At night everything is black."),
+        LearnPhrase("weiß", "white", "Im Winter ist alles weiß.", "In winter everything is white."),
+        LearnPhrase("grau", "gray", "Der Himmel ist heute grau.", "The sky is gray today."),
+        LearnPhrase("bunt", "colorful", "Im Herbst sind die Blätter bunt.", "In autumn the leaves are colorful."),
+        LearnPhrase("hell", "light", "Die Wand ist hellblau gestrichen.", "The wall is painted light blue."),
+        LearnPhrase("dunkel", "dark", "Er trägt einen dunkelblauen Anzug.", "He wears a dark blue suit."),
+        LearnPhrase("die Farbe", "color", "Welche Farbe hat dein Fahrrad?", "What color is your bike?")
+    )
+)
+
+val WortschatzKörper = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_KÖRPER,
+    phrases = listOf(
+        LearnPhrase("der Kopf", "head", "Mir tut der Kopf weh.", "My head hurts."),
+        LearnPhrase("das Gesicht", "face", "Sie hat ein freundliches Gesicht.", "She has a friendly face."),
+        LearnPhrase("die Augen", "eyes", "Er hat blaue Augen.", "He has blue eyes."),
+        LearnPhrase("die Nase", "nose", "Ich kann mit der Nase riechen.", "I can smell with my nose."),
+        LearnPhrase("der Mund", "mouth", "Öffne bitte den Mund.", "Please open your mouth."),
+        LearnPhrase("die Ohren", "ears", "Mit den Ohren höre ich Musik.", "With my ears I hear music."),
+        LearnPhrase("die Haare", "hair", "Sie hat lange blonde Haare.", "She has long blond hair."),
+        LearnPhrase("der Arm", "arm", "Er hat sich den Arm gebrochen.", "He broke his arm."),
+        LearnPhrase("die Hand", "hand", "Kannst du mir deine Hand geben?", "Can you give me your hand?"),
+        LearnPhrase("der Finger", "finger", "Sie trägt einen Ring am Finger.", "She wears a ring on her finger."),
+        LearnPhrase("das Bein", "leg", "Mein Bein tut weh.", "My leg hurts."),
+        LearnPhrase("der Fuß", "foot", "Der Fuß ist angeschwollen.", "The foot is swollen."),
+        LearnPhrase("der Rücken", "back", "Ich habe Rückenschmerzen vom Sitzen.", "I have back pain from sitting."),
+        LearnPhrase("der Bauch", "stomach", "Ich habe Schmerzen im Bauch.", "I have pain in my stomach."),
+        LearnPhrase("das Herz", "heart", "Mein Herz schlägt schnell.", "My heart beats fast."),
+        LearnPhrase("das Blut", "blood", "Er hat Blut gespendet.", "He donated blood.")
+    )
+)
+
+val WortschatzTiere = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_TIERE,
+    phrases = listOf(
+        LearnPhrase("der Hund", "dog", "Der Hund bellt laut.", "The dog barks loudly."),
+        LearnPhrase("die Katze", "cat", "Die Katze schläft auf dem Sofa.", "The cat sleeps on the sofa."),
+        LearnPhrase("das Pferd", "horse", "Sie reitet gern Pferd.", "She likes to ride horses."),
+        LearnPhrase("die Kuh", "cow", "Die Kuh gibt Milch.", "The cow gives milk."),
+        LearnPhrase("das Schwein", "pig", "Das Schwein ist rosa.", "The pig is pink."),
+        LearnPhrase("das Schaf", "sheep", "Die Schafe stehen auf der Wiese.", "The sheep are in the meadow."),
+        LearnPhrase("die Ziege", "goat", "Die Ziege frisst Gras.", "The goat eats grass."),
+        LearnPhrase("das Huhn", "chicken", "Das Huhn legt Eier.", "The chicken lays eggs."),
+        LearnPhrase("der Vogel", "bird", "Die Vögel singen am Morgen.", "The birds sing in the morning."),
+        LearnPhrase("der Fisch", "fish", "Im Aquarium schwimmen viele Fische.", "Many fish swim in the aquarium."),
+        LearnPhrase("die Maus", "mouse", "Die Maus hat Angst vor der Katze.", "The mouse is afraid of the cat."),
+        LearnPhrase("der Hase", "rabbit", "Der Hase hoppelt über das Feld.", "The rabbit hops across the field."),
+        LearnPhrase("der Bär", "bear", "Im Wald leben Bären.", "Bears live in the forest."),
+        LearnPhrase("der Wolf", "wolf", "Der Wolf heult den Mond an.", "The wolf howls at the moon."),
+        LearnPhrase("der Elefant", "elephant", "Der Elefant hat einen langen Rüssel.", "The elephant has a long trunk."),
+        LearnPhrase("der Löwe", "lion", "Der Löwe ist der König der Tiere.", "The lion is the king of animals.")
+    )
+)
+
+val WortschatzPflanzen = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_PFLANZEN,
+    phrases = listOf(
+        LearnPhrase("die Pflanze", "plant", "Die Pflanze braucht Wasser.", "The plant needs water."),
+        LearnPhrase("die Blume", "flower", "Die Blume duftet schön.", "The flower smells nice."),
+        LearnPhrase("der Baum", "tree", "Vor dem Haus steht ein großer Baum.", "There's a large tree in front of the house."),
+        LearnPhrase("der Wald", "forest", "Im Wald wachsen viele Bäume.", "Many trees grow in the forest."),
+        LearnPhrase("das Gras", "grass", "Das Gras ist frisch gemäht.", "The grass is freshly mown."),
+        LearnPhrase("das Blatt", "leaf", "Im Herbst werden die Blätter bunt.", "In autumn the leaves become colorful."),
+        LearnPhrase("die Blüte", "blossom", "Im Frühling zeigen die Bäume ihre Blüten.", "In spring the trees show their blossoms."),
+        LearnPhrase("die Wurzel", "root", "Die Wurzel der Pflanze ist tief.", "The root of the plant is deep."),
+        LearnPhrase("der Samen", "seed", "Aus dem Samen wächst eine neue Pflanze.", "A new plant grows from the seed."),
+        LearnPhrase("die Frucht", "fruit", "Der Apfelbaum trägt viele Früchte.", "The apple tree bears many fruits."),
+        LearnPhrase("das Gemüse", "vegetables", "Im Garten wachsen verschiedene Gemüsesorten.", "Various vegetables grow in the garden."),
+        LearnPhrase("die Tomate", "tomato", "Die Tomaten sind reif und rot.", "The tomatoes are ripe and red."),
+        LearnPhrase("der Apfel", "apple", "Äpfel sind gesund.", "Apples are healthy."),
+        LearnPhrase("die Birne", "pear", "Die Birne ist süß.", "The pear is sweet."),
+        LearnPhrase("die Banane", "banana", "Die Banane ist gelb.", "The banana is yellow."),
+        LearnPhrase("die Orange", "orange", "Orangen enthalten viel Vitamin C.", "Oranges contain a lot of vitamin C.")
+    )
+)
 
 // ─── All Learn Content (only vocabulary themes) ────────────────────────────────────────
 
@@ -1364,6 +1971,38 @@ val allCategories = listOf(
         title = "Sprechen B1",
         subtitle = "6 Dialoge und Präsentationen für die mündliche Prüfung",
         themes = listOf(SprechenB1Content)
+    ),
+    LearnCategory(
+        id = "wortschatz",
+        title = "Wortschatz",
+        subtitle = "B1-Wortschatz nach Themen geordnet",
+        themes = listOf(
+            WortschatzFamilie,
+            WortschatzArbeit,
+            WortschatzFreizeit,
+            WortschatzReisen,
+            WortschatzGesundheit,
+            WortschatzWohnen,
+            WortschatzEssen,
+            WortschatzEinkaufen,
+            WortschatzKleidung,
+            WortschatzVerkehr,
+            WortschatzUmwelt,
+            WortschatzBildung,
+            WortschatzMedien,
+            WortschatzGefühle,
+            WortschatzBeziehungen,
+            WortschatzKultur,
+            WortschatzStadt,
+            WortschatzLand,
+            WortschatzWetter,
+            WortschatzZeit,
+            WortschatzZahlen,
+            WortschatzFarben,
+            WortschatzKörper,
+            WortschatzTiere,
+            WortschatzPflanzen
+        )
     )
 )
 

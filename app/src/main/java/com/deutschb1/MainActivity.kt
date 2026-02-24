@@ -4,20 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -31,9 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -79,9 +69,10 @@ fun DeutschB1App() {
             FloatingGlassNavBar(navController = navController)
         }
     ) { innerPadding ->
+        // Use fillMaxSize to let content go under the floating bar
         AppNavGraph(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
@@ -136,19 +127,60 @@ fun FloatingGlassNavBar(navController: NavController) {
                                 (item.route == Screen.ExamsHome.route && currentRoute?.startsWith("exam") == true) ||
                                 (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true)
 
-                        NavButton(
-                            item = item,
-                            isSelected = isSelected,
-                            onClick = {
-                                if (!isSelected) {
-                                    navController.navigate(item.route) {
-                                        popUpTo(Screen.Home.route) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(
+                                    if (isSelected) Color.White.copy(alpha = 0.15f)
+                                    else Color.Transparent
+                                )
+                                .clickable {
+                                    if (!isSelected) {
+                                        // Navigate to the tab's root, clearing back stack up to it
+                                        navController.navigate(item.route) {
+                                            popUpTo(item.route) { inclusive = false }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    } else {
+                                        // Already on this tab – pop back to its root
+                                        navController.popBackStack(item.route, inclusive = false)
                                     }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                AnimatedContent(
+                                    targetState = isSelected,
+                                    transitionSpec = {
+                                        (fadeIn(animationSpec = tween(300)) +
+                                                scaleIn(initialScale = 0.8f, animationSpec = tween(300))) togetherWith
+                                                (fadeOut(animationSpec = tween(300)) +
+                                                        scaleOut(targetScale = 0.8f, animationSpec = tween(300)))
+                                    },
+                                    label = "icon_animation"
+                                ) { selected ->
+                                    Icon(
+                                        imageVector = if (selected) item.iconFilled else item.iconOutlined,
+                                        contentDescription = item.label,
+                                        tint = if (selected) Color.White else Color.Gray,
+                                        modifier = Modifier.size(26.dp)
+                                    )
                                 }
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = item.label,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (isSelected) Color.White else Color.Gray,
+                                    fontSize = 10.sp
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
@@ -157,20 +189,41 @@ fun FloatingGlassNavBar(navController: NavController) {
 }
 
 @Composable
-fun NavButton(item: NavItem, isSelected: Boolean, onClick: () -> Unit) {
+fun NavButton(
+    item: NavItem,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxHeight()
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                if (isSelected) Color.White.copy(alpha = 0.15f)
+                else Color.Transparent
+            )
             .clickable { onClick() }
     ) {
-        Icon(
-            imageVector = if (isSelected) item.iconFilled else item.iconOutlined,
-            contentDescription = item.label,
-            tint = if (isSelected) Color.White else Color.Gray,
-            modifier = Modifier.size(26.dp)
-        )
+        AnimatedContent(
+            targetState = isSelected,
+            transitionSpec = {
+                (fadeIn(animationSpec = tween(300)) +
+                        scaleIn(initialScale = 0.8f, animationSpec = tween(300))) togetherWith
+                        (fadeOut(animationSpec = tween(300)) +
+                                scaleOut(targetScale = 0.8f, animationSpec = tween(300)))
+            },
+            label = "icon_animation"
+        ) { selected ->
+            Icon(
+                imageVector = if (selected) item.iconFilled else item.iconOutlined,
+                contentDescription = item.label,
+                tint = if (selected) Color.White else Color.Gray,
+                modifier = Modifier.size(26.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = item.label,
