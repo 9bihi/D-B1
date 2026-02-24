@@ -18,6 +18,7 @@ import com.deutschb1.ui.exam.sprechen.SprechenScreen
 import com.deutschb1.ui.exams.ExamsHomeScreen
 import com.deutschb1.ui.home.HomeScreen
 import com.deutschb1.ui.learn.*
+import com.deutschb1.ui.learn.ThemePhraseListScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")

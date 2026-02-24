@@ -1,13 +1,8 @@
 package com.deutschb1.ui.learn
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -25,14 +20,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.LearnPhrase
+import com.deutschb1.data.LearnTheme
 import com.deutschb1.data.LearnThemeContent
 import com.deutschb1.data.hexToColor
+import androidx.compose.foundation.Image
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +41,9 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
         green = (themeColor.green * 0.7f).coerceIn(0f, 1f),
         blue = (themeColor.blue * 0.7f).coerceIn(0f, 1f)
     )
+
+    // Determine if this theme should use enhanced cards
+    val isEnhanced = isEnhancedTheme(content.theme)
 
     Scaffold(
         topBar = {
@@ -69,7 +70,7 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            // Hero banner
+            // Hero banner (unchanged)
             item {
                 Box(
                     modifier = Modifier
@@ -139,7 +140,8 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
                 PhraseCard(
                     phrase = phrase,
                     index = index + 1,
-                    accentColor = themeColor
+                    accentColor = themeColor,
+                    enhanced = isEnhanced
                 )
             }
 
@@ -148,18 +150,84 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
     }
 }
 
+// Helper to identify enhanced categories
+fun isEnhancedTheme(theme: LearnTheme): Boolean {
+    return when (theme) {
+        LearnTheme.SCHREIBEN_TEIL1,
+        LearnTheme.SCHREIBEN_TEIL2,
+        LearnTheme.SCHREIBEN_TEIL3,
+        LearnTheme.KONJUNKTIONEN,
+        LearnTheme.SUBJUNKTIONEN,
+        LearnTheme.KONJUNKTIONALADVERBIEN,
+        LearnTheme.GRAM_PERFEKT,
+        LearnTheme.GRAM_PRAETERITUM,
+        LearnTheme.GRAM_MODALVERBEN,
+        LearnTheme.GRAM_PASSIV,
+        LearnTheme.GRAM_KONJUNKTIV_II,
+        LearnTheme.GRAM_RELATIVSATZ,
+        LearnTheme.GRAM_ADJEKTIVDEKLINATION,
+        LearnTheme.GRAM_PRAEPOSITIONEN,
+        LearnTheme.GRAM_WORTSTELLUNG,
+        LearnTheme.GRAM_INFINITIV_MIT_ZU,
+        LearnTheme.GRAM_KOMPARATIV,
+        LearnTheme.GRAM_NEGATION,
+        LearnTheme.GRAM_REFLEXIVE_VERBEN,
+        LearnTheme.GRAM_FRAGEN,
+        LearnTheme.GRAM_TRENNBARE_VERBEN,
+        LearnTheme.GRAM_GENITIV,
+        LearnTheme.GRAM_IMPERATIV,
+        LearnTheme.SPRECHEN_B1 -> true
+        else -> false
+    }
+}
+
 @Composable
-fun PhraseCard(phrase: LearnPhrase, index: Int, accentColor: Color) {
+fun PhraseCard(
+    phrase: LearnPhrase,
+    index: Int,
+    accentColor: Color,
+    enhanced: Boolean
+) {
     var expanded by remember { mutableStateOf(false) }
 
+    if (enhanced) {
+        EnhancedPhraseCard(
+            phrase = phrase,
+            index = index,
+            accentColor = accentColor,
+            expanded = expanded,
+            onExpandChange = { expanded = !expanded }
+        )
+    } else {
+        SimplePhraseCard(
+            phrase = phrase,
+            index = index,
+            accentColor = accentColor,
+            expanded = expanded,
+            onExpandChange = { expanded = !expanded }
+        )
+    }
+}
+
+@Composable
+fun SimplePhraseCard(
+    phrase: LearnPhrase,
+    index: Int,
+    accentColor: Color,
+    expanded: Boolean,
+    onExpandChange: () -> Unit
+) {
+    // Original design for vocabulary (unchanged)
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onExpandChange() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Main row
+            // Header with badge
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -197,53 +265,225 @@ fun PhraseCard(phrase: LearnPhrase, index: Int, accentColor: Color) {
                 }
                 Icon(
                     if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                    null,
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             // Expanded content
-            AnimatedVisibility(
-                visible = expanded,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
-            ) {
-                Column {
-                    Spacer(modifier = Modifier.height(14.dp))
-                    HorizontalDivider(color = accentColor.copy(alpha = 0.2f))
-                    Spacer(modifier = Modifier.height(12.dp))
+            if (expanded) {
+                Spacer(modifier = Modifier.height(14.dp))
+                HorizontalDivider(color = accentColor.copy(alpha = 0.2f))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                    // Example sentence
+                RichText(
+                    text = phrase.exampleSentence,
+                    modifier = Modifier.fillMaxWidth(),
+                    accentColor = accentColor
+                )
+
+                if (phrase.usageTip.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
                     Card(
-                        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = accentColor.copy(alpha = 0.08f)),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = accentColor.copy(alpha = 0.08f)
+                        ),
                         elevation = CardDefaults.cardElevation(0.dp)
                     ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text("📝 Beispiel", style = MaterialTheme.typography.labelLarge,
-                                color = accentColor, fontWeight = FontWeight.SemiBold)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(phrase.exampleSentence, style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Medium, lineHeight = 20.sp)
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(phrase.exampleTranslation, style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant, lineHeight = 18.sp)
-                        }
+                        Text(
+                            text = "💡 ${phrase.usageTip}",
+                            modifier = Modifier.padding(12.dp),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
+                }
+            }
+        }
+    }
+}
 
-                    // Usage tip
-                    if (phrase.usageTip.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(verticalAlignment = Alignment.Top) {
-                            Text("💡 ", fontSize = 14.sp)
+@Composable
+fun EnhancedPhraseCard(
+    phrase: LearnPhrase,
+    index: Int,
+    accentColor: Color,
+    expanded: Boolean,
+    onExpandChange: () -> Unit
+) {
+    // Enhanced design for grammar, connectors, writing, speaking
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onExpandChange() },
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column {
+            // Header with gradient background
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(accentColor, accentColor.copy(alpha = 0.7f)),
+                            start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                            end = androidx.compose.ui.geometry.Offset(Float.POSITIVE_INFINITY, 0f)
+                        )
+                    )
+                    .padding(16.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Larger index badge
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color.White.copy(alpha = 0.2f),
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    "$index",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
                             Text(
-                                phrase.usageTip,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                lineHeight = 18.sp
+                                phrase.german,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                            Text(
+                                phrase.english,
+                                color = Color.White.copy(alpha = 0.9f),
+                                fontSize = 14.sp
                             )
                         }
                     }
+                    Icon(
+                        if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
+
+            // Expanded content
+            if (expanded) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Main content with rich text
+                    RichText(
+                        text = phrase.exampleSentence,
+                        modifier = Modifier.fillMaxWidth(),
+                        accentColor = accentColor
+                    )
+
+                    // Usage tip in a distinct card
+                    if (phrase.usageTip.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = accentColor.copy(alpha = 0.08f)
+                            ),
+                            elevation = CardDefaults.cardElevation(0.dp)
+                        ) {
+                            Text(
+                                text = "💡 ${phrase.usageTip}",
+                                modifier = Modifier.padding(12.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// RichText remains the same as before
+@Composable
+fun RichText(text: String, modifier: Modifier = Modifier, accentColor: Color) {
+    val lines = text.split("\n")
+    Column(modifier = modifier) {
+        lines.forEach { line ->
+            when {
+                line.startsWith("**") && line.endsWith("**") -> {
+                    val header = line.removeSurrounding("**")
+                    Text(
+                        text = header,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = accentColor,
+                        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                    )
+                }
+                line.startsWith("•") -> {
+                    Row(modifier = Modifier.padding(start = 8.dp, top = 2.dp, bottom = 2.dp)) {
+                        Text("•", color = accentColor, fontSize = 14.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = line.drop(1).trim(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            lineHeight = 20.sp
+                        )
+                    }
+                }
+                line.startsWith("→") -> {
+                    Text(
+                        text = line,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = accentColor,
+                        modifier = Modifier.padding(start = 8.dp, top = 2.dp, bottom = 2.dp)
+                    )
+                }
+                line.isBlank() -> {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+                else -> {
+                    val annotatedString = buildAnnotatedString {
+                        var remaining = line
+                        while (remaining.isNotEmpty()) {
+                            val boldStart = remaining.indexOf("**")
+                            if (boldStart >= 0) {
+                                val boldEnd = remaining.indexOf("**", boldStart + 2)
+                                if (boldEnd > boldStart) {
+                                    append(remaining.substring(0, boldStart))
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(remaining.substring(boldStart + 2, boldEnd))
+                                    }
+                                    remaining = remaining.substring(boldEnd + 2)
+                                } else {
+                                    append(remaining)
+                                    remaining = ""
+                                }
+                            } else {
+                                append(remaining)
+                                remaining = ""
+                            }
+                        }
+                    }
+                    Text(
+                        text = annotatedString,
+                        style = MaterialTheme.typography.bodyMedium,
+                        lineHeight = 22.sp,
+                        modifier = Modifier.padding(vertical = 2.dp)
+                    )
                 }
             }
         }

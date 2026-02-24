@@ -85,9 +85,13 @@ fun DeutschBottomBar(navController: NavController, items: List<BottomNavItem>) {
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    if (!selected) {
+                    if (selected) {
+                        // If already selected, pop back to the root of this tab
+                        navController.popBackStack(item.route, inclusive = false)
+                    } else {
+                        // Navigate to the tab's root, clearing back stack up to that root
                         navController.navigate(item.route) {
-                            popUpTo(Screen.Home.route) { saveState = true }
+                            popUpTo(item.route) { inclusive = false }
                             launchSingleTop = true
                             restoreState = true
                         }

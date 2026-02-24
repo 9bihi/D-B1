@@ -2,9 +2,6 @@ package com.deutschb1.data
 
 import androidx.annotation.DrawableRes
 import com.deutschb1.R
-import androidx.compose.ui.graphics.painter.Painter
-// OR if you use Icons instead of Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.Color
 
 // ─── Theme Enum ───────────────────────────────────────────────────────────────
@@ -26,10 +23,34 @@ enum class LearnTheme(
     BILDUNG("Bildung & Schule", "📚", "Schule, Studium, Lernen, Prüfungen", "#F7DC6F"),
     UMWELT("Umwelt & Natur", "🌿", "Klimawandel, Natur, Nachhaltigkeit", "#82E0AA"),
     ESSEN("Essen & Trinken", "🍽️", "Lebensmittel, Kochen, Restaurant, Rezepte", "#FAD7A0"),
-    SCHREIBEN("Schreiben & Textproduktion", "✍️", "E-Mails, Briefe, Aufsätze schreiben", "#FF9F43"),
-    SPRECHEN("Sprechen & Kommunikation", "🗣️", "Präsentationen, Gespräche, Diskussionen", "#54A0FF"),
-    GRAMMATIK("Grammatik & Struktur", "📖", "Zeiten, Fälle, Satzstruktur", "#5F27CD")
+    SCHREIBEN_TEIL1("Beschreibender Text", "✍️", "E-Mails oder Blog-Einträge über persönliche Erlebnisse", "#FF9F43"),
+    SCHREIBEN_TEIL2("Meinungsäußerung", "🗣️", "Forumsbeiträge mit Argumenten", "#54A0FF"),
+    SCHREIBEN_TEIL3("Privater oder formeller Brief", "📝", "Briefe und E-Mails zu Alltagssituationen", "#5F27CD"),
+    // Connector themes
+    KONJUNKTIONEN("Konjunktionen", "🔗", "Verbindungswörter für Hauptsätze", "#4A90E2"),
+    SUBJUNKTIONEN("Subjunktionen", "🔀", "Nebensatzeinleiter", "#50E3C2"),
+    KONJUNKTIONALADVERBIEN("Konjunktionaladverbien", "⚡", "Adverbien mit Inversion", "#F5A623"),
+    // Grammar themes
+    GRAM_PERFEKT("Perfekt", "⏱️", "Present Perfect Tense", "#4285F4"),
+    GRAM_PRAETERITUM("Präteritum", "📖", "Simple Past Tense", "#EA4335"),
+    GRAM_MODALVERBEN("Modalverben", "🎯", "Modal Verbs (können, müssen, ...)", "#FBBC05"),
+    GRAM_PASSIV("Passiv", "🔄", "Passive Voice", "#34A853"),
+    GRAM_KONJUNKTIV_II("Konjunktiv II", "✨", "Subjunctive II (würde, hätte, wäre)", "#FF6D00"),
+    GRAM_RELATIVSATZ("Relativsätze", "🔗", "Relative Clauses", "#9C27B0"),
+    GRAM_ADJEKTIVDEKLINATION("Adjektivdeklination", "📊", "Adjective Endings", "#00ACC1"),
+    GRAM_PRAEPOSITIONEN("Präpositionen", "📍", "Prepositions and Cases", "#FFB300"),
+    GRAM_WORTSTELLUNG("Wortstellung", "📐", "Word Order (Satzbau)", "#7B1FA2"),
+    GRAM_INFINITIV_MIT_ZU("Infinitiv mit 'zu'", "📝", "Infinitive with 'zu', 'um...zu'", "#E67E22"),
+    GRAM_KOMPARATIV("Komparativ & Superlativ", "📈", "Comparatives and Superlatives", "#2E7D32"),
+    GRAM_NEGATION("Negation", "🚫", "nicht vs. kein", "#C62828"),
+    GRAM_REFLEXIVE_VERBEN("Reflexive Verben", "🔄", "Reflexive Verbs", "#6A1B9A"),
+    GRAM_FRAGEN("Fragen", "❓", "Questions (W‑Fragen, indirekte Fragen)", "#1565C0"),
+    GRAM_TRENNBARE_VERBEN("Trennbare Verben", "✂️", "Separable and Inseparable Prefixes", "#EF6C00"),
+    GRAM_GENITIV("Genitiv", "👑", "Genitive Case", "#4A148C"),
+    GRAM_IMPERATIV("Imperativ", "❗", "Commands and Requests", "#B71C1C"),
+    SPRECHEN_B1("Sprechen B1", "🗣️", "Dialoge und Präsentationen für die mündliche Prüfung", "#E67E22")
 }
+
 
 // ─── Phrase Model ─────────────────────────────────────────────────────────────
 
@@ -37,7 +58,7 @@ data class LearnPhrase(
     val german: String,
     val english: String,
     val exampleSentence: String,
-    val exampleTranslation: String = "",  // ← Add "= "" " to make it optional
+    val exampleTranslation: String = "",
     val usageTip: String = ""
 )
 
@@ -308,318 +329,966 @@ val EssenContent = LearnThemeContent(
     )
 )
 
-// ─── Schreiben Content ────────────────────────────────────────────────────────
+// ─── NEW: Schreiben B1 Themes ─────────────────────────────────────────────────
 
-val SchreibenLearnContent = LearnThemeContent(
-    theme = LearnTheme.SCHREIBEN,
+// Part 1: Beschreibender Text
+val SchreibenTeil1Content = LearnThemeContent(
+    theme = LearnTheme.SCHREIBEN_TEIL1,
     phrases = listOf(
-        // ─── TEMPLATES (Structure Guide) ───────────────────────────────────────
+        // Template
         LearnPhrase(
-            german = "TEIL 1 Template: Erlebnisbeschreibung",
-            english = "Part 1 Template: Describing an Experience",
-            exampleSentence = """Struktur: 1. Einleitung (Wann/Wo/Mit wem?) → 2. Hauptteil (Was ist passiert?) → 3. Höhepunkt (Besonders ... hat mich ...) → 4. Gefühle (Ich habe mich ... gefühlt) → 5. Schluss (Empfehlung)""",
-            exampleTranslation = """Structure: 1. Introduction (When/Where/With whom?) → 2. Main part (What happened?) → 3. Highlight (Especially ... me ...) → 4. Feelings (I felt ...) → 5. Conclusion (Recommendation)""",
-            usageTip = "Wichtig: Ca. 80–100 Wörter schreiben."
+            german = "📌 TEMPLATE: Beschreibender Text",
+            english = "Template for descriptive texts",
+            exampleSentence = """
+                **Einleitung:** Anrede + wann/wo/mit wem das Erlebnis stattfand
+                **Hauptteil:** Was passiert ist — 2 konkrete Details
+                **Höhepunkt:** „Besonders ... hat mich ...“ → das schönste Moment
+                **Gefühle:** „Ich habe mich dabei ... gefühlt“
+                **Schluss:** Empfehlung oder ob man es wiederholen würde + Gruß
+            """.trimIndent(),
+            exampleTranslation = "Use this structure for all Part 1 tasks.",
+            usageTip = "Achte auf eine klare zeitliche Reihenfolge und persönliche Gefühle."
         ),
-        LearnPhrase(
-            german = "TEIL 2 Template: Meinungsäußerung",
-            english = "Part 2 Template: Expressing Opinion",
-            exampleSentence = """Struktur: 1. Position (Ich bin dafür/dagegen, weil...) → 2. Argument 1 (Einerseits...) → 3. Argument 2 (Außerdem...) → 4. Einschränkung (Natürlich..., aber...) → 5. Fazit (Meiner Meinung nach...)""",
-            exampleTranslation = """Structure: 1. Position (I am for/against because...) → 2. Argument 1 (On one hand...) → 3. Argument 2 (Furthermore...) → 4. Limitation (Of course..., but...) → 5. Conclusion (In my opinion...)""",
-            usageTip = "Wichtig: Klare Meinung und mindestens 2 Argumente."
-        ),
-        LearnPhrase(
-            german = "TEIL 3 Template: Brief / E-Mail",
-            english = "Part 3 Template: Letter / Email",
-            exampleSentence = """Struktur: 1. Anrede (Sehr geehrte... / Liebe...) → 2. Bezug (Ich schreibe bezüglich...) → 3. Vorstellung (Name, Alter) → 4. Anliegen (Fragen/Bewerbung) → 5. Abschluss (Ich würde mich freuen...)""",
-            exampleTranslation = """Structure: 1. Salutation (Dear...) → 2. Reference (I am writing regarding...) → 3. Introduction (Name, Age) → 4. Purpose (Questions/Application) → 5. Closing (I would be happy...)""",
-            usageTip = "Wichtig: Auf den Ton achten (formell vs. informell)."
-        ),
-
-        // ─── TEIL 1 EXAMPLES (1.1 - 1.10) ──────────────────────────────────────
+        // Example 1.1
         LearnPhrase(
             german = "1.1 Kino Film gesehen",
             english = "Write to a friend about a movie you saw.",
-            exampleSentence = """Liebe Julia, ich möchte dir von einem tollen Kinoabend erzählen. Wir haben den Film "Das Lehrerzimmer" gesehen – ein spannendes deutsches Drama. Besonders beeindruckt hat mich das Ende des Films. Ich habe mich dabei bestens unterhalten. Ich würde den Film unbedingt empfehlen. Liebe Grüße, Mia""",
-            exampleTranslation = """Dear Julia, I would like to tell you about a great cinema evening. We watched the film 'The Teachers' Lounge' – an exciting German drama. I was especially impressed by the ending. I felt greatly entertained. I would definitely recommend the film. Best regards, Mia""",
-            usageTip = "Keywords: spannend, realistisch, beeindruckt, empfehlen"
+            exampleSentence = """
+                Liebe Julia,
+                ich möchte dir von einem tollen Kinoabend erzählen, den ich gestern mit meiner Schwester erlebt habe.
+                Wir haben den Film "Das Lehrerzimmer" gesehen – ein spannendes deutsches Drama über eine junge Lehrerin, die einen Diebstahl in ihrer Schule aufdecken will. Die Geschichte war sehr realistisch und die Hauptdarstellerin hat ihre Rolle fantastisch gespielt.
+                Besonders beeindruckt hat mich das Ende des Films, das sehr überraschend und nachdenklich war.
+                Ich habe mich dabei bestens unterhalten und gleichzeitig sehr berührt gefühlt.
+                Ich würde den Film unbedingt empfehlen – vielleicht gehen wir nächste Woche gemeinsam hin?
+                Liebe Grüße, Mia
+            """.trimIndent(),
+            exampleTranslation = "Keywords: spannend, realistisch, beeindruckt, berührt, empfehlen",
+            usageTip = "Nutze Adjektive wie 'spannend', 'realistisch', 'berührend'."
         ),
+        // Example 1.2
         LearnPhrase(
             german = "1.2 Flohmarkt",
             english = "Write a blog post about a flea market visit.",
-            exampleSentence = """Hallo zusammen! Ich möchte euch von einem tollen Erlebnis erzählen. Mit meiner Freundin habe ich stundenlang zwischen den Ständen gestöbert. Besonders schön war die Atmosphäre. Ich habe mich dabei entspannt, fröhlich und nostalgisch gefühlt. Ein Flohmarktbesuch ist wirklich empfehlenswert!""",
-            exampleTranslation = """Hello everyone! I would like to tell you about a great experience. With my friend I browsed for hours between the stalls. The atmosphere was especially beautiful. I felt relaxed, cheerful and nostalgic. A flea market visit is really recommended!""",
-            usageTip = "Keywords: stöbern, Schnäppchen, Atmosphäre, nostalgisch"
+            exampleSentence = """
+                Hallo zusammen!
+                ich möchte euch von einem tollen Erlebnis erzählen, das ich letzten Samstag auf dem Flohmarkt in der Innenstadt erlebt habe.
+                Mit meiner Freundin habe ich stundenlang zwischen den Ständen gestöbert und viele interessante Dinge entdeckt: alte Bücher, bunte Vasen und originelle Kleidung. Für nur fünf Euro habe ich eine alte Schreibmaschine gekauft – ein echtes Schnäppchen!
+                Besonders schön war die Atmosphäre: überall duftete es nach frischem Kaffee und alle Leute waren sehr freundlich.
+                Ich habe mich dabei entspannt, fröhlich und ein bisschen nostalgisch gefühlt.
+                Ein Flohmarktbesuch ist wirklich empfehlenswert – man findet immer etwas Besonderes!
+                Euer Blog-Team
+            """.trimIndent(),
+            exampleTranslation = "Keywords: stöbern, Schnäppchen, Atmosphäre, nostalgisch, empfehlenswert",
+            usageTip = "Beschreibe die Stimmung und besondere Funde."
         ),
+        // Example 1.3
         LearnPhrase(
             german = "1.3 Kochkurs",
             english = "Write to an acquaintance about a cooking course.",
-            exampleSentence = """Liebe Sandra, ich wollte dir von einem Kochkurs erzählen. Gemeinsam mit zehn anderen Teilnehmern habe ich ein italienisches Menü zubereitet. Besonders begeistert hat mich, wie viel besser die selbst gemachte Pasta schmeckt. Ich habe mich dabei sehr wohl und kreativ gefühlt.""",
-            exampleTranslation = """Dear Sandra, I wanted to tell you about a cooking course. Together with ten other participants I prepared an Italian menu. I was especially excited about how much better the homemade pasta tastes. I felt very comfortable and creative.""",
-            usageTip = "Keywords: zubereiten, geduldig, Tipps, inspiriert"
+            exampleSentence = """
+                Liebe Sandra,
+                ich wollte dir von einem Kochkurs erzählen, den ich letzte Woche in der Volkshochschule besucht habe.
+                Gemeinsam mit zehn anderen Teilnehmern habe ich ein italienisches Menü zubereitet: selbst gemachte Pasta, eine leckere Tomaten-Basilikum-Soße und zum Abschluss Tiramisu. Die Kursleiterin hat alles sehr geduldig erklärt und uns viele nützliche Tipps gegeben.
+                Besonders begeistert hat mich, wie viel besser die selbst gemachte Pasta im Vergleich zur Variante aus dem Supermarkt schmeckt.
+                Ich habe mich dabei sehr wohl und gleichzeitig kreativ und inspiriert gefühlt.
+                Ich würde den Kurs auf jeden Fall wiederholen und kann ihn dir sehr empfehlen!
+                Liebe Grüße, Anna
+            """.trimIndent(),
+            exampleTranslation = "Keywords: zubereiten, geduldig, Tipps, inspiriert, empfehlen",
+            usageTip = "Vergleiche mit Alltagserfahrungen (z.B. Supermarkt)."
         ),
+        // Example 1.4
         LearnPhrase(
             german = "1.4 Rundfahrt",
             english = "Write to family about a bus/boat tour.",
-            exampleSentence = """Liebe Familie, ich möchte euch von einer wunderschönen Schiffsrundfahrt erzählen. Die zweistündige Fahrt führte uns an malerischen Uferdörfern vorbei. Besonders atemberaubend war die Aussicht auf die Alpen. Ich habe mich dabei vollkommen entspannt gefühlt.""",
-            exampleTranslation = """Dear Family, I would like to tell you about a wonderful boat tour. The two-hour trip led us past picturesque villages. The view of the Alps was especially breathtaking. I felt completely relaxed.""",
-            usageTip = "Keywords: malerisch, atemberaubend, unvergesslich, es lohnt sich"
+            exampleSentence = """
+                Liebe Familie,
+                ich möchte euch von einer wunderschönen Schiffsrundfahrt erzählen, die ich vorgestern auf dem Bodensee gemacht habe.
+                Die zweistündige Fahrt führte uns an mehreren kleinen Städten und malerischen Uferdörfern vorbei. Ein freundlicher Kommentator hat uns die Geschichte der Region sehr interessant erklärt.
+                Besonders atemberaubend war die Aussicht auf die schneebedeckten Alpen im Hintergrund – das war wirklich unvergesslich.
+                Ich habe mich dabei vollkommen entspannt und sehr glücklich gefühlt.
+                Diese Erfahrung möchte ich unbedingt mit euch gemeinsam wiederholen – es lohnt sich sehr!
+                Viele Grüße, Thomas
+            """.trimIndent(),
+            exampleTranslation = "Keywords: malerisch, atemberaubend, unvergesslich, entspannt, es lohnt sich",
+            usageTip = "Verwende starke Adjektive wie 'atemraubend', 'unvergesslich'."
         ),
+        // Example 1.5
         LearnPhrase(
             german = "1.5 Klassentreffen",
             english = "Write to a former classmate about a reunion.",
-            exampleSentence = """Lieber Marco, ich wollte dir von unserem Klassentreffen erzählen. Fast alle aus unserer alten Klasse sind zusammengekommen. Besonders lustig war der Moment, als jemand ein altes Schulfoto mitgebracht hat. Ich habe mich dabei warm und glücklich gefühlt.""",
-            exampleTranslation = """Dear Marco, I wanted to tell you about our class reunion. Almost everyone from our old class came together. Especially funny was the moment when someone brought an old school photo. I felt warm and happy.""",
-            usageTip = "Keywords: zusammenkommen, sich erinnern, kaum wiedererkennen"
+            exampleSentence = """
+                Lieber Marco,
+                ich wollte dir von unserem Klassentreffen erzählen, das ich letztes Wochenende nach zehn Jahren endlich erlebt habe.
+                Fast alle aus unserer alten Klasse sind in einem gemütlichen Restaurant in der Altstadt zusammengekommen. Wir haben alte Fotos angeschaut, gemeinsam gelacht und uns an viele gemeinsame Abenteuer erinnert.
+                Besonders lustig war der Moment, als jemand ein altes Schulfoto mitgebracht hat – alle haben sich kaum wiedererkannt!
+                Ich habe mich dabei warm, nostalgisch und sehr glücklich gefühlt.
+                Es war ein wirklich unvergesslicher Abend – schade, dass du leider nicht dabei sein konntest!
+                Liebe Grüße, Felix
+            """.trimIndent(),
+            exampleTranslation = "Keywords: zusammenkommen, sich erinnern, kaum wiedererkennen, nostalgisch, unvergesslich",
+            usageTip = "Betone gemeinsame Erinnerungen und Emotionen."
         ),
+        // Example 1.6
         LearnPhrase(
             german = "1.6 Geschäft eröffnen",
             english = "Write a blog post about opening a shop.",
-            exampleSentence = """Hallo zusammen! Ich möchte euch von einem aufregenden Tag berichten. Die Vorbereitungen haben Monate gedauert. Besonders berührt hat mich, wie begeistert alle reagiert haben. Ich habe mich dabei stolz und glücklich gefühlt. Ein Traum ist endlich wahr geworden!""",
-            exampleTranslation = """Hello everyone! I would like to report about an exciting day. The preparations took months. I was especially touched by how enthusiastically everyone reacted. I felt proud and happy. A dream has finally come true!""",
-            usageTip = "Keywords: aufregend, Vorbereitung, begeistert, stolz"
+            exampleSentence = """
+                Hallo zusammen!
+                ich möchte euch von einem aufregenden Tag berichten – der Eröffnung meines kleinen Buchladens letzte Woche.
+                Die Vorbereitungen haben Monate gedauert: Regale aufbauen, Bücher sortieren, Flyer verteilen. Am Eröffnungstag kamen viele Gäste – Freunde, Nachbarn und sogar Fremde aus der ganzen Stadt.
+                Besonders berührt hat mich, wie begeistert alle reagiert haben und wie schnell die ersten Bücher verkauft wurden.
+                Ich habe mich dabei sehr aufgeregt, aber auch unglaublich stolz und glücklich gefühlt.
+                Ein Traum ist endlich wahr geworden – ich freue mich auf alle, die meinen Laden besuchen möchten!
+                Euer Blog
+            """.trimIndent(),
+            exampleTranslation = "Keywords: aufregend, Vorbereitung, begeistert, stolz, ein Traum wird wahr",
+            usageTip = "Beschreibe die Vorbereitung und die Gefühle am großen Tag."
         ),
+        // Example 1.7
         LearnPhrase(
             german = "1.7 Neue Wohnung",
             english = "Write to a friend about moving to a new apartment.",
-            exampleSentence = """Liebe Sophia, ich freue mich, dir von meiner neuen Wohnung erzählen zu können. Das Tragen der schweren Kartons war anstrengend. Die Wohnung ist hell und geräumig. Besonders gefällt mir die große Küche. Ich habe mich hier sofort wohl gefühlt.""",
-            exampleTranslation = """Dear Sophia, I am happy to tell you about my new apartment. Carrying the heavy boxes was exhausting. The apartment is bright and spacious. I especially like the large kitchen. I felt comfortable here immediately.""",
-            usageTip = "Keywords: anstrengend, geräumig, wohl fühlen, sich kümmern"
+            exampleSentence = """
+                Liebe Sophia,
+                ich freue mich, dir endlich von meiner neuen Wohnung erzählen zu können – der Umzug letzten Freitag ist gut gelungen!
+                Das Tragen der schweren Kartons und Möbel über die Treppen war anstrengend, aber jetzt ist alles geschafft. Die Wohnung ist hell und geräumig mit einem wunderschönen Blick auf den Stadtpark.
+                Besonders gefällt mir die große, moderne Küche – endlich habe ich genug Platz zum richtigen Kochen!
+                Ich habe mich hier sofort wohl und zuhause gefühlt.
+                Ein kleines Problem gibt es noch: Die Heizung macht manchmal Geräusche, aber der Vermieter kümmert sich darum. Du musst mich bald besuchen!
+                Liebe Grüße, Marie
+            """.trimIndent(),
+            exampleTranslation = "Keywords: anstrengend, geräumig, Blick auf, wohl fühlen, sich kümmern",
+            usageTip = "Erwähne sowohl positive Aspekte als auch kleine Probleme."
         ),
+        // Example 1.8
         LearnPhrase(
-            german = "1.8 Schulbesichtigung",
+            german = "1.8 Schulbesichtigung mit Kind",
             english = "Write to a relative about visiting a school with your child.",
-            exampleSentence = """Liebe Tante Renate, ich möchte dir von der Schulbesichtigung erzählen. Wir haben eine moderne Grundschule besucht. Besonders schön war der Moment, als Leon andere Kinder kennenlernte. Ich habe mich dabei erleichtert und optimistisch gefühlt. Es ist die richtige Wahl!""",
-            exampleTranslation = """Dear Aunt Renate, I would like to tell you about the school visit. We visited a modern primary school. Especially nice was the moment when Leon met other children. I felt relieved and optimistic. It is the right choice!""",
-            usageTip = "Keywords: modern, freundlich, erleichtert, optimistisch"
+            exampleSentence = """
+                Liebe Tante Renate,
+                ich möchte dir von der Schulbesichtigung erzählen, die ich gestern mit meinem Sohn Leon in unserem neuen Viertel erlebt habe.
+                Wir haben eine moderne Grundschule besucht: helle Klassenzimmer, einen großen Spielplatz und eine sehr freundliche Direktorin. Die Lehrerin hat sich viel Zeit für unsere Fragen genommen.
+                Besonders schön war der Moment, als Leon sofort andere Kinder kennenlernte und strahlend fragte: "Kann ich hier anfangen?"
+                Ich habe mich dabei sehr erleichtert und optimistisch gefühlt.
+                Wir haben entschieden, dass Leon im September in diese Schule gehen wird – ich bin sicher, es ist die richtige Wahl!
+                Liebe Grüße, Katja
+            """.trimIndent(),
+            exampleTranslation = "Keywords: modern, freundlich, erleichtert, optimistisch, die richtige Wahl",
+            usageTip = "Zeige die Perspektive des Kindes und deine eigenen Gefühle."
         ),
+        // Example 1.9
         LearnPhrase(
             german = "1.9 Reise gemacht",
             english = "Write a blog post about a trip.",
-            exampleSentence = """Hallo zusammen! Ich möchte euch von meiner unvergesslichen Reise nach Portugal erzählen. Wir sind durch bunte Gassen geschlendert. Besonders begeistert hat mich der Sonnenuntergang. Ich habe mich dabei frei und glücklich gefühlt. Absolut empfehlenswert!""",
-            exampleTranslation = """Hello everyone! I would like to tell you about my unforgettable trip to Portugal. We strolled through colorful streets. I was especially excited about the sunset. I felt free and happy. Absolutely recommended!""",
-            usageTip = "Keywords: schlendern, türkisfarben, Sonnenuntergang, atemberaubend"
+            exampleSentence = """
+                Hallo zusammen!
+                ich möchte euch von meiner unvergesslichen Reise nach Portugal erzählen, die ich letzte Woche mit meinem Partner unternommen habe.
+                Wir haben Lissabon und die Algarve besucht: Wir sind durch bunte Gassen geschlendert, haben frischen Fisch gegessen und im türkisfarbenen Meer geschwommen.
+                Besonders begeistert hat mich der Sonnenuntergang am Cabo da Roca – dem westlichsten Punkt Europas. Das war wirklich atemberaubend!
+                Ich habe mich dabei frei, glücklich und vollkommen entspannt gefühlt.
+                Portugal ist wunderschön und ich würde auf jeden Fall wieder dorthin reisen – absolut empfehlenswert!
+                Euer Blog
+            """.trimIndent(),
+            exampleTranslation = "Keywords: schlendern, türkisfarben, Sonnenuntergang, atemberaubend, absolut empfehlenswert",
+            usageTip = "Nutze bildhafte Beschreibungen der Orte und Aktivitäten."
         ),
+        // Example 1.10
         LearnPhrase(
             german = "1.10 Museum besuchen",
             english = "Tell a friend about a museum visit.",
-            exampleSentence = """Lieber David, ich wollte dir von einem besonderen Museumsbesuch erzählen. Ich war im Kunsthistorischen Museum in Wien. Besonders fasziniert hat mich ein Gemälde von Rembrandt. Ich habe mich dabei neugierig gefühlt. Ein Museumsbesuch bildet wirklich!""",
-            exampleTranslation = """Dear David, I wanted to tell you about a special museum visit. I was at the Art History Museum in Vienna. I was especially fascinated by a painting by Rembrandt. I felt curious. A museum visit is truly educational!""",
-            usageTip = "Keywords: Skulpturen, Führerin, fasziniert, Maltechnik"
-        ),
-
-        // ─── TEIL 2 EXAMPLES (2.1 - 2.10) ──────────────────────────────────────
-        LearnPhrase(
-            german = "2.1 Ungesundes Essen am Arbeitsplatz",
-            english = "Opinion: Healthy vs. Unhealthy food at work.",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen. Einerseits schadet ungesunde Ernährung der Konzentration. Außerdem kostet Fast Food langfristig mehr Geld. Natürlich verstehe ich, dass Berufstätige oft wenig Zeit haben. Meiner Meinung nach sollten Arbeitgeber gesunde Optionen anbieten.""",
-            exampleTranslation = """On this topic I have a clear opinion: I am against it. On one hand, unhealthy nutrition harms concentration. Furthermore, fast food costs more money in the long term. Of course I understand that workers often have little time. In my opinion, employers should offer healthy options.""",
-            usageTip = "Keywords: Konzentration, unproduktiv, bewusste Ernährung"
-        ),
-        LearnPhrase(
-            german = "2.2 Umweltschutz",
-            english = "Opinion: What can we do for environmental protection?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Umweltschutz ist eine absolute Notwendigkeit. Einerseits sehen wir täglich die Folgen des Klimawandels. Außerdem ist die Umwelt das Erbe künftiger Generationen. Natürlich reichen individuelle Maßnahmen allein nicht aus. Meiner Meinung nach brauchen wir persönliches Engagement und strenge Gesetze.""",
-            exampleTranslation = """On this topic I have a clear opinion: Environmental protection is an absolute necessity. On one hand, we see the consequences of climate change daily. Furthermore, the environment is the heritage of future generations. Of course, individual measures alone are not enough. In my opinion, we need personal commitment and strict laws.""",
-            usageTip = "Keywords: überzeugt, Klimawandel, Erbe, Engagement"
-        ),
-        LearnPhrase(
-            german = "2.3 Fernseher im Kinderzimmer",
-            english = "Opinion: Should kids have a TV in their room?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen. Einerseits können Eltern den Medienkonsum nicht mehr kontrollieren. Außerdem leiden Schlaf und Schulleistung. Natürlich dürfen Kinder auch fernsehen. Meiner Meinung nach sollte das immer im gemeinsamen Wohnzimmer stattfinden.""",
-            exampleTranslation = """On this topic I have a clear opinion: I am against it. On one hand, parents can no longer control media consumption. Furthermore, sleep and school performance suffer. Of course, children may watch TV. In my opinion, this should always happen in the shared living room.""",
-            usageTip = "Keywords: Medienkonsum, Aufsicht, Schulleistung, gemeinsam"
-        ),
-        LearnPhrase(
-            german = "2.4 Einkaufen im Internet",
-            english = "Opinion: Advantages of online shopping.",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Die Vorteile überwiegen. Einerseits ist es sehr bequem. Außerdem ist die Auswahl im Internet viel größer. Natürlich gibt es auch Risiken wie Betrug. Meiner Meinung nach sollte man Online-Shopping bewusst einsetzen.""",
-            exampleTranslation = """On this topic I have a clear opinion: The advantages outweigh. On one hand, it is very convenient. Furthermore, the selection on the internet is much larger. Of course, there are also risks like fraud. In my opinion, one should use online shopping consciously.""",
-            usageTip = "Keywords: überwiegen, mühelos, Auswahl, Betrug"
-        ),
-        LearnPhrase(
-            german = "2.5 Führerschein ab 16 Jahre",
-            english = "Opinion: Driving license at age 16?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin gegen den Führerschein ab 16 Jahren. Einerseits sind 16-Jährige oft noch nicht reif genug. Außerdem wäre die Kfz-Versicherung sehr teuer. Natürlich haben junge Menschen ein Mobilitätsproblem. Meiner Meinung nach ist begleitetes Fahren ab 17 ein guter Kompromiss.""",
-            exampleTranslation = """On this topic I have a clear opinion: I am against the driving license at 16. On one hand, 16-year-olds are often not mature enough. Furthermore, car insurance would be very expensive. Of course, young people have a mobility problem. In my opinion, accompanied driving from 17 is a good compromise.""",
-            usageTip = "Keywords: Verantwortung, finanzielle Belastung, Kompromiss"
-        ),
-        LearnPhrase(
-            german = "2.6 Urlaub am Strand",
-            english = "Opinion: Is beach vacation the best?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Strand ist wunderbar, aber nicht für jeden der beste. Einerseits bietet der Strand echte Erholung. Außerdem ist Schwimmen gesund. Natürlich bevorzugen manche Menschen Berge. Meiner Meinung nach ist es am wichtigsten, den Urlaub zu wählen, der Freude bringt.""",
-            exampleTranslation = """On this topic I have a clear opinion: Beach is wonderful, but not the best for everyone. On one hand, the beach offers real relaxation. Furthermore, swimming is healthy. Of course, some people prefer mountains. In my opinion, it is most important to choose the vacation that brings joy.""",
-            usageTip = "Keywords: Erholung, Verpflichtungen, abschalten, bevorzugen"
-        ),
-        LearnPhrase(
-            german = "2.7 Essen in öffentlichen Verkehrsmitteln",
-            english = "Opinion: Eating on buses/trains?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ich bin gegen stark riechende Speisen. Einerseits ist der Geruch für andere Fahrgäste unangenehm. Außerdem kann Essen die Sitze schmutzig machen. Natürlich ist ein kleiner Keks in Ordnung. Meiner Meinung nach sollte man Rücksicht auf Mitreisende nehmen.""",
-            exampleTranslation = """On this topic I have a clear opinion: I am against strongly smelling food. On one hand, the smell is unpleasant for other passengers. Furthermore, food can make seats dirty. Of course, a small cookie is okay. In my opinion, one should be considerate of fellow travelers.""",
-            usageTip = "Keywords: Fahrgäste, störend, Rücksicht nehmen, intensiv"
-        ),
-        LearnPhrase(
-            german = "2.8 Soll man Vegetarier werden",
-            english = "Opinion: Should people become vegetarian?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Mehr Menschen sollten vegetarisch essen. Einerseits ist pflanzenbasierte Ernährung oft gesünder. Außerdem hat Fleischproduktion enorme Auswirkungen auf die Umwelt. Natürlich ist es eine persönliche Entscheidung. Meiner Meinung nach wäre weniger Fleisch essen schon ein großer Fortschritt.""",
-            exampleTranslation = """On this topic I have a clear opinion: More people should eat vegetarian. On one hand, plant-based nutrition is often healthier. Furthermore, meat production has enormous impacts on the environment. Of course, it is a personal decision. In my opinion, eating less meat would already be a big progress.""",
-            usageTip = "Keywords: pflanzenbasiert, Herzerkrankungen, Treibhausgase"
-        ),
-        LearnPhrase(
-            german = "2.9 Dürfen Männer weinen",
-            english = "Opinion: Should men cry in public?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Ja, Männer dürfen weinen. Einerseits ist Weinen eine natürliche menschliche Reaktion. Außerdem zeigen Studien, dass Unterdrücken von Gefühlen zu Depressionen führen kann. Natürlich gibt es kulturelle Unterschiede. Meiner Meinung nach sollten wir alte Rollenbilder überwinden.""",
-            exampleTranslation = """On this topic I have a clear opinion: Yes, men may cry. On one hand, crying is a natural human reaction. Furthermore, studies show that suppressing feelings can lead to depression. Of course, there are cultural differences. In my opinion, we should overcome old role models.""",
-            usageTip = "Keywords: natürliche Reaktion, Trauer, unterdrücken, Rollenbilder"
-        ),
-        LearnPhrase(
-            german = "2.10 Telefonieren in öffentlichen Verkehrsmitteln",
-            english = "Opinion: Loud phone calls on transport?",
-            exampleSentence = """Zu diesem Thema habe ich eine klare Meinung: Lautes Telefonieren ist störend. Einerseits wollen viele Mitfahrer in Ruhe lesen. Außerdem werden private Details hörbar erzählt. Natürlich muss man manchmal dringend telefonieren. Meiner Meinung nach sollte man leise sprechen oder in den Vorraum gehen.""",
-            exampleTranslation = """On this topic I have a clear opinion: Loud phone calls are disturbing. On one hand, many passengers want to read in peace. Furthermore, private details are told audibly. Of course, sometimes one must phone urgently. In my opinion, one should speak quietly or go to the vestibule.""",
-            usageTip = "Keywords: rücksichtslos, Mitfahrer, hörbar, peinlich"
-        ),
-
-        // ─── TEIL 3 EXAMPLES (3.1 - 3.6) ───────────────────────────────────────
-        LearnPhrase(
-            german = "3.1 Fahrrad-Anzeige",
-            english = "Email to seller: Ask about a used bike.",
-            exampleSentence = """Sehr geehrte/r Verkäufer/in, ich schreibe Ihnen bezüglich Ihrer Anzeige für ein gebrauchtes Mountainbike. Das Fahrrad interessiert mich sehr, da ich ein zuverlässiges Rad suche. Ich würde gerne wissen, wie alt das Fahrrad ist und ob der Preis verhandelbar ist. Ich bitte um einen Besichtigungstermin. Mit freundlichen Grüßen, Max Müller""",
-            exampleTranslation = """Dear Seller, I am writing to you regarding your advertisement for a used mountainbike. The bicycle interests me very much as I am looking for a reliable bike. I would like to know how old the bicycle is and if the price is negotiable. I request a viewing appointment. Sincerely, Max Müller""",
-            usageTip = "Keywords: zuverlässig, Arbeitsweg, gewartet, verhandelbar"
-        ),
-        LearnPhrase(
-            german = "3.2 Entschuldigung",
-            english = "Email to friend: Apologize for missed appointment.",
-            exampleSentence = """Lieber Jonas, ich schreibe dir, weil ich mich aufrichtig entschuldigen möchte. Leider habe ich unseren Termin völlig vergessen. Der Grund war ein unerwarteter Notfall bei der Arbeit. Ich hätte dir trotzdem rechtzeitig eine Nachricht schicken sollen. Als Zeichen meiner Entschuldigung lade ich dich zum Essen ein. Liebe Grüße, Sophia""",
-            exampleTranslation = """Dear Jonas, I am writing to you because I want to apologize sincerely. Unfortunately, I completely forgot our appointment. The reason was an unexpected emergency at work. I should have sent you a message anyway in time. As a sign of my apology, I invite you to dinner. Best regards, Sophia""",
-            usageTip = "Keywords: aufrichtig, übel nehmen, unerwarteter Notfall, rechtzeitig"
-        ),
-        LearnPhrase(
-            german = "3.3 Job-Anzeige: Kassierer/in",
-            english = "Application email for supermarket cashier job.",
-            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihrer Stellenanzeige. Mein Name ist Leila Bensalem, ich bin 28 Jahre alt. Ich habe bereits ein Jahr Erfahrung als Verkäuferin. Ich bin zuverlässig, pünktlich und lernbereit. Ich bitte um einen Vorstellungstermin. Mit freundlichen Grüßen, Leila Bensalem""",
-            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your job advertisement. My name is Leila Bensalem, I am 28 years old. I already have one year of experience as a saleswoman. I am reliable, punctual and willing to learn. I request an interview appointment. Sincerely, Leila Bensalem""",
-            usageTip = "Keywords: Stellenanzeige, geeignet, Erfahrung, lernbereit, Eignung"
-        ),
-        LearnPhrase(
-            german = "3.4 Englisch-Kurs-Anzeige",
-            english = "Email: Register for English course.",
-            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihres Englisch-Kurses für Anfänger. Mein Name ist Amira Hassan, ich benötige die Sprache dringend für meinen Beruf. Ich würde gerne wissen, ob noch freie Plätze verfügbar sind. Ich bitte um baldige Rückmeldung. Mit freundlichen Grüßen, Amira Hassan""",
-            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your English course for beginners. My name is Amira Hassan, I urgently need the language for my profession. I would like to know if there are still free places available. I request prompt feedback. Sincerely, Amira Hassan""",
-            usageTip = "Keywords: dringend, Abendkurs, verfügbar, Ratenzahlung"
-        ),
-        LearnPhrase(
-            german = "3.5 Schauspieler-Anzeige",
-            english = "Application email for theater role.",
-            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihrer Anzeige für Schauspieler/innen. Theater ist meine größte Leidenschaft. Ich habe drei Jahre lang in einer Laientheatergruppe mitgespielt. Ich bitte herzlich um einen Vorsprechtermin. Mit freundlichen Grüßen, Carlos Diaz""",
-            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your advertisement for actors. Theater is my greatest passion. I have played in an amateur theater group for three years. I warmly request an audition appointment. Sincerely, Carlos Diaz""",
-            usageTip = "Keywords: Leidenschaft, Laientheater, Hauptrolle, Vorsprechtermin"
-        ),
-        LearnPhrase(
-            german = "3.6 Wohnungs-Anzeige",
-            english = "Email to landlord: Request viewing.",
-            exampleSentence = """Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich Ihrer Anzeige für eine 2-Zimmer-Wohnung. Mein Name ist Nina Kowalski, ich bin berufstätig und zuverlässig. Ich würde gerne wissen, ob Haustiere erlaubt sind und wie hoch die Nebenkosten sind. Ich bitte um einen Besichtigungstermin. Mit freundlichen Grüßen, Nina Kowalski""",
-            exampleTranslation = """Dear Sir or Madam, I am writing to you regarding your advertisement for a 2-room apartment. My name is Nina Kowalski, I am employed and reliable. I would like to know if pets are allowed and how high the additional costs are. I request a viewing appointment. Sincerely, Nina Kowalski""",
-            usageTip = "Keywords: Immobilienportal, zentrale Lage, Nebenkosten, Kautionshöhe"
-        ),
-
-        // ─── USEFUL EXPRESSIONS ────────────────────────────────────────────────
-        LearnPhrase(
-            german = "Nützliche Ausdrücke: Einleitung",
-            english = "Useful Expressions: Introduction",
-            exampleSentence = """• ich möchte dir/Ihnen von ... erzählen • ich schreibe dir/Ihnen bezüglich • ich möchte meine Meinung zu ... äußern""",
-            exampleTranslation = """• I would like to tell you about... • I am writing to you regarding... • I would like to express my opinion on...""",
-            usageTip = "Start your text clearly."
-        ),
-        LearnPhrase(
-            german = "Nützliche Ausdrücke: Argumente",
-            english = "Useful Expressions: Arguments",
-            exampleSentence = """• Einerseits ... • Außerdem / Darüber hinaus ... • Ein weiterer Punkt ist ... • Zum Beispiel ...""",
-            exampleTranslation = """• On one hand... • Furthermore / Moreover... • Another point is... • For example...""",
-            usageTip = "Connect your ideas."
-        ),
-        LearnPhrase(
-            german = "Nützliche Ausdrücke: Einschränkung",
-            english = "Useful Expressions: Limitation",
-            exampleSentence = """• Natürlich ... , aber ... • Zwar ... , jedoch ... • Das stimmt, allerdings ...""",
-            exampleTranslation = """• Of course ..., but... • Admittedly ..., however... • That is true, however...""",
-            usageTip = "Show nuance in Part 2."
-        ),
-        LearnPhrase(
-            german = "Nützliche Ausdrücke: Meinung",
-            english = "Useful Expressions: Opinion",
-            exampleSentence = """• Meiner Meinung nach ... • Ich bin überzeugt, dass ... • Ich finde, dass ...""",
-            exampleTranslation = """• In my opinion... • I am convinced that... • I find that...""",
-            usageTip = "State your conclusion."
-        ),
-        LearnPhrase(
-            german = "Nützliche Ausdrücke: Schluss",
-            english = "Useful Expressions: Conclusion",
-            exampleSentence = """• Ich würde mich sehr freuen ... • Ich hoffe auf Ihre baldige Antwort • Ich empfehle es jedem!""",
-            exampleTranslation = """• I would be very happy... • I hope for your prompt answer • I recommend it to everyone!""",
-            usageTip = "Polite ending."
+            exampleSentence = """
+                Lieber David,
+                ich wollte dir von einem besonderen Museumsbesuch erzählen, den ich gestern zum ersten Mal erlebt habe.
+                Ich war im Kunsthistorischen Museum in Wien: riesige Räume voller Gemälde, antiker Skulpturen und historischer Objekte. Eine freundliche Führerin hat uns alles sehr verständlich erklärt.
+                Besonders fasziniert hat mich ein Gemälde von Rembrandt – die Maltechnik und die Geschichte dahinter waren einfach unglaublich.
+                Ich habe mich dabei neugierig und sehr begeistert gefühlt – und viel Neues gelernt!
+                Ein Museumsbesuch bildet wirklich und macht Spaß zugleich – ich empfehle es jedem!
+                Liebe Grüße, Lena
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Skulpturen, Führerin, fasziniert, Maltechnik, bilden und Spaß machen",
+            usageTip = "Beschreibe konkrete Exponate und deine Reaktion darauf."
         )
     )
 )
 
-// ─── Sprechen Content ─────────────────────────────────────────────────────────
-
-val SprechenContent = LearnThemeContent(
-    theme = LearnTheme.SPRECHEN,
+// Part 2: Meinungsäußerung
+val SchreibenTeil2Content = LearnThemeContent(
+    theme = LearnTheme.SCHREIBEN_TEIL2,
     phrases = listOf(
-        LearnPhrase("sich vorstellen", "to introduce oneself", "Darf ich mich vorstellen? Ich heiße Anna.", "May I introduce myself? My name is Anna.", "Typisch am ersten Tag"),
-        LearnPhrase("eine Präsentation halten", "to give a presentation", "Ich muss morgen eine Präsentation halten.", "I have to give a presentation tomorrow."),
-        LearnPhrase("das Wort ergreifen", "to take the floor", "Darf ich das Wort ergreifen?", "May I take the floor?", "Formell in Meetings"),
-        LearnPhrase("nachfragen", "to ask for clarification", "Könnten Sie das bitte wiederholen? Ich habe nicht verstanden.", "Could you please repeat that? I didn't understand."),
-        LearnPhrase("zustimmen / widersprechen", "to agree / disagree", "Ich stimme Ihnen voll zu. / Da muss ich widersprechen.", "I fully agree with you. / I have to disagree with that."),
-        LearnPhrase("eine Frage stellen", "to ask a question", "Darf ich eine Frage stellen?", "May I ask a question?"),
-        LearnPhrase("laut und deutlich sprechen", "to speak loudly and clearly", "Bitte sprechen Sie laut und deutlich.", "Please speak loudly and clearly."),
-        LearnPhrase("ins Stocken geraten", "to get stuck (while speaking)", "Ich bin beim Sprechen ins Stocken geraten.", "I got stuck while speaking."),
-        LearnPhrase("ein Gespräch beginnen", "to start a conversation", "Wie kann ich ein Gespräch auf Deutsch beginnen?", "How can I start a conversation in German?"),
-        LearnPhrase("das Gesprächsthema wechseln", "to change the topic", "Können wir das Gesprächsthema wechseln?", "Can we change the topic?"),
-        LearnPhrase("ausdrücken", "to express", "Wie kann ich das auf Deutsch ausdrücken?", "How can I express that in German?"),
-        LearnPhrase("unterbrechen", "to interrupt", "Entschuldigung, darf ich kurz unterbrechen?", "Excuse me, may I interrupt briefly?", "Höfliche Unterbrechung"),
-        LearnPhrase("weitermachen", "to continue", "Bitte machen Sie weiter.", "Please continue."),
-        LearnPhrase("etwas betonen", "to emphasize something", "Ich möchte diesen Punkt besonders betonen.", "I want to emphasize this point particularly."),
-        LearnPhrase("eine Pause machen", "to take a break", "Können wir eine kurze Pause machen?", "Can we take a short break?"),
-        LearnPhrase("zusammenfassen", "to summarize", "Lassen Sie mich das kurz zusammenfassen.", "Let me summarize that briefly."),
-        LearnPhrase("Beispiele nennen", "to give examples", "Können Sie ein Beispiel nennen?", "Can you give an example?"),
-        LearnPhrase("die Aussprache üben", "to practice pronunciation", "Ich muss meine Aussprache üben.", "I need to practice my pronunciation."),
-        LearnPhrase("frei sprechen", "to speak freely", "Bei der Prüfung müssen Sie frei sprechen.", "In the exam, you have to speak freely."),
-        LearnPhrase("Feedback geben", "to give feedback", "Können Sie mir Feedback zu meiner Präsentation geben?", "Can you give me feedback on my presentation?")
+        // Template
+        LearnPhrase(
+            german = "📌 TEMPLATE: Meinungsäußerung",
+            english = "Template for argumentative texts",
+            exampleSentence = """
+                **Position:** „Zu diesem Thema habe ich eine klare Meinung: Ich bin [dafür/dagegen], weil ...“
+                **Argument 1:** „Einerseits ...“ → erstes Hauptargument + Alltagsbeispiel
+                **Argument 2:** „Außerdem / Darüber hinaus ...“ → zweites Argument verstärken
+                **Einschränkung:** „Natürlich / Zwar ..., aber ...“ → Gegenargument kurz anerkennen
+                **Fazit:** „Meiner Meinung nach ...“ → eigene Schlussfolgerung / Appell
+            """.trimIndent(),
+            exampleTranslation = "Use this structure for Part 2.",
+            usageTip = "Achte auf klare Argumente und ein erkennbares Fazit."
+        ),
+        // Example 2.1
+        LearnPhrase(
+            german = "2.1 Ungesundes Essen am Arbeitsplatz",
+            english = "Opinion: Healthy vs. unhealthy food at work.",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen, dass Menschen regelmäßig ungesund am Arbeitsplatz essen.
+                Einerseits schadet ungesunde Ernährung auf Dauer der Gesundheit und der Konzentration – wer viel Zucker und Fett isst, fühlt sich nachmittags müde und unproduktiv.
+                Außerdem kostet Fast Food langfristig mehr Geld als selbst mitgebrachte Mahlzeiten – ein Beispiel aus meinem Alltag zeigt das deutlich.
+                Natürlich verstehe ich, dass Berufstätige oft wenig Zeit haben und Fast Food sehr praktisch ist.
+                Meiner Meinung nach sollten Arbeitgeber gesunde Optionen in der Kantine anbieten und Mitarbeiter zu bewusster Ernährung motivieren.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Konzentration, unproduktiv, Mahlzeit, bewusste Ernährung, motivieren",
+            usageTip = "Nenne konkrete Beispiele aus deinem Alltag."
+        ),
+        // Example 2.2
+        LearnPhrase(
+            german = "2.2 Umweltschutz",
+            english = "Opinion: What can we do for environmental protection?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich bin überzeugt, dass Umweltschutz eine absolute Notwendigkeit ist.
+                Einerseits sehen wir täglich die Folgen des Klimawandels – extremes Wetter, schmelzende Gletscher und das Aussterben vieler Tierarten.
+                Außerdem ist die Umwelt das Erbe künftiger Generationen: Was wir heute zerstören, können unsere Kinder nicht zurückbekommen.
+                Natürlich reichen individuelle Maßnahmen allein nicht aus, um das Problem vollständig zu lösen.
+                Meiner Meinung nach brauchen wir sowohl persönliches Engagement – Fahrrad fahren, weniger Plastik – als auch strenge internationale Gesetze.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: überzeugt, Notwendigkeit, Klimawandel, Erbe, Engagement",
+            usageTip = "Verbinde persönliche Maßnahmen mit politischen Forderungen."
+        ),
+        // Example 2.3
+        LearnPhrase(
+            german = "2.3 Fernseher im Kinderzimmer",
+            english = "Opinion: Should kids have a TV in their room?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen, dass Kinder einen Fernseher im eigenen Zimmer haben.
+                Einerseits können Eltern den Medienkonsum nicht mehr kontrollieren – das Kind schaut dann alleine und ohne Aufsicht zu lange oder die falschen Inhalte.
+                Außerdem leiden Schlaf und Schulleistung: Kinder, die abends lange fernsehen, sind am nächsten Tag müde und unkonzentriert.
+                Natürlich dürfen Kinder auch fernsehen – das ist völlig in Ordnung.
+                Meiner Meinung nach sollte das aber immer im gemeinsamen Wohnzimmer stattfinden, damit die Familie zusammen Zeit verbringt.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Medienkonsum, Aufsicht, Schulleistung, unkonzentriert, gemeinsam",
+            usageTip = "Betone die Rolle der Familie."
+        ),
+        // Example 2.4
+        LearnPhrase(
+            german = "2.4 Einkaufen im Internet",
+            english = "Opinion: Advantages of online shopping.",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich finde, dass die Vorteile des Online-Shoppings überwiegen.
+                Einerseits ist es sehr bequem – man kann rund um die Uhr einkaufen, ohne das Haus zu verlassen, und Preise mühelos vergleichen.
+                Außerdem ist die Auswahl im Internet viel größer als in lokalen Geschäften – ich kaufe zum Beispiel Bücher und Elektronik fast immer online.
+                Natürlich gibt es auch Risiken wie Betrug, schlechte Qualität oder umständliche Rücksendungen.
+                Meiner Meinung nach sollte man Online-Shopping bewusst einsetzen und dabei trotzdem lokale Geschäfte regelmäßig unterstützen.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: überwiegen, mühelos, Auswahl, Betrug, bewusst einsetzen",
+            usageTip = "Erwähne sowohl Vor- als auch Nachteile, bevor du ein Fazit ziehst."
+        ),
+        // Example 2.5
+        LearnPhrase(
+            german = "2.5 Führerschein ab 16 Jahre",
+            english = "Opinion: Driving license at age 16?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich bin gegen den Führerschein ab 16 Jahren.
+                Einerseits sind 16-Jährige oft noch nicht reif genug für die große Verantwortung im Straßenverkehr – Studien zeigen, dass sehr junge Fahrer häufiger Unfälle verursachen.
+                Außerdem wäre die Kfz-Versicherung für Jugendliche sehr teuer und eine zusätzliche finanzielle Belastung für die Familien.
+                Natürlich haben junge Menschen in ländlichen Regionen ein echtes Mobilitätsproblem – das ist verständlich.
+                Meiner Meinung nach ist das begleitete Fahren ab 17 Jahren ein guter Kompromiss, der Erfahrung und Sicherheit verbindet.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Verantwortung, verursachen, finanzielle Belastung, Mobilitätsproblem, Kompromiss",
+            usageTip = "Erwähne eine Alternative, um deine Position zu stärken."
+        ),
+        // Example 2.6
+        LearnPhrase(
+            german = "2.6 Urlaub am Strand",
+            english = "Opinion: Is beach vacation the best?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Urlaub am Strand ist wunderbar, aber nicht automatisch der beste Urlaub für jeden.
+                Einerseits bietet der Strand echte Erholung – Sonne, Meeresluft und keine Verpflichtungen helfen, vollständig abzuschalten.
+                Außerdem ist Schwimmen gesund und tut dem Körper gut – ich war letzten Sommer am Mittelmeer und habe mich perfekt erholt.
+                Natürlich bevorzugen manche Menschen Berge, Städtereisen oder Abenteuerurlaub, und das ist völlig verständlich.
+                Meiner Meinung nach ist es am wichtigsten, den Urlaub zu wählen, der einem persönlich am meisten Freude und Erholung bringt.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Erholung, Verpflichtungen, abschalten, bevorzugen, Freude bringen",
+            usageTip = "Anerkenne, dass andere Vorlieben ebenso gültig sind."
+        ),
+        // Example 2.7
+        LearnPhrase(
+            german = "2.7 Essen in öffentlichen Verkehrsmitteln",
+            english = "Opinion: Eating on buses/trains?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich bin dagegen, stark riechende Speisen in öffentlichen Verkehrsmitteln zu essen.
+                Einerseits ist der Geruch für andere Fahrgäste sehr unangenehm – besonders Fisch, Zwiebeln oder Fast Food in einem geschlossenen Waggon sind störend.
+                Außerdem kann Essen die Sitze und den Boden schmutzig machen, was für alle anderen unangenehm ist.
+                Natürlich ist ein kleiner Keks oder eine Flasche Wasser völlig in Ordnung – das stört niemanden.
+                Meiner Meinung nach sollte man Rücksicht auf Mitreisende nehmen und intensive Gerüche in gemeinsam genutzten Räumen vermeiden.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Fahrgäste, Waggon, störend, Rücksicht nehmen, intensiv",
+            usageTip = "Differenziere zwischen störenden und akzeptablen Lebensmitteln."
+        ),
+        // Example 2.8
+        LearnPhrase(
+            german = "2.8 Soll man Vegetarier werden",
+            english = "Opinion: Should people become vegetarian?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich denke, dass mehr Menschen vegetarisch essen sollten.
+                Einerseits ist eine pflanzenbasierte Ernährung oft gesünder – weniger gesättigte Fette bedeuten ein geringeres Risiko für Herzerkrankungen.
+                Außerdem hat die Fleischproduktion enorme Auswirkungen auf die Umwelt: Sie verbraucht viel Wasser und Energie und erzeugt viele Treibhausgase.
+                Natürlich ist es eine persönliche Entscheidung und niemand sollte gezwungen werden, sein Essverhalten zu ändern.
+                Meiner Meinung nach wäre es schon ein großer Fortschritt, wenn alle einfach weniger und bewusster Fleisch essen würden.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: pflanzenbasiert, gesättigte Fette, Herzerkrankungen, Treibhausgase, Essverhalten",
+            usageTip = "Schlage einen realistischen Kompromiss vor (z.B. weniger Fleisch)."
+        ),
+        // Example 2.9
+        LearnPhrase(
+            german = "2.9 Dürfen Männer weinen",
+            english = "Opinion: Should men cry in public?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ja, Männer dürfen und sollten weinen dürfen – genauso wie alle anderen Menschen.
+                Einerseits ist Weinen eine natürliche menschliche Reaktion auf Trauer, Schmerz oder sogar Freude – das gilt für alle Menschen gleich.
+                Außerdem zeigen Studien, dass das langfristige Unterdrücken von Gefühlen zu ernsten psychischen Problemen wie Depressionen führen kann.
+                Natürlich gibt es kulturelle Unterschiede, und nicht jeder fühlt sich wohl damit, öffentlich Gefühle zu zeigen.
+                Meiner Meinung nach sollten wir alte Rollenbilder über Männlichkeit überwinden und Emotionen bei allen Menschen akzeptieren.
+            """.trimIndent(),
+            exampleTranslation = "Keywords: natürliche Reaktion, Trauer, unterdrücken, Depressionen, Rollenbilder",
+            usageTip = "Verweise auf psychologische Studien oder gesellschaftliche Veränderungen."
+        ),
+        // Example 2.10
+        LearnPhrase(
+            german = "2.10 Telefonieren in öffentlichen Verkehrsmitteln",
+            english = "Opinion: Loud phone calls on transport?",
+            exampleSentence = """
+                Zu diesem Thema habe ich eine klare Meinung: Ich finde lautes Telefonieren in öffentlichen Verkehrsmitteln störend und rücksichtslos.
+                Einerseits wollen viele Mitfahrer in Ruhe lesen, arbeiten oder entspannen – ein lautes Gespräch macht das unmöglich.
+                Außerdem werden dabei oft private Details für alle hörbar erzählt, was peinlich und unangenehm für alle Beteiligten ist.
+                Natürlich muss man manchmal dringend telefonieren – das ist verständlich und gehört zum Alltag.
+                Meiner Meinung nach sollte man aber leise sprechen, kurze Gespräche führen oder in den Vorraum gehen. Rücksicht ist das Wichtigste!
+            """.trimIndent(),
+            exampleTranslation = "Keywords: rücksichtslos, Mitfahrer, hörbar, peinlich, in den Vorraum gehen",
+            usageTip = "Gib praktische Tipps für rücksichtsvolles Verhalten."
+        )
     )
 )
 
-// ─── Grammatik Content ────────────────────────────────────────────────────────
-
-val GrammatikContent = LearnThemeContent(
-    theme = LearnTheme.GRAMMATIK,
+// Part 3: Privater oder formeller Brief
+val SchreibenTeil3Content = LearnThemeContent(
+    theme = LearnTheme.SCHREIBEN_TEIL3,
     phrases = listOf(
-        LearnPhrase("der Nominativ", "nominative case", "Der Nominativ ist der erste Fall im Deutschen.", "The nominative is the first case in German.", "Subjekt-Fall"),
-        LearnPhrase("der Akkusativ", "accusative case", "Den Akkusativ benutzt man für das direkte Objekt.", "The accusative is used for the direct object."),
-        LearnPhrase("der Dativ", "dative case", "Der Dativ ist der dritte Fall.", "The dative is the third case.", "Indirektes Objekt"),
-        LearnPhrase("der Genitiv", "genitive case", "Der Genitiv zeigt Besitz an.", "The genitive shows possession.", "Wessen-Fall"),
-        LearnPhrase("die Konjugation", "conjugation", "Die Konjugation von Verben ist wichtig.", "Conjugating verbs is important."),
-        LearnPhrase("das Präsens", "present tense", "Das Präsens beschreibt aktuelle Handlungen.", "The present tense describes current actions."),
-        LearnPhrase("das Perfekt", "perfect tense", "Das Perfekt wird für vergangene Handlungen benutzt.", "The perfect tense is used for past actions.", "Gesprochene Sprache"),
-        LearnPhrase("das Präteritum", "simple past", "Das Präteritum benutzt man oft in Geschichten.", "The simple past is often used in stories.", "Geschriebene Sprache"),
-        LearnPhrase("das Futur I", "future tense", "Das Futur I beschreibt zukünftige Handlungen.", "The future tense describes future actions."),
-        LearnPhrase("die Präpositionen", "prepositions", "Präpositionen stehen vor Nomen.", "Prepositions stand before nouns."),
-        LearnPhrase("die Artikel (der/die/das)", "articles", "Im Deutschen gibt es drei Artikel.", "There are three articles in German."),
-        LearnPhrase("die Pluralbildung", "plural formation", "Die Pluralbildung ist im Deutschen komplex.", "Plural formation is complex in German."),
-        LearnPhrase("die Adjektivdeklination", "adjective declension", "Adjektive werden nach Fall und Artikel dekliniert.", "Adjectives are declined according to case and article."),
-        LearnPhrase("die Nebensätze", "subordinate clauses", "Nebensätze haben das Verb am Ende.", "Subordinate clauses have the verb at the end."),
-        LearnPhrase("die Konjunktionen", "conjunctions", "Konjunktionen verbinden Sätze.", "Conjunctions connect sentences."),
-        LearnPhrase("weil / denn", "because", "Weil leitet einen Nebensatz ein, denn einen Hauptsatz.", "Weil introduces a subordinate clause, denn a main clause."),
-        LearnPhrase("obwohl / trotzdem", "although / nevertheless", "Obwohl es regnet, gehe ich spazieren.", "Although it's raining, I'm going for a walk."),
-        LearnPhrase("wenn / als", "when/if", "Wenn benutzt man für Gegenwart/Zukunft, als für Vergangenheit.", "Wenn is used for present/future, als for past."),
-        LearnPhrase("die Relativsätze", "relative clauses", "Relativsätze geben mehr Informationen über ein Nomen.", "Relative clauses give more information about a noun."),
-        LearnPhrase("Passiv bilden", "to form passive", "Das Passiv wird mit werden + Partizip II gebildet.", "The passive is formed with werden + past participle.")
+        // Template
+        LearnPhrase(
+            german = "📌 TEMPLATE: Brief / E-Mail",
+            english = "Template for letters and emails",
+            exampleSentence = """
+                **Anrede:** Sehr geehrte/r [Name/Damen und Herren] ODER Liebe/r [Vorname] (informell)
+                **Bezug:** „Ich schreibe Ihnen bezüglich [Anzeige/Situation vom ...]“
+                **Vorstellung:** Name, Alter, Situation (1 Satz)
+                **Anliegen:** 2–3 konkrete Fragen oder Bewerbungsinhalt
+                **Abschluss:** „Ich würde mich sehr freuen, von Ihnen zu hören, und bitte um ...“
+                **Gruß:** Mit freundlichen Grüßen / Liebe Grüße + Name
+            """.trimIndent(),
+            exampleTranslation = "Use this structure for Part 3.",
+            usageTip = "Achte auf den richtigen Ton (formell vs. informell)."
+        ),
+        // Example 3.1
+        LearnPhrase(
+            german = "3.1 Fahrrad-Anzeige",
+            english = "Email to seller: Ask about a used bike.",
+            exampleSentence = """
+                Sehr geehrte/r Verkäufer/in,
+                ich schreibe Ihnen bezüglich Ihrer Anzeige für ein gebrauchtes Mountainbike, die ich heute online gesehen habe.
+                Das Fahrrad interessiert mich sehr, da ich ein zuverlässiges Rad für meinen täglichen Arbeitsweg suche. Mein Name ist Max Müller, ich bin 29 Jahre alt und auf ein gutes Fahrrad angewiesen.
+                Ich würde gerne wissen, wie alt das Fahrrad ist und ob es kürzlich gewartet oder repariert wurde. Außerdem frage ich mich, ob der Preis noch verhandelbar ist.
+                Ich würde mich sehr freuen, von Ihnen zu hören, und bitte um einen Besichtigungstermin – am liebsten an einem Wochenende.
+                Mit freundlichen Grüßen,
+                Max Müller
+            """.trimIndent(),
+            exampleTranslation = "Keywords: zuverlässig, Arbeitsweg, angewiesen auf, gewartet, verhandelbar",
+            usageTip = "Stelle konkrete Fragen, die für dich wichtig sind."
+        ),
+        // Example 3.2
+        LearnPhrase(
+            german = "3.2 Entschuldigung",
+            english = "Email to friend: Apologize for missed appointment.",
+            exampleSentence = """
+                Lieber Jonas,
+                ich schreibe dir, weil ich mich aufrichtig bei dir entschuldigen möchte: Leider habe ich unseren gemeinsamen Termin am Mittwochabend völlig vergessen.
+                Das tut mir sehr leid und ich hoffe wirklich, du nimmst es mir nicht übel. Der Grund war leider ein unerwarteter Notfall bei der Arbeit, der mich den ganzen Tag beschäftigt hat.
+                Ich hätte dir aber trotzdem rechtzeitig eine Nachricht schicken sollen – das war nicht in Ordnung von mir.
+                Als kleines Zeichen meiner Entschuldigung würde ich dich gerne auf ein Abendessen einladen. Wann hast du nächste Woche Zeit? Donnerstag oder Freitag würde mir gut passen.
+                Liebe Grüße,
+                Sophia
+            """.trimIndent(),
+            exampleTranslation = "Keywords: aufrichtig, übel nehmen, unerwarteter Notfall, rechtzeitig, Zeichen der Entschuldigung",
+            usageTip = "Nenne den Grund, entschuldige dich und mache einen konkreten Wiedergutmachungsvorschlag."
+        ),
+        // Example 3.3
+        LearnPhrase(
+            german = "3.3 Job-Anzeige: Kassierer/in",
+            english = "Application email for supermarket cashier job.",
+            exampleSentence = """
+                Sehr geehrte Damen und Herren,
+                ich schreibe Ihnen bezüglich Ihrer Stellenanzeige für eine Aushilfskraft als Kassierer/in in Teilzeit, die ich diese Woche in Ihrer Filiale gesehen habe.
+                Mein Name ist Leila Bensalem, ich bin 28 Jahre alt und derzeit auf der Suche nach einer geeigneten Teilzeitstelle. Ich habe bereits ein Jahr Erfahrung als Verkäuferin in einem Lebensmittelgeschäft und arbeite sehr gerne mit Menschen.
+                Ich bin zuverlässig, pünktlich und lernbereit. An Wochentagen und am Wochenende stehe ich flexibel zur Verfügung.
+                Ich würde mich sehr freuen, von Ihnen zu hören, und bitte um einen Vorstellungstermin, um meine Eignung persönlich vorstellen zu können.
+                Mit freundlichen Grüßen,
+                Leila Bensalem
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Stellenanzeige, geeignet, Erfahrung, lernbereit, Eignung",
+            usageTip = "Heb deine relevanten Erfahrungen und Soft Skills hervor."
+        ),
+        // Example 3.4
+        LearnPhrase(
+            german = "3.4 Englisch-Kurs-Anzeige",
+            english = "Email: Register for English course.",
+            exampleSentence = """
+                Sehr geehrte Damen und Herren,
+                ich schreibe Ihnen bezüglich Ihres Englisch-Kurses für Anfänger, den ich in Ihrer aktuellen Anzeige gesehen habe.
+                Mein Name ist Amira Hassan, ich bin 34 Jahre alt und möchte Englisch lernen, da ich die Sprache dringend für meinen Beruf benötige. Ich interessiere mich sehr für Ihren Abendkurs.
+                Ich würde gerne wissen, ob noch freie Plätze verfügbar sind und wann genau der nächste Kurs beginnt. Außerdem möchte ich fragen, ob eine Ratenzahlung möglich ist.
+                Ich würde mich sehr freuen, von Ihnen zu hören, und bitte um baldige Rückmeldung sowie alle notwendigen Informationen zur Anmeldung.
+                Mit freundlichen Grüßen,
+                Amira Hassan
+            """.trimIndent(),
+            exampleTranslation = "Keywords: dringend, Abendkurs, verfügbar, Ratenzahlung, Rückmeldung",
+            usageTip = "Stelle alle wichtigen Fragen, die du vor der Anmeldung klären musst."
+        ),
+        // Example 3.5
+        LearnPhrase(
+            german = "3.5 Schauspieler-Anzeige",
+            english = "Application email for theater role.",
+            exampleSentence = """
+                Sehr geehrte Damen und Herren,
+                ich schreibe Ihnen bezüglich Ihrer Anzeige, in der Sie Schauspieler/innen für ein Theaterstück suchen, die ich diese Woche entdeckt habe.
+                Mein Name ist Carlos Diaz, ich bin 26 Jahre alt und bewerbe mich mit großer Freude für diese Rolle, da Theater meine größte Leidenschaft ist. Ich habe drei Jahre lang in einer Laientheatergruppe mitgespielt und dabei mehrere Hauptrollen übernommen.
+                Außerdem habe ich an einem professionellen Schauspiel-Workshop teilgenommen und bin erfahren im Umgang mit Publikum. Ich bin flexibel und kann an den meisten Abenden für Proben erscheinen.
+                Ich würde mich sehr freuen, von Ihnen zu hören, und bitte herzlich um einen Vorsprechtermin, um mein Können zeigen zu können.
+                Mit freundlichen Grüßen,
+                Carlos Diaz
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Leidenschaft, Laientheater, Hauptrolle, Vorsprechtermin, Können zeigen",
+            usageTip = "Zeige Begeisterung und nenne konkrete Erfahrungen."
+        ),
+        // Example 3.6
+        LearnPhrase(
+            german = "3.6 Wohnungs-Anzeige",
+            english = "Email to landlord: Request viewing.",
+            exampleSentence = """
+                Sehr geehrte Damen und Herren,
+                ich schreibe Ihnen bezüglich Ihrer Anzeige für eine 2-Zimmer-Wohnung (600 €/Monat), die ich heute auf Ihrem Immobilienportal gesehen habe.
+                Mein Name ist Nina Kowalski, ich bin 31 Jahre alt, berufstätig und zuverlässig. Ich suche ab dem 1. März eine neue Unterkunft in zentraler Lage.
+                Ich würde gerne wissen, ob die Wohnung noch verfügbar ist und ob Haustiere erlaubt sind. Außerdem bitte ich um Informationen zu den Nebenkosten und der Kautionshöhe.
+                Ich würde mich sehr freuen, von Ihnen zu hören, und bitte um einen Besichtigungstermin in der nächsten Woche.
+                Mit freundlichen Grüßen,
+                Nina Kowalski
+            """.trimIndent(),
+            exampleTranslation = "Keywords: Immobilienportal, Unterkunft, zentrale Lage, Nebenkosten, Kautionshöhe",
+            usageTip = "Frage nach allen wichtigen Details, die du vor der Besichtigung wissen musst."
+        )
     )
 )
 
-// ─── All Learn Content ────────────────────────────────────────────────────────
+// ─── NEW: Konnektoren ─────────────────────────────────────────────────
+
+val KonjunktionenContent = LearnThemeContent(
+    theme = LearnTheme.KONJUNKTIONEN,   // now correctly resolved
+    phrases = listOf(
+        LearnPhrase(
+            german = "und",
+            english = "Konjunktion – Addition (and)",
+            exampleSentence = "Ich lerne Deutsch **und** Englisch.\n\n→ Verb in Position 2.\n\n*Beispiele:*\n• Ich trinke Wasser und Saft.\n• Er singt und tanzt gern.",
+            exampleTranslation = "I learn German and English.",
+            usageTip = "Kein Komma vor 'und' bei Aufzählungen. Bei ganzen Sätzen optional."
+        ),
+        LearnPhrase(
+            german = "aber",
+            english = "Konjunktion – Gegensatz (but)",
+            exampleSentence = "Ich mag Fußball, **aber** ich spiele nicht gern.\n\n→ Verb in Position 2.\n\n*Beispiele:*\n• Sie ist müde, aber sie arbeitet weiter.\n• Das Wetter ist schlecht, aber wir gehen trotzdem raus.",
+            exampleTranslation = "I like football, but I don't like playing it.",
+            usageTip = "Komma vor 'aber' immer, wenn zwei Hauptsätze verbunden werden. ❌ Nicht mit 'obwohl' kombinieren!"
+        ),
+        LearnPhrase(
+            german = "denn",
+            english = "Konjunktion – Grund (because)",
+            exampleSentence = "Ich bleibe zu Hause, **denn** ich bin müde.\n\n→ Verb in Position 2 (kein Nebensatz!).\n\n*Beispiele:*\n• Er kommt nicht, denn er ist krank.\n• Wir fahren mit dem Zug, denn das ist billiger.",
+            exampleTranslation = "I stay home because I'm tired.",
+            usageTip = "Anders als 'weil': Verb bleibt auf Position 2. Kein Komma? Doch, Komma vor 'denn' ist Pflicht."
+        ),
+        // Add more connectors as needed – here we show a representative sample.
+        // From the JSON, all Konjunktionen: und, aber, denn, oder, sondern
+        // You can add the remaining ones following the same pattern.
+        LearnPhrase(
+            german = "oder",
+            english = "Konjunktion – Alternative (or)",
+            exampleSentence = "Möchtest du Tee **oder** Kaffee?\n\n→ Verb in Position 2.\n\n*Beispiele:*\n• Wir fahren nach Berlin oder nach Hamburg.\n• Kannst du morgen oder übermorgen kommen?",
+            exampleTranslation = "Would you like tea or coffee?",
+            usageTip = "Kein Komma vor 'oder' bei einfachen Aufzählungen. Bei ganzen Sätzen optional."
+        ),
+        LearnPhrase(
+            german = "sondern",
+            english = "Konjunktion – Korrektur (but rather)",
+            exampleSentence = "Er kommt nicht mit dem Auto, **sondern** er nimmt den Zug.\n\n→ Verb in Position 2.\n\n*Beispiele:*\n• Sie ist nicht müde, sondern sie hat keine Lust.\n• Das Buch ist nicht neu, sondern gebraucht.",
+            exampleTranslation = "He's not coming by car, but rather he's taking the train.",
+            usageTip = "Wird verwendet, um eine Verneinung zu korrigieren. Immer mit Komma."
+        )
+    )
+)
+
+val SubjunktionenContent = LearnThemeContent(
+    theme = LearnTheme.SUBJUNKTIONEN,
+    phrases = listOf(
+        LearnPhrase(
+            german = "weil",
+            english = "Subjunktion – Grund (because)",
+            exampleSentence = "Ich lerne, **weil** ich die Prüfung bestehen will.\n\n→ Verb am ENDE des Nebensatzes!\n\n*Beispiele:*\n• Er bleibt zu Hause, weil er krank ist.\n• Wir gehen spazieren, weil die Sonne scheint.",
+            exampleTranslation = "I study because I want to pass the exam.",
+            usageTip = "❌ Falsch: 'weil ich bin müde' → ✅ 'weil ich müde bin'"
+        ),
+        LearnPhrase(
+            german = "obwohl",
+            english = "Subjunktion – Gegensatz (although)",
+            exampleSentence = "**Obwohl** es regnet, gehe ich spazieren.\n\n→ Verb am ENDE.\n\n*Beispiele:*\n• Obwohl er krank ist, arbeitet er.\n• Sie kommt, obwohl sie keine Zeit hat.",
+            exampleTranslation = "Although it's raining, I'm going for a walk.",
+            usageTip = "Nicht mit 'aber' kombinieren! ❌ 'Obwohl es regnet, aber ich gehe...'"
+        ),
+        LearnPhrase(
+            german = "wenn",
+            english = "Subjunktion – Bedingung / Wiederholung (if/when)",
+            exampleSentence = "**Wenn** du Zeit hast, ruf mich an.\n\n**Wenn** ich müde bin, gehe ich früh schlafen.\n\n→ Verb am ENDE.",
+            exampleTranslation = "If you have time, call me. / When I'm tired, I go to bed early.",
+            usageTip = "Verwechsle nicht mit 'als': 'wenn' = wiederholt / Gegenwart / Zukunft; 'als' = einmalige Vergangenheit."
+        ),
+        LearnPhrase(
+            german = "als",
+            english = "Subjunktion – einmalige Vergangenheit (when)",
+            exampleSentence = "**Als** ich Kind war, wohnte ich in Berlin.\n\n→ Verb am ENDE.",
+            exampleTranslation = "When I was a child, I lived in Berlin.",
+            usageTip = "Nur für ein einzelnes Ereignis in der Vergangenheit. Für wiederholte Handlungen in der Vergangenheit: 'wenn'."
+        ),
+        LearnPhrase(
+            german = "damit",
+            english = "Subjunktion – Zweck (so that) – verschiedene Subjekte",
+            exampleSentence = "Ich lerne, **damit** ich gute Noten bekomme.\n\n→ Verb am ENDE.\n\n*Beispiele:*\n• Er erklärt es langsam, damit alle verstehen.\n• Wir sparen Geld, damit wir reisen können.",
+            exampleTranslation = "I study so that I get good grades.",
+            usageTip = "Wenn Hauptsatz‑ und Nebensatz‑Subjekt gleich sind, benutze 'um...zu' + Infinitiv."
+        ),
+        LearnPhrase(
+            german = "nachdem",
+            english = "Subjunktion – Vorzeitigkeit (after)",
+            exampleSentence = "**Nachdem** ich gegessen hatte, ging ich spazieren.\n\n→ Verb am ENDE. Beachte die Zeitfolge!",
+            exampleTranslation = "After I had eaten, I went for a walk.",
+            usageTip = "Nachdem + Plusquamperfekt (Vorvergangenheit) im Nebensatz, dann Hauptsatz im Präteritum."
+        )
+        // Weitere Subjunktionen aus JSON: falls, bevor, während, seitdem, sobald, etc. – analog ergänzen
+    )
+)
+
+val KonjunktionaladverbienContent = LearnThemeContent(
+    theme = LearnTheme.KONJUNKTIONALADVERBIEN,
+    phrases = listOf(
+        LearnPhrase(
+            german = "deshalb",
+            english = "Konjunktionaladverb – Folge (therefore)",
+            exampleSentence = "Es regnet, **deshalb** bleibe ich zu Hause.\n\n→ Verb direkt NACH dem Adverb (Inversion!).",
+            exampleTranslation = "It's raining, therefore I'm staying home.",
+            usageTip = "Position 1 im Satz – das Verb folgt sofort. ❌ 'deshalb ich bleibe' → ✅ 'deshalb bleibe ich'"
+        ),
+        LearnPhrase(
+            german = "trotzdem",
+            english = "Konjunktionaladverb – Gegensatz (nevertheless)",
+            exampleSentence = "Es ist kalt, **trotzdem** gehe ich raus.\n\n→ Inversion!",
+            exampleTranslation = "It's cold, nevertheless I'm going out.",
+            usageTip = "Ähnlich wie 'obwohl', aber mit Inversion. Synonym: 'dennoch'."
+        ),
+        LearnPhrase(
+            german = "außerdem",
+            english = "Konjunktionaladverb – Addition (furthermore)",
+            exampleSentence = "Er ist intelligent, **außerdem** ist er sehr fleißig.\n\n→ Inversion!",
+            exampleTranslation = "He is intelligent, furthermore he's very diligent.",
+            usageTip = "Wird oft verwendet, um ein Argument zu verstärken."
+        ),
+        LearnPhrase(
+            german = "sonst",
+            english = "Konjunktionaladverb – Alternative (otherwise)",
+            exampleSentence = "Beeil dich, **sonst** verpassen wir den Zug.\n\n→ Inversion!",
+            exampleTranslation = "Hurry up, otherwise we'll miss the train.",
+            usageTip = "Drohende Konsequenz. Steht meist im zweiten Satz."
+        )
+        // Weitere: daher, darum, dennoch, folglich, etc.
+    )
+)
+
+// ============================================================================
+// GRAMMAR TOPICS (full list)
+// ============================================================================
+
+val PerfektContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_PERFEKT,
+    phrases = listOf(LearnPhrase("Perfekt", "Present Perfect", """
+        **Bildung:** haben/sein + Partizip II
+        • Regelmäßig: ge‑ + Stamm + ‑t (gemacht)
+        • Unregelmäßig: ge‑ + Stamm (geändert) + ‑en (gesehen)
+        • Hilfsverb: 'haben' (meiste Verben), 'sein' (Bewegung, Zustandswechsel)
+        
+        **Wortstellung:** Hilfsverb Position 2, Partizip am Ende.
+        → Ich habe gestern einen Film gesehen.
+        
+        **Beispiele:**
+        • Ich bin nach Berlin gefahren. (Bewegung)
+        • Wir haben uns getroffen. (reflexiv)
+        
+        **Häufige Fehler:**
+        ❌ Ich habe gesehen den Film. → ✅ Ich habe den Film gesehen.
+        ❌ Ich bin gegessen. → ✅ Ich habe gegessen.
+        
+        **Prüfungstipps:** In B1‑Sprechen bevorzugt; 15 häufige unregelmäßige Partizipien lernen.
+    """.trimIndent())))
+
+val PraeteritumContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_PRAETERITUM,
+    phrases = listOf(LearnPhrase("Präteritum", "Simple Past", """
+        **Bildung:** Regelmäßig: Stamm + -te + Endung (ich lernte). Unregelmäßig: Stammwechsel (ich ging).
+        **Verwendung:** Schriftliche Erzählungen; Modalverben, sein, haben auch in gesprochener Sprache.
+        **Beispiele:** Ich lernte Deutsch, als ich in Deutschland wohnte. Er konnte nicht kommen.
+        **Häufige Fehler:** Übermäßiger Gebrauch in Sprache; falscher Stammwechsel.
+        **Prüfungstipps:** In Schreibaufgaben Präteritum für Hintergrund, Perfekt für Hauptereignisse.
+    """.trimIndent())))
+
+val ModalverbenContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_MODALVERBEN,
+    phrases = listOf(LearnPhrase("Modalverben", "können, müssen, ...", """
+        **Präsens:** kann, musst, will, soll, darf, mag – Infinitiv am Ende.
+        **Perfekt:** haben + Infinitiv + Infinitiv (Ich habe kommen können).
+        **Bedeutungen:** Fähigkeit, Notwendigkeit, Wille, Empfehlung, Erlaubnis, Vorliebe.
+        **Häufige Fehler:** 'zu' nach Modalverb (❌ muss zu gehen); falsches Perfekt (❌ habe gekonnt).
+        **Prüfungstipps:** Modalverben für Meinungsäußerung; Präteritum (konnte, musste) für Texte.
+    """.trimIndent())))
+
+val PassivContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_PASSIV,
+    phrases = listOf(LearnPhrase("Passiv (Vorgangspassiv)", "werden + Partizip II", """
+        **Bildung:** werden (konjugiert) + Partizip II
+        • Präsens: Das Buch wird gelesen.
+        • Präteritum: Das Haus wurde 1990 gebaut.
+        • Perfekt: ist ... worden (nicht geworden!)
+        **Agent:** von + Dativ (Person), durch + Akkusativ (Mittel)
+        **Häufige Fehler:** 'geworden' im Perfekt; Passiv bei intransitiven Verben.
+        **Prüfungstipps:** Für Prozesse, Regeln, formale Texte; Aktiv ↔ Passiv üben.
+    """.trimIndent())))
+
+val KonjunktivIIContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_KONJUNKTIV_II,
+    phrases = listOf(LearnPhrase("Konjunktiv II", "würde, hätte, wäre", """
+        **Bildung:** würde + Infinitiv (meist); unregelmäßig: hätte, wäre, könnte, müsste, sollte, dürfte, wollte.
+        **Verwendung:** Höfliche Bitten, irreale Bedingungen, Wünsche.
+        **Beispiele:** Wenn ich Zeit hätte, würde ich kommen. Könnten Sie mir helfen?
+        **Häufige Fehler:** Indikativ im wenn‑Satz (❌ wenn ich habe → ✅ hätte); Fehlendes würde im Hauptsatz.
+        **Prüfungstipps:** B1‑Schwerpunkt: würde + Infinitiv + hätte/wäre/könnte.
+    """.trimIndent())))
+
+val RelativsatzContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_RELATIVSATZ,
+    phrases = listOf(LearnPhrase("Relativsätze", "der, die, das ...", """
+        **Relativpronomen:** richten sich nach Genus/Numerus des Bezugsworts und Fall im Relativsatz.
+        • Nominativ: der, die, das, die
+        • Akkusativ: den, die, das, die
+        • Dativ: dem, der, dem, denen
+        • Genitiv: dessen, deren, dessen, deren
+        **Wortstellung:** Verb am Ende; Komma vor Relativsatz.
+        **Beispiele:** Der Mann, der mir half, ... Die Frau, mit der ich sprach, ...
+        **Häufige Fehler:** Falscher Fall (❌ der Mann, den mir half); Verb nicht am Ende.
+        **Prüfungstipps:** B1 konzentriert sich auf Nom., Akk., Dat. Relativpronomen.
+    """.trimIndent())))
+
+val AdjektivdeklinationContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_ADJEKTIVDEKLINATION,
+    phrases = listOf(LearnPhrase("Adjektivdeklination", "Endungen nach Artikel", """
+        **Nach bestimmtem Artikel (der‑Wörter):**
+        Nom: -e, -e, -e, -en
+        Akk: -en, -e, -e, -en
+        Dat: -en, -en, -en, -en
+        Gen: -en, -en, -en, -en
+        
+        **Nach unbestimmtem Artikel (ein‑Wörter):**
+        Nom: -er, -e, -es, -en
+        Akk: -en, -e, -es, -en
+        Dat: -en, -en, -en, -en
+        Gen: -en, -en, -en, -en
+        
+        **Ohne Artikel:**
+        Nom: -er, -e, -es, -e
+        Akk: -en, -e, -es, -e
+        Dat: -en, -en, -en, -en
+        Gen: -en, -er, -en, -er
+        
+        **Häufige Fehler:** Gleiche Endung für alle Fälle; -en im Dativ vergessen.
+        **Prüfungstipps:** Muster für bestimmte/unbestimmte Artikel getrennt lernen; im Zweifel -en.
+    """.trimIndent())))
+
+val PraepositionenContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_PRAEPOSITIONEN,
+    phrases = listOf(LearnPhrase("Präpositionen", "mit Akkusativ, Dativ, Genitiv", """
+        **Akkusativ:** durch, für, gegen, ohne, um (DOGFU)
+        **Dativ:** aus, außer, bei, mit, nach, seit, von, zu, gegenüber
+        **Wechselpräpositionen (Akkusativ = Bewegung, Dativ = Ort):** an, auf, hinter, in, neben, über, unter, vor, zwischen
+        **Genitiv:** wegen, trotz, während, (an)statt
+        **Häufige Fehler:** Falscher Fall bei Wechselpräpositionen; fehlende Kontraktionen (im, am, zur).
+        **Prüfungstipps:** Wo? vs. Wohin? für Wechselpräpositionen; die 9 Dativ‑Präpositionen auswendig.
+    """.trimIndent())))
+
+val WortstellungContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_WORTSTELLUNG,
+    phrases = listOf(LearnPhrase("Wortstellung (Satzbau)", "Verbposition, TeKaMoLo", """
+        **Hauptsatz:** Verb in Position 2.
+        • Zeit, Grund, Art, Ort (TeKaMoLo): Ich fahre morgen (T) wegen der Arbeit (K) mit dem Zug (M) nach Berlin (L).
+        **Nebensatz:** Verb am Ende (weil ich müde bin).
+        **Fragen:** Verb in Position 1 (Kommst du?) oder nach W‑Wort (Wann kommst du?).
+        **Häufige Fehler:** Verb nicht in Position 2 (❌ Ich morgen gehe); Verb nicht am Ende im Nebensatz.
+        **Prüfungstipps:** Immer Verbposition prüfen; TeKaMoLo für lange Sätze nutzen.
+    """.trimIndent())))
+
+val InfinitivMitZuContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_INFINITIV_MIT_ZU,
+    phrases = listOf(LearnPhrase("Infinitiv mit 'zu' / 'um...zu'", "", """
+        **zu + Infinitiv:** nach bestimmten Verben (versuchen, hoffen, planen) und Adjektiven (es ist wichtig, ...).
+        → Ich versuche, Deutsch zu lernen.
+        **um...zu:** Absicht, gleiches Subjekt → Ich lerne, um zu arbeiten.
+        **ohne...zu / anstatt...zu:** ohne / anstatt + zu + Infinitiv.
+        **Regeln:** Komma vor Infinitivgruppe; zu direkt vor Infinitiv; bei trennbaren Verben zwischen Präfix und Stamm (anzurufen).
+        **Häufige Fehler:** Fehlendes Komma; um...zu bei verschiedenen Subjekten (dann 'damit').
+        **Prüfungstipps:** Gleiches Subjekt → um...zu; verschiedenes → damit.
+    """.trimIndent())))
+
+val KomparativContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_KOMPARATIV,
+    phrases = listOf(LearnPhrase("Komparativ & Superlativ", "", """
+        **Komparativ:** Adjektiv + -er (schneller), oft Umlaut (älter), unregelmäßig: gut → besser, viel → mehr.
+        **Vergleich:** als (größer als).
+        **Superlativ:** am + -sten (am schnellsten) oder der/die/das + -ste (der schnellste).
+        **Häufige Fehler:** 'wie' statt 'als' im Komparativ; Umlaut vergessen; falsche Superlativform (am größte).
+        **Prüfungstipps:** Komparativ für Meinungen (Ich finde X besser als Y); Superlativ für Favoriten.
+    """.trimIndent())))
+
+val NegationContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_NEGATION,
+    phrases = listOf(LearnPhrase("Negation: nicht vs. kein", "", """
+        **kein:** verneint Nomen mit unbestimmtem Artikel oder ohne Artikel (Ich habe kein Auto).
+        **nicht:** verneint Verben, Adjektive, bestimmte Nomen, etc. Position: vor dem verneinten Element oder am Ende.
+        → Ich verstehe das nicht. (Verb)
+        → Das ist nicht mein Buch. (Possessiv)
+        → Ich gehe heute nicht ins Kino. (allgemein)
+        **Häufige Fehler:** nicht bei Nomen ohne Artikel (❌ Ich habe nicht Geld); falsche Position.
+        **Prüfungstipps:** Frage: Gibt es einen unbestimmten Artikel? → kein, sonst nicht.
+    """.trimIndent())))
+
+val ReflexiveVerbenContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_REFLEXIVE_VERBEN,
+    phrases = listOf(LearnPhrase("Reflexive Verben", "", """
+        **Reflexivpronomen:** Akkusativ (mich, dich, sich, uns, euch, sich) / Dativ (mir, dir, sich, uns, euch, sich).
+        **Echte reflexive Verben:** immer mit Reflexivpronomen (sich freuen, sich erinnern).
+        **Wechselnd:** manche Verben ändern Bedeutung (treffen → sich treffen).
+        **Dativ‑reflexiv:** bei Körperteilen/Possessiv (Ich wasche mir die Hände).
+        **Wortstellung:** Pronomen folgt direkt nach Verb im Hauptsatz.
+        **Häufige Fehler:** Falscher Kasus (❌ Ich freue mir); 3. Person 'sich' vergessen.
+        **Prüfungstipps:** Die 15 häufigsten reflexiven Verben mit Präposition lernen (sich freuen auf/über).
+    """.trimIndent())))
+
+val FragenContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_FRAGEN,
+    phrases = listOf(LearnPhrase("Fragen (Fragesätze)", "", """
+        **Ja/Nein‑Fragen:** Verb in Position 1 → Kommst du mit?
+        **W‑Fragen:** W‑Wort + Verb + Subjekt → Wo wohnst du?
+        **Indirekte Fragen:** Hauptsatz + ob/W‑Wort + Nebensatz (Verb am Ende).
+        → Ich weiß nicht, ob er kommt.
+        → Können Sie mir sagen, wo der Bahnhof ist?
+        **Häufige Fehler:** Verb im indirekten Fragesatz nicht am Ende; 'ob' mit 'wenn' verwechselt.
+        **Prüfungstipps:** Indirekte Fragen für höfliche Nachfragen nutzen; 10 W‑Wörter beherrschen.
+    """.trimIndent())))
+
+val TrennbareVerbenContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_TRENNBARE_VERBEN,
+    phrases = listOf(LearnPhrase("Trennbare & untrennbare Verben", "", """
+        **Trennbare Präfixe:** ab‑, an‑, auf‑, aus‑, ein‑, mit‑, nach‑, vor‑, zu‑, zurück‑.
+        • Im Hauptsatz: Präfix trennt und geht ans Ende (Ich stehe auf).
+        • Im Nebensatz: Präfix bleibt am Verb (..., weil ich aufstehe).
+        • Perfekt: ge‑ zwischen Präfix und Stamm (aufgestanden).
+        
+        **Untrennbare Präfixe:** be‑, emp‑, ent‑, er‑, ge‑, miss‑, ver‑, zer‑.
+        • Präfix trennt nie; kein ge‑ im Perfekt (besucht).
+        
+        **Häufige Fehler:** Trennbare Verben im Hauptsatz nicht getrennt; ge‑ bei untrennbaren.
+        **Prüfungstipps:** 10 häufigste trennbare/untrennbare Präfixe auswendig; Wortstellung üben.
+    """.trimIndent())))
+
+val GenitivContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_GENITIV,
+    phrases = listOf(LearnPhrase("Genitiv (Einführung)", "", """
+        **Bildung:** des + (m/n) + -(e)s (des Mannes); der + (f/pl) (der Frau).
+        **Verwendung:** Besitz (das Auto des Mannes), nach Präpositionen (wegen, trotz, während, statt).
+        **Umgangssprache:** oft durch von + Dativ ersetzt (das Auto von dem Mann).
+        **Häufige Fehler:** Fehlendes -s bei Maskulinum/Neutrum; Verwechslung mit Dativ.
+        **Prüfungstipps:** Genitiv erkennen reicht für B1; in formellen Texten verwenden.
+    """.trimIndent())))
+
+val ImperativContent = LearnThemeContent(
+    theme = LearnTheme.GRAM_IMPERATIV,
+    phrases = listOf(LearnPhrase("Imperativ (Befehle, Bitten)", "", """
+        **du‑Form:** Stamm (+e) → Lern(e)!; starke Verben mit Umlaut (fahr → fahr, aber: nimm, iss).
+        **ihr‑Form:** ihr‑Form ohne ihr → Lernt!
+        **Sie‑Form:** Infinitiv + Sie → Lernen Sie!
+        **wir‑Form:** Infinitiv + wir (Vorschlag) → Gehen wir!
+        **Reflexiv:** Wasch dich! / Wascht euch! / Waschen Sie sich!
+        **Häufige Fehler:** du‑Imperativ ohne Stammänderung (nehm → nimm); falsches Reflexivpronomen.
+        **Prüfungstipps:** Höfliche Bitten mit Sie‑Form + bitte; 10 unregelmäßige du‑Imperative lernen.
+    """.trimIndent())))
+
+// ─── NEW: Sprechen ─────────────────────────────────────────────────
+val SprechenB1Content = LearnThemeContent(
+    theme = LearnTheme.SPRECHEN_B1,
+    phrases = listOf(
+        LearnPhrase(
+            german = "Goethe Teil 1 – Gemeinsam etwas planen: Kursausflug",
+            english = "Plan a course trip: destination, food, transport",
+            exampleSentence = """
+                **A:** Also, ich finde die Idee mit dem Ausflug super! Wo sollen wir denn hinfahren? Ich würde gerne an einen See, weil das Wetter gerade so schön ist.
+                
+                **B:** Das klingt gut! Aber vielleicht wäre eine Stadtbesichtigung auch interessant – man lernt dabei etwas und es ist nicht so abhängig vom Wetter.
+                
+                **A:** Stimmt, aber ein See ist doch entspannender. Wir könnten zum Ammersee fahren – der ist gut erreichbar und hat einen schönen Badestrand.
+                
+                **B:** Okay, das überzeugt mich! Was sollten wir denn mitbringen? Vielleicht jeder etwas Essen oder Trinken?
+                
+                **A:** Ja, genau. Ich schlage vor, dass wir uns aufteilen: Ein paar bringen Getränke mit, andere kochen etwas oder kaufen Sandwiches. Und wir könnten auch Spiele mitbringen, wie Frisbee oder Volleyball.
+                
+                **B:** Gute Idee! Und wie kommen wir hin? Mit dem Bus wäre wohl am einfachsten, oder?
+                
+                **A:** Ich würde die Bahn vorschlagen – sie ist pünktlicher und wir können alle zusammen fahren. Fahrgemeinschaften wären auch möglich, aber nicht alle haben ein Auto.
+                
+                **B:** Stimmt, die Bahn ist besser. Dann können auch alle problemlos mitkommen. Sollen wir das so beschließen? See, Bahn, jeder bringt etwas mit?
+                
+                **A:** Ja, genau! Ich glaube, das wird ein super Ausflug. Wollen wir das dem Kurs heute noch vorstellen?
+                
+                **B:** Auf jeden Fall! Ich finde unseren Plan wirklich gut.
+            """.trimIndent(),
+            exampleTranslation = "",
+            usageTip = "Teil 1: Gemeinsam planen – Vorschläge machen, zustimmen, ablehnen, Kompromiss finden."
+        ),
+        LearnPhrase(
+            german = "Goethe Teil 2 – Thema präsentieren: Handynutzung in der Schule",
+            english = "Presentation: mobile phone use in schools – experience, home country, pros/cons, opinion",
+            exampleSentence = """
+                **Präsentation:**
+                Sehr geehrte Prüferin, liebe Teilnehmerin,
+                
+                ich möchte heute über das Thema Handynutzung in der Schule sprechen – ein Thema, das mich persönlich sehr beschäftigt.
+                
+                Ich erinnere mich noch gut an meine Schulzeit: Handys waren damals gerade erst verbreitet, und unsere Lehrer haben sie meist verboten. Trotzdem haben viele Schüler heimlich ihr Handy benutzt – meistens zum Schreiben von Nachrichten. Heute ist das noch viel aktueller.
+                
+                In meinem Heimatland gibt es unterschiedliche Regelungen. In manchen Schulen dürfen Schüler ihr Handy gar nicht benutzen, in anderen ist es in der Pause erlaubt. Es gibt sogar Schulen, die Handys komplett einsammeln. Die Diskussion darüber ist überall sehr lebhaft.
+                
+                Einerseits gibt es klare Vorteile: Schüler können Lernapps nutzen, schnell Informationen nachschlagen und digitale Kompetenzen entwickeln. Außerdem können Eltern ihre Kinder jederzeit erreichen, was die Sicherheit erhöht.
+                
+                Andererseits lenken Handys stark vom Unterricht ab. Viele Schüler schauen lieber auf Social Media als auf die Tafel. Außerdem kann exzessive Handynutzung zu Schlafmangel und Konzentrationsproblemen führen.
+                
+                Meine persönliche Meinung ist: Handys gehören zum modernen Leben und man kann sie nicht einfach ignorieren. Ich würde mir wünschen, dass Schulen klare Regeln einführen: Handys aus während des Unterrichts, aber erlaubt in den Pausen. So können wir die Vorteile nutzen ohne die Nachteile zu ignorieren.
+                
+                Vielen Dank für Ihre Aufmerksamkeit. Ich freue mich auf Ihre Fragen.
+            """.trimIndent(),
+            exampleTranslation = "",
+            usageTip = "Teil 2: Struktur – Einleitung, persönliche Erfahrung, Heimatland, Vor-/Nachteile, eigene Meinung, Schluss."
+        ),
+        LearnPhrase(
+            german = "Goethe Teil 3 – Diskussion: Reaktion auf Präsentation",
+            english = "Discussion: follow-up questions on the presentation",
+            exampleSentence = """
+                **B:** Danke für Ihre interessante Präsentation! Sie haben gesagt, dass Handys im Unterricht ablenken. Aber glauben Sie nicht, dass Lern-Apps wie Duolingo oder Khan Academy wirklich nützlich sein können?
+                
+                **A:** Das ist ein guter Punkt! Ich denke, Lern-Apps haben definitiv ihren Wert. Das Problem ist aber, dass es schwer zu kontrollieren ist, ob ein Schüler gerade eine Lern-App benutzt oder auf Instagram schaut. Deshalb finde ich klare Regeln wichtig.
+                
+                **B:** Verstehe ich. Aber wäre es nicht besser, wenn die Schule selbst digitale Geräte – zum Beispiel Tablets – bereitstellt, die nur für Lernzwecke genutzt werden können?
+                
+                **A:** Das wäre ideal, aber leider haben nicht alle Schulen das Budget dafür. In meinem Heimatland gibt es große Unterschiede zwischen reichen und ärmeren Schulen. Handys zu nutzen ist oft die praktischste Lösung – solange man den richtigen Umgang damit lernt.
+                
+                **B:** Da haben Sie recht. Vielleicht ist digitale Medienerziehung genauso wichtig wie das Handy-Verbot selbst.
+                
+                **A:** Genau das meine ich! Man muss Schülern beibringen, verantwortungsvoll mit dem Handy umzugehen – das ist eine wichtige Kompetenz für das Leben.
+            """.trimIndent(),
+            exampleTranslation = "",
+            usageTip = "Teil 3: Auf die Präsentation reagieren, Fragen stellen, Meinungen austauschen – höflich bleiben."
+        ),
+        LearnPhrase(
+            german = "ÖSD Teil 1 – Kontaktaufnahme: Kennenlernen",
+            english = "Casual conversation: introduce yourself, hobbies, work, family",
+            exampleSentence = """
+                **Prüfer/in:** Guten Tag! Bitte stellen Sie sich kurz vor. Wie heißen Sie, und woher kommen Sie?
+                
+                **A:** Guten Tag! Mein Name ist [Name], ich komme aus [Land], aber seit etwa einem Jahr wohne ich in Wien. Ich bin hierher gekommen, weil ich hier arbeite.
+                
+                **Prüfer/in:** Interessant! Und was machen Sie beruflich?
+                
+                **A:** Ich bin Informatiker. Ich arbeite für ein kleines Technologieunternehmen hier in Wien. Die Arbeit macht mir viel Spaß, auch wenn es manchmal stressig ist.
+                
+                **Prüfer/in:** Und was machen Sie in Ihrer Freizeit?
+                
+                **A:** In meiner Freizeit lese ich gerne, besonders Krimis. Außerdem gehe ich regelmäßig ins Fitnessstudio und entdecke die Stadt – Wien hat so viele schöne Parks und Museen, da gibt es immer etwas Neues zu entdecken!
+                
+                **Prüfer/in:** Das klingt sehr schön. Haben Sie schon Freunde in Wien gefunden?
+                
+                **A:** Ja, ein paar! Vor allem durch den Deutschkurs habe ich einige nette Leute kennengelernt. Und meine Kollegen bei der Arbeit sind auch sehr freundlich – wir machen manchmal nach der Arbeit etwas zusammen.
+            """.trimIndent(),
+            exampleTranslation = "",
+            usageTip = "Teil 1: Lockeres Gespräch – auf Fragen antworten, eigene Erfahrungen einbringen."
+        ),
+        LearnPhrase(
+            german = "ÖSD Teil 2 – Thema präsentieren: Soziale Netzwerke – Freund oder Feind?",
+            english = "Presentation: social networks – own use, pros/cons, situation in home country",
+            exampleSentence = """
+                **Präsentation:**
+                Sehr geehrte Prüferin, lieber Prüfer,
+                
+                ich möchte Ihnen heute meine Gedanken zum Thema soziale Netzwerke vorstellen – ein Thema, das unser aller Leben beeinflusst.
+                
+                Ich selbst nutze soziale Netzwerke täglich. Hauptsächlich verwende ich Instagram und WhatsApp, um mit Familie und Freunden in meinem Heimatland in Kontakt zu bleiben. Das ist für mich als Auswanderer besonders wichtig – ohne diese Plattformen wäre die Entfernung viel schwerer zu ertragen.
+                
+                In meinem Heimatland sind soziale Netzwerke extrem beliebt. Fast jeder hat ein Smartphone und ist auf mehreren Plattformen aktiv. Besonders junge Menschen verbringen viele Stunden täglich damit. Auch Unternehmen und Politiker nutzen diese Plattformen aktiv für ihre Kommunikation.
+                
+                Die Vorteile sind klar: Man kann schnell Informationen teilen, Kontakte pflegen und weltweit kommunizieren. Soziale Netzwerke helfen auch dabei, Gemeinschaften zu bilden – zum Beispiel Gruppen für Sprachlernende oder Hobbygruppen. Für kleine Unternehmen bieten sie außerdem kostengünstige Werbemöglichkeiten.
+                
+                Auf der anderen Seite gibt es ernste Nachteile: Fehlinformationen verbreiten sich sehr schnell. Viele Menschen vergleichen ihr Leben ständig mit den scheinbar perfekten Leben anderer, was zu Unzufriedenheit führen kann. Außerdem können soziale Netzwerke sehr zeitraubend sein – man scrollt manchmal stundenlang, ohne es zu merken.
+                
+                Mein Fazit: Soziale Netzwerke sind weder rein Freund noch rein Feind. Sie sind ein mächtiges Werkzeug – wie wir sie nutzen, liegt an uns. Mit Bewusstsein und Selbstdisziplin kann man die Vorteile genießen und die Nachteile minimieren.
+                
+                Danke für Ihre Aufmerksamkeit!
+            """.trimIndent(),
+            exampleTranslation = "",
+            usageTip = "Teil 2: Struktur wie bei Goethe – eigene Nutzung, Heimatland, Vor-/Nachteile, Fazit."
+        ),
+        LearnPhrase(
+            german = "ÖSD Teil 3 – Diskussion: Nachfragen zur Präsentation",
+            english = "Discussion: questions about the presentation (e.g., how to reduce usage)",
+            exampleSentence = """
+                **Prüfer/in:** Sie haben in Ihrer Präsentation erwähnt, dass soziale Netzwerke sehr zeitraubend sein können. Haben Sie einen konkreten Tipp, wie man die eigene Nutzung reduzieren kann?
+                
+                **A:** Ja, auf jeden Fall! Ich finde, man sollte sich bewusst Zeitlimits setzen. Viele Smartphones haben heute eine eingebaute Funktion, mit der man die tägliche Nutzungszeit einer App begrenzen kann. Das hilft wirklich.
+                
+                **Prüfer/in:** Das ist ein guter Hinweis. Sie haben auch gesagt, dass Fehlinformationen ein großes Problem sind. Wer ist Ihrer Meinung nach für die Kontrolle verantwortlich – die Plattformen selbst oder der Staat?
+                
+                **A:** Das ist eine schwierige Frage! Ich denke, beide tragen Verantwortung. Die Plattformen müssen ihre Algorithmen so gestalten, dass Falschinformationen nicht bevorzugt werden. Aber der Staat muss auch rechtliche Rahmenbedingungen schaffen. Am Ende liegt jedoch die größte Verantwortung bei uns, den Nutzern – wir müssen lernen, Quellen kritisch zu hinterfragen.
+                
+                **Prüfer/in:** Sehr gut! Und würden Sie persönlich soziale Netzwerke komplett aufgeben können?
+                
+                **A:** Ehrlich gesagt – für mich wäre das gerade sehr schwer, weil meine Familie weit weg ist. Aber ich könnte mir vorstellen, meinen Konsum deutlich zu reduzieren und bewusster zu nutzen. Vielleicht eine Woche Digital-Detox wäre ein guter Anfang – das habe ich letzten Sommer schon einmal ausprobiert und es war überraschend erholsam!
+            """.trimIndent(),
+            exampleTranslation = "",
+            usageTip = "Teil 3: Auf Nachfragen reagieren, eigene Meinung vertiefen, Beispiele nennen."
+        )
+    )
+)
+
+// ─── All Learn Content (only vocabulary themes) ────────────────────────────────────────
 
 val allLearnContent: List<LearnThemeContent> = listOf(
     FamilieContent,
@@ -634,15 +1303,14 @@ val allLearnContent: List<LearnThemeContent> = listOf(
     EssenContent
 )
 
-// Make sure this is only defined ONCE in the file
+// ─── Categories ───────────────────────────────────────────────────────────────
+
 data class LearnCategory(
     val id: String,
     val title: String,
     val subtitle: String,
-    val themes: List<LearnThemeContent> // Use the correct type from your existing code
+    val themes: List<LearnThemeContent>
 )
-
-// Replace the old allCategories with this:
 
 val allCategories = listOf(
     LearnCategory(
@@ -651,23 +1319,51 @@ val allCategories = listOf(
         subtitle = "${allLearnContent.sumOf { it.phrases.size }} Phrasen • ${allLearnContent.size} Themen",
         themes = allLearnContent
     ),
+    // NEW: Schreiben B1 category
     LearnCategory(
-        id = "schreiben",
+        id = "schreiben_b1",
         title = "Schreiben B1",
-        subtitle = "${SchreibenLearnContent.phrases.size} Phrasen • ÖSD Musterlösungen", // Updated subtitle
-        themes = listOf(SchreibenLearnContent)
+        subtitle = "3 Teile mit Musterlösungen • ${SchreibenTeil1Content.phrases.size + SchreibenTeil2Content.phrases.size + SchreibenTeil3Content.phrases.size} Beispiele",
+        themes = listOf(SchreibenTeil1Content, SchreibenTeil2Content, SchreibenTeil3Content)
     ),
+    // NEW: Konnektoren category
     LearnCategory(
-        id = "sprechen",
-        title = "Sprechen",
-        subtitle = "${SprechenContent.phrases.size} Phrasen • Präsentation & Gespräche",
-        themes = listOf(SprechenContent)
+        id = "konnektoren",
+        title = "Konnektoren",
+        subtitle = "Verbindungswörter für bessere Sätze",
+        themes = listOf(KonjunktionenContent, SubjunktionenContent, KonjunktionaladverbienContent)
     ),
+    // NEW: Grammatik category
     LearnCategory(
         id = "grammatik",
         title = "Grammatik",
-        subtitle = "${GrammatikContent.phrases.size} Phrasen • Zeiten, Fälle & Struktur",
-        themes = listOf(GrammatikContent)
+        subtitle = "17 Themen mit Regeln, Beispielen und Tipps",
+        themes = listOf(
+            PerfektContent,
+            PraeteritumContent,
+            ModalverbenContent,
+            PassivContent,
+            KonjunktivIIContent,
+            RelativsatzContent,
+            AdjektivdeklinationContent,
+            PraepositionenContent,
+            WortstellungContent,
+            InfinitivMitZuContent,
+            KomparativContent,
+            NegationContent,
+            ReflexiveVerbenContent,
+            FragenContent,
+            TrennbareVerbenContent,
+            GenitivContent,
+            ImperativContent
+        )
+    ),
+    // NEW: Sprechen category
+    LearnCategory(
+        id = "sprechen_b1",
+        title = "Sprechen B1",
+        subtitle = "6 Dialoge und Präsentationen für die mündliche Prüfung",
+        themes = listOf(SprechenB1Content)
     )
 )
 
