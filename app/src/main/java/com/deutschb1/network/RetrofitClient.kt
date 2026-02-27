@@ -12,10 +12,10 @@ object RetrofitClient {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val httpClient = OkHttpClient.Builder()
+    val httpClient: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
         .build()
 
     /** German Verb Conjugation API — https://german-verbs-api.onrender.com */
@@ -28,23 +28,23 @@ object RetrofitClient {
             .create(VerbApiService::class.java)
     }
 
-    /** LibreTranslate community mirror — no key required */
+    /**
+     * LibreTranslate — free, no API key required.
+     * Using translate.argosopentech.com as the public free mirror.
+     * Fallback mirrors (in case this is down):
+     *   https://libretranslate.de/  (often rate-limited)
+     *   https://translate.terraprint.co/
+     */
     val translateApi: TranslateApiService by lazy {
         Retrofit.Builder()
-            .baseUrl("https://libretranslate.de/")
+            .baseUrl("https://translate.argosopentech.com/")
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TranslateApiService::class.java)
     }
 
-    /** Free Dictionary API for word definitions */
-    val dictionaryApi: DictionaryApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://api.dictionaryapi.dev/")
-            .client(httpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(DictionaryApiService::class.java)
-    }
+    // Note: DictionaryApiService has been removed from Retrofit because Gson cannot
+    // deserialize List<T> through Retrofit's reflection proxy without a TypeToken.
+    // Dictionary lookups now use raw OkHttp calls in ApiRepository.fetchWordDefinition().
 }

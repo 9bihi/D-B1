@@ -162,7 +162,7 @@ fun GlassProviderCard(provider: ProviderItem, onClick: () -> Unit) {
                     Icon(
                         painter = painterResource(id = provider.iconRes),
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = Color.Unspecified,
                         modifier = Modifier.size(28.dp)
                     )
                 }

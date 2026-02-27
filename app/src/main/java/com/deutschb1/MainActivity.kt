@@ -73,10 +73,12 @@ fun DeutschB1App() {
         bottomBar = {
             FloatingGlassNavBar(navController = navController)
         }
-    ) { _ ->
+    ) { innerPadding ->
         AppNavGraph(
             navController = navController,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         )
     }
 }

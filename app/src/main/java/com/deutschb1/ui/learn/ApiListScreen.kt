@@ -36,10 +36,10 @@ import kotlinx.coroutines.launch
 enum class ApiScreenType { DICTIONARY, VERBS }
 
 val TENSE_OPTIONS = listOf(
-    "PRASENS" to "Präsens (Present)",
-    "PERFEKT" to "Perfekt (Perfect)",
-    "PRATERITUM" to "Präteritum (Past)",
-    "FUTUR1" to "Futur I (Future)",
+    "PRASENS" to "Präsens",
+    "PERFEKT" to "Perfekt",
+    "PRATERITUM" to "Präteritum",
+    "FUTUR1" to "Futur I",
     "KONJUNKTIV2" to "Konjunktiv II"
 )
 
@@ -61,6 +61,7 @@ fun ApiListScreen(navController: NavController, type: String) {
     var wordList by remember { mutableStateOf<List<String>>(emptyList()) }
     var filterQuery by remember { mutableStateOf("") }
     var selectedWord by remember { mutableStateOf<String?>(null) }
+    var translatedWord by remember { mutableStateOf<String?>(null) }
     var definitionText by remember { mutableStateOf<String?>(null) }
     var isLoadingDefinition by remember { mutableStateOf(false) }
 
@@ -68,6 +69,9 @@ fun ApiListScreen(navController: NavController, type: String) {
     var verbInput by remember { mutableStateOf("") }
     var selectedTense by remember { mutableStateOf("PRASENS") }
     var verbResult by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
+    var selectedVerb by remember { mutableStateOf<String?>(null) }
+    var verbFilterQuery by remember { mutableStateOf("") }
+    var isLoadingConjugation by remember { mutableStateOf(false) }
 
     // Load word list on first composition in DICTIONARY mode
     LaunchedEffect(screenType) {
@@ -113,7 +117,7 @@ fun ApiListScreen(navController: NavController, type: String) {
                             color = Color.White
                         )
                         Text(
-                            if (screenType == ApiScreenType.DICTIONARY) "5,000 German B1 words" else "8,000 Verbs · All Tenses",
+                            if (screenType == ApiScreenType.DICTIONARY) "5,000 German B1 words" else "Common B1 Verbs · All Tenses",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray
                         )
@@ -186,6 +190,7 @@ fun ApiListScreen(navController: NavController, type: String) {
                                 onValueChange = {
                                     filterQuery = it
                                     selectedWord = null
+                                    translatedWord = null
                                     definitionText = null
                                 },
                                 modifier = Modifier.fillMaxWidth(),
@@ -210,6 +215,7 @@ fun ApiListScreen(navController: NavController, type: String) {
                     item {
                         DefinitionCard(
                             word = selectedWord!!,
+                            englishWord = translatedWord,
                             definition = definitionText,
                             isLoading = isLoadingDefinition
                         )
@@ -227,14 +233,26 @@ fun ApiListScreen(navController: NavController, type: String) {
                         onClick = {
                             if (selectedWord == word) {
                                 selectedWord = null
+                                translatedWord = null
                                 definitionText = null
                             } else {
                                 selectedWord = word
+                                translatedWord = null
                                 definitionText = null
                                 scope.launch {
                                     isLoadingDefinition = true
-                                    val result = ApiRepository.fetchWordDefinition(word)
-                                    definitionText = result.getOrElse { "No definition found." }
+                                    // Step 1: translate German word to English
+                                    val transResult = ApiRepository.translateText(word, "de", "en")
+                                    val englishWord = transResult.getOrNull()?.trim()?.lowercase()
+                                    translatedWord = transResult.getOrNull()
+
+                                    // Step 2: look up English definition
+                                    if (!englishWord.isNullOrBlank()) {
+                                        val defResult = ApiRepository.fetchWordDefinition(englishWord)
+                                        definitionText = defResult.getOrElse { "No definition found." }
+                                    } else {
+                                        definitionText = "Translation unavailable."
+                                    }
                                     isLoadingDefinition = false
                                 }
                             }
@@ -256,23 +274,99 @@ fun ApiListScreen(navController: NavController, type: String) {
             // ════════════════════════════════════════════
             if (screenType == ApiScreenType.VERBS && !isLoading) {
 
-                // Verb input
+                // Tense selector at top
+                item {
+                    Text("Zeitform", style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.6f))
+                    Spacer(Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TENSE_OPTIONS.take(3).forEach { (code, label) ->
+                            TenseChip(
+                                label = label,
+                                isSelected = selectedTense == code,
+                                onClick = {
+                                    selectedTense = code
+                                    verbResult = emptyMap()
+                                    // Re-fetch conjugation for selected verb with new tense
+                                    selectedVerb?.let { verb ->
+                                        scope.launch {
+                                            isLoadingConjugation = true
+                                            val result = ApiRepository.fetchVerbConjugation(verb, code)
+                                            result.fold(
+                                                onSuccess = { v ->
+                                                    verbResult = buildMap {
+                                                        if (v.ich != null) put("ich", v.ich)
+                                                        if (v.du != null) put("du", v.du)
+                                                        if (v.er != null) put("er/sie/es", v.er)
+                                                        if (v.wir != null) put("wir", v.wir)
+                                                        if (v.ihr != null) put("ihr", v.ihr)
+                                                        if (v.sie != null) put("sie/Sie", v.sie)
+                                                    }
+                                                },
+                                                onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
+                                            )
+                                            isLoadingConjugation = false
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TENSE_OPTIONS.drop(3).forEach { (code, label) ->
+                            TenseChip(
+                                label = label,
+                                isSelected = selectedTense == code,
+                                onClick = {
+                                    selectedTense = code
+                                    verbResult = emptyMap()
+                                    selectedVerb?.let { verb ->
+                                        scope.launch {
+                                            isLoadingConjugation = true
+                                            val result = ApiRepository.fetchVerbConjugation(verb, code)
+                                            result.fold(
+                                                onSuccess = { v ->
+                                                    verbResult = buildMap {
+                                                        if (v.ich != null) put("ich", v.ich)
+                                                        if (v.du != null) put("du", v.du)
+                                                        if (v.er != null) put("er/sie/es", v.er)
+                                                        if (v.wir != null) put("wir", v.wir)
+                                                        if (v.ihr != null) put("ihr", v.ihr)
+                                                        if (v.sie != null) put("sie/Sie", v.sie)
+                                                    }
+                                                },
+                                                onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
+                                            )
+                                            isLoadingConjugation = false
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+
+                // Verb search + manual input bar
                 item {
                     ApiGlassCard {
                         Column(Modifier.padding(16.dp)) {
-                            Text("Verb eingeben", style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.5f))
+                            Text("Verb suchen oder eingeben", style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.5f))
                             Spacer(Modifier.height(8.dp))
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 TextField(
-                                    value = verbInput,
-                                    onValueChange = {
-                                        verbInput = it
-                                        verbResult = emptyMap()
-                                        errorMessage = null
-                                    },
+                                    value = verbFilterQuery,
+                                    onValueChange = { verbFilterQuery = it },
                                     modifier = Modifier.weight(1f),
                                     colors = TextFieldDefaults.colors(
                                         focusedContainerColor = Color.White.copy(alpha = 0.06f),
@@ -286,82 +380,117 @@ fun ApiListScreen(navController: NavController, type: String) {
                                     placeholder = { Text("z.B. gehen, sein…", color = Color.Gray) },
                                     singleLine = true,
                                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                                    keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
-                                )
-                                Button(
-                                    onClick = {
+                                    keyboardActions = KeyboardActions(onSearch = {
                                         focusManager.clearFocus()
-                                        scope.launch {
-                                            isLoading = true
-                                            errorMessage = null
+                                        val query = verbFilterQuery.trim().lowercase()
+                                        if (query.isNotBlank()) {
+                                            selectedVerb = query
                                             verbResult = emptyMap()
-                                            val result = ApiRepository.fetchVerbConjugation(verbInput.trim(), selectedTense)
-                                            result.fold(
-                                                onSuccess = { v ->
-                                                    verbResult = buildMap {
-                                                        if (v.ich != null) put("ich", v.ich)
-                                                        if (v.du != null) put("du", v.du)
-                                                        if (v.er != null) put("er/sie/es", v.er)
-                                                        if (v.wir != null) put("wir", v.wir)
-                                                        if (v.ihr != null) put("ihr", v.ihr)
-                                                        if (v.sie != null) put("sie/Sie", v.sie)
-                                                    }
-                                                    if (verbResult.isEmpty()) errorMessage = "No conjugation data found for \"${verbInput.trim()}\""
-                                                },
-                                                onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
-                                            )
-                                            isLoading = false
+                                            scope.launch {
+                                                isLoadingConjugation = true
+                                                errorMessage = null
+                                                val result = ApiRepository.fetchVerbConjugation(query, selectedTense)
+                                                result.fold(
+                                                    onSuccess = { v ->
+                                                        verbResult = buildMap {
+                                                            if (v.ich != null) put("ich", v.ich)
+                                                            if (v.du != null) put("du", v.du)
+                                                            if (v.er != null) put("er/sie/es", v.er)
+                                                            if (v.wir != null) put("wir", v.wir)
+                                                            if (v.ihr != null) put("ihr", v.ihr)
+                                                            if (v.sie != null) put("sie/Sie", v.sie)
+                                                        }
+                                                        if (verbResult.isEmpty()) errorMessage = "No conjugation found for \"$query\""
+                                                    },
+                                                    onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
+                                                )
+                                                isLoadingConjugation = false
+                                            }
                                         }
-                                    },
-                                    enabled = verbInput.isNotBlank() && !isLoading,
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5856D6)),
-                                    shape = RoundedCornerShape(12.dp)
-                                ) {
-                                    Text("Suchen")
-                                }
+                                    })
+                                )
                             }
                         }
                     }
                 }
 
-                // Tense selector
-                item {
-                    Text("Zeitform", style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.6f))
-                    Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TENSE_OPTIONS.take(3).forEach { (code, label) ->
-                            TenseChip(
-                                label = label.substringBefore(" ("),
-                                isSelected = selectedTense == code,
-                                onClick = { selectedTense = code; verbResult = emptyMap() },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TENSE_OPTIONS.drop(3).forEach { (code, label) ->
-                            TenseChip(
-                                label = label.substringBefore(" ("),
-                                isSelected = selectedTense == code,
-                                onClick = { selectedTense = code; verbResult = emptyMap() },
-                                modifier = Modifier.weight(1f)
-                            )
+                // Conjugation loading
+                if (isLoadingConjugation) {
+                    item {
+                        Box(Modifier.fillMaxWidth().padding(20.dp), contentAlignment = Alignment.Center) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color(0xFF5856D6), strokeWidth = 2.dp)
+                                Spacer(Modifier.width(12.dp))
+                                Text("Loading conjugation…", color = Color.Gray)
+                            }
                         }
                     }
                 }
 
                 // Conjugation result table
-                if (verbResult.isNotEmpty()) {
+                if (verbResult.isNotEmpty() && selectedVerb != null) {
                     item {
-                        ConjugationCard(verb = verbInput.trim(), tense = selectedTense, conjugations = verbResult)
+                        ConjugationCard(verb = selectedVerb!!, tense = selectedTense, conjugations = verbResult)
                     }
+                }
+
+                // Section header for verb list
+                item {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Alle Verben",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        "Tippe auf ein Verb um die Konjugation zu sehen",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                    Spacer(Modifier.height(4.dp))
+                }
+
+                // Verb list from ApiRepository.commonB1Verbs (filtered by search query)
+                val filteredVerbs = if (verbFilterQuery.isBlank()) {
+                    ApiRepository.commonB1Verbs
+                } else {
+                    ApiRepository.commonB1Verbs.filter {
+                        it.contains(verbFilterQuery.trim(), ignoreCase = true)
+                    }
+                }
+
+                items(filteredVerbs) { verb ->
+                    WordRow(
+                        word = verb,
+                        isSelected = verb == selectedVerb,
+                        onClick = {
+                            selectedVerb = verb
+                            verbFilterQuery = verb
+                            verbResult = emptyMap()
+                            focusManager.clearFocus()
+                            scope.launch {
+                                isLoadingConjugation = true
+                                errorMessage = null
+                                val result = ApiRepository.fetchVerbConjugation(verb, selectedTense)
+                                result.fold(
+                                    onSuccess = { v ->
+                                        verbResult = buildMap {
+                                            if (v.ich != null) put("ich", v.ich)
+                                            if (v.du != null) put("du", v.du)
+                                            if (v.er != null) put("er/sie/es", v.er)
+                                            if (v.wir != null) put("wir", v.wir)
+                                            if (v.ihr != null) put("ihr", v.ihr)
+                                            if (v.sie != null) put("sie/Sie", v.sie)
+                                        }
+                                        if (verbResult.isEmpty()) errorMessage = "No conjugation found for \"$verb\""
+                                    },
+                                    onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
+                                )
+                                isLoadingConjugation = false
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -398,7 +527,7 @@ fun WordRow(word: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun DefinitionCard(word: String, definition: String?, isLoading: Boolean) {
+fun DefinitionCard(word: String, englishWord: String?, definition: String?, isLoading: Boolean) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -414,13 +543,32 @@ fun DefinitionCard(word: String, definition: String?, isLoading: Boolean) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     CircularProgressIndicator(modifier = Modifier.size(18.dp), color = Color(0xFF5856D6), strokeWidth = 2.dp)
                     Spacer(Modifier.width(12.dp))
-                    Text("Looking up definition…", color = Color.Gray)
+                    Text("Translating & looking up…", color = Color.Gray)
                 }
             } else {
                 Column {
+                    // German word
                     Text(word, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 18.sp)
-                    Spacer(Modifier.height(6.dp))
-                    Text(definition ?: "No definition available.", color = Color.LightGray, style = MaterialTheme.typography.bodyMedium)
+                    // English translation
+                    if (!englishWord.isNullOrBlank()) {
+                        Spacer(Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("🇬🇧 ", fontSize = 14.sp)
+                            Text(
+                                englishWord,
+                                color = Color(0xFF8E8CE1),
+                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                    // English definition
+                    if (!definition.isNullOrBlank()) {
+                        Spacer(Modifier.height(8.dp))
+                        HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
+                        Spacer(Modifier.height(8.dp))
+                        Text(definition, color = Color.LightGray, style = MaterialTheme.typography.bodyMedium)
+                    }
                 }
             }
         }

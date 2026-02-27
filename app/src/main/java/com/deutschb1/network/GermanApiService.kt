@@ -3,7 +3,6 @@ package com.deutschb1.network
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 // ─── Verb Conjugation ────────────────────────────────────────────────────────
@@ -46,30 +45,7 @@ interface TranslateApiService {
 }
 
 // ─── Free Dictionary API ─────────────────────────────────────────────────────
-
-data class DictionaryPhonetic(
-    val text: String? = null
-)
-
-data class DictionaryDefinition(
-    val definition: String? = null,
-    val example: String? = null
-)
-
-data class DictionaryMeaning(
-    val partOfSpeech: String? = null,
-    val definitions: List<DictionaryDefinition>? = null
-)
-
-data class DictionaryEntry(
-    val word: String? = null,
-    val phonetics: List<DictionaryPhonetic>? = null,
-    val meanings: List<DictionaryMeaning>? = null
-)
-
-interface DictionaryApiService {
-    @GET("api/v2/entries/en/{word}")
-    suspend fun getDefinition(
-        @Path("word") word: String
-    ): List<DictionaryEntry>
-}
+// NOTE: DictionaryApiService is intentionally NOT using Retrofit here.
+// Retrofit + Gson crashes with "Class cannot be cast to ParameterizedType"
+// when deserializing List<T> return types through Retrofit's dynamic proxy.
+// Dictionary lookups are done via raw OkHttp in ApiRepository.fetchWordDefinition().
