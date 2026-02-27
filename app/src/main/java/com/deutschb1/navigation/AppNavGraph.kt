@@ -21,6 +21,8 @@ import com.deutschb1.ui.exams.ExamsHomeScreen
 import com.deutschb1.ui.learn.LearnHomeScreen
 import com.deutschb1.ui.learn.CategoryDetailScreen
 import com.deutschb1.ui.learn.ThemePhraseListScreen
+import com.deutschb1.ui.learn.ApiListScreen
+import com.deutschb1.ui.translation.TranslationScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -52,6 +54,12 @@ sealed class Screen(val route: String) {
     object LearnTheme : Screen("learn/theme/{themeIndex}") {
         fun createRoute(index: Int) = "learn/theme/$index"
     }
+    object ApiTools : Screen("learn/api/{type}") {
+        fun createRoute(type: String) = "learn/api/$type"
+    }
+
+    // Translation
+    object Translation : Screen("translation")
 }
 
 @Composable
@@ -149,6 +157,15 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             if (content != null) {
                 ThemePhraseListScreen(content = content, navController = navController)
             }
+        }
+        composable(Screen.ApiTools.route) { backStackEntry ->
+            val type = backStackEntry.arguments?.getString("type") ?: "dictionary"
+            ApiListScreen(navController = navController, type = type)
+        }
+
+        // Translation
+        composable(Screen.Translation.route) {
+            TranslationScreen(navController = navController)
         }
     }
 }

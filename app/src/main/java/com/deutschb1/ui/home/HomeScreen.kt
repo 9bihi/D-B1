@@ -68,6 +68,13 @@ fun HomeScreen(navController: NavController) {
             R.drawable.ic_learn,
             listOf(Color(0xFF5856D6), Color(0xFF8E8CE1)),
             Screen.LearnHome.route
+        ),
+        CategoryCard(
+            "Translation",
+            "Deutsch ↔ English · LibreTranslate",
+            R.drawable.ic_translation,
+            listOf(Color(0xFF00B4DB), Color(0xFF0083B0)),
+            Screen.Translation.route
         )
     )
 

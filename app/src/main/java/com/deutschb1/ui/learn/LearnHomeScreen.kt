@@ -94,6 +94,42 @@ fun LearnHomeScreen(navController: NavController) {
                 }
             )
         }
+
+        // API Tools section
+        item {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "🔌 API Tools",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Text(
+                "Live data from online APIs",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+            Spacer(Modifier.height(10.dp))
+
+            // Dictionary card
+            ApiToolCard(
+                emoji = "📖",
+                title = "Online Dictionary",
+                subtitle = "Browse 5,000 German B1 words",
+                gradient = listOf(Color(0xFF4ECDC4), Color(0xFF44A08D)),
+                onClick = { navController.navigate(Screen.ApiTools.createRoute("dictionary")) }
+            )
+            Spacer(Modifier.height(10.dp))
+
+            // Verb Conjugation card
+            ApiToolCard(
+                emoji = "⚡",
+                title = "Verb Conjugation",
+                subtitle = "8,000 verbs · All tenses",
+                gradient = listOf(Color(0xFF5856D6), Color(0xFF8E8CE1)),
+                onClick = { navController.navigate(Screen.ApiTools.createRoute("verbs")) }
+            )
+        }
     }
 }
 
@@ -216,6 +252,89 @@ fun GlassCategoryCard(
                         Text(
                             text = category.subtitle,
                             style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                    }
+                }
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = null,
+                    tint = Color.White.copy(alpha = 0.3f),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ApiToolCard(
+    emoji: String,
+    title: String,
+    subtitle: String,
+    gradient: List<Color>,
+    onClick: () -> Unit
+) {
+    var pressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.98f else 1f,
+        animationSpec = tween(100),
+        label = "apiCardScale"
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .scale(scale)
+            .clickable {
+                pressed = true
+                onClick()
+            },
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .padding(18.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Brush.linearGradient(gradient)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(emoji, fontSize = 24.sp)
+                    }
+                    Spacer(Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            subtitle,
+                            style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray
                         )
                     }

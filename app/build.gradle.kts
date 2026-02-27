@@ -67,6 +67,13 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.material.icons.extended)
+    
+    // Networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    
     debugImplementation(libs.androidx.ui.tooling)
     // implementation("com.mikepenz:multiplatform-markdown-renderer-m3:0.23.0")
 }
