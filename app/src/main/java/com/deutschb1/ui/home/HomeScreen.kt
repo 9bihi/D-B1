@@ -201,21 +201,15 @@ fun GlassHomeCategoryCard(category: CategoryCard, onClick: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(1f)
                 ) {
-                    // Icon in colored circle
-                    Box(
+                    // Icon with built-in rounded-square background (no circle clip, no tint)
+                    Icon(
+                        painter = painterResource(id = category.iconRes),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
                         modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Brush.linearGradient(category.gradient)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = category.iconRes),
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
+                            .size(56.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(

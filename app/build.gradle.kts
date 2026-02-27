@@ -68,4 +68,5 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.material.icons.extended)
     debugImplementation(libs.androidx.ui.tooling)
+    // implementation("com.mikepenz:multiplatform-markdown-renderer-m3:0.23.0")
 }

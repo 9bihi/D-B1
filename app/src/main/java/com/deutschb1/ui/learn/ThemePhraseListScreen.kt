@@ -1,9 +1,11 @@
 package com.deutschb1.ui.learn
 
-import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -11,8 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.*
@@ -30,7 +31,6 @@ import androidx.navigation.NavController
 import com.deutschb1.data.LearnPhrase
 import com.deutschb1.data.LearnThemeContent
 import com.deutschb1.data.hexToColor
-import androidx.compose.foundation.Image
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,9 +75,9 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
                 .padding(padding)
                 .background(Color.Black),
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // Hero banner with glass border
+            // Hero banner
             item {
                 Box(
                     modifier = Modifier
@@ -135,7 +135,7 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                "${content.phrases.size} Phrasen",
+                                "${content.phrases.size} Phrasen • Tippe zum Umdrehen",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Color.White.copy(alpha = 0.9f),
                                 fontWeight = FontWeight.SemiBold
@@ -145,9 +145,9 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
                 }
             }
 
-            // Glass phrase cards
+            // Flip phrase cards
             itemsIndexed(content.phrases) { index, phrase ->
-                GlassPhraseCard(
+                FlipPhraseCard(
                     phrase = phrase,
                     index = index + 1,
                     accentColor = themeColor
@@ -160,120 +160,165 @@ fun ThemePhraseListScreen(content: LearnThemeContent, navController: NavControll
 }
 
 @Composable
-fun GlassPhraseCard(
+fun FlipPhraseCard(
     phrase: LearnPhrase,
     index: Int,
     accentColor: Color
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var flipped by remember { mutableStateOf(false) }
 
-    Card(
+    // Animate rotation from 0 → 180 (flip)
+    val rotation by animateFloatAsState(
+        targetValue = if (flipped) 180f else 0f,
+        animationSpec = tween(durationMillis = 420, easing = FastOutSlowInEasing),
+        label = "flip_$index"
+    )
+
+    // Determine which face to show based on rotation angle
+    val showBack = rotation > 90f
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { expanded = !expanded },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
-        ),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .heightIn(min = 110.dp)
+            .graphicsLayer {
+                rotationY = rotation
+                cameraDistance = 12f * density
+            }
+            .clip(RoundedCornerShape(18.dp))
+            .border(
+                width = 1.dp,
+                color = if (showBack)
+                    accentColor.copy(alpha = 0.5f)
+                else
+                    Color.White.copy(alpha = 0.13f),
+                shape = RoundedCornerShape(18.dp)
+            )
+            .background(
+                if (showBack)
+                    accentColor.copy(alpha = 0.12f)
+                else
+                    Color(0xFF1C1C1E).copy(alpha = 0.75f)
+            )
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { flipped = !flipped }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = Color.White.copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(16.dp)
-                )
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                // Header with colored badge
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Number badge (colored circle)
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(accentColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            "$index",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            phrase.german,
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = Color.White
-                        )
-                        Text(
-                            phrase.english,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                    Icon(
-                        if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        contentDescription = null,
-                        tint = Color.Gray,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                // Expanded content with rich formatting
-                if (expanded) {
-                    Spacer(modifier = Modifier.height(14.dp))
-                    HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    RichText(
-                        text = phrase.exampleSentence,
-                        modifier = Modifier.fillMaxWidth(),
-                        accentColor = accentColor
-                    )
-
-                    if (phrase.usageTip.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = accentColor.copy(alpha = 0.15f)
-                            ),
-                            elevation = CardDefaults.cardElevation(0.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(
-                                        width = 1.dp,
-                                        color = Color.White.copy(alpha = 0.1f),
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                            ) {
-                                Text(
-                                    text = "💡 ${phrase.usageTip}",
-                                    modifier = Modifier.padding(12.dp),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color.Gray
-                                )
-                            }
-                        }
-                    }
-                }
+        if (!showBack) {
+            // FRONT: German phrase
+            FrontFace(phrase = phrase, index = index, accentColor = accentColor)
+        } else {
+            // BACK: English + example + tip (counter-rotated so it reads correctly)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { rotationY = 180f }
+            ) {
+                BackFace(phrase = phrase, accentColor = accentColor)
             }
         }
+    }
+}
+
+@Composable
+private fun FrontFace(phrase: LearnPhrase, index: Int, accentColor: Color) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Number badge
+        Box(
+            modifier = Modifier
+                .size(38.dp)
+                .clip(CircleShape)
+                .background(accentColor),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "$index",
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                phrase.german,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+            Text(
+                "Tippe zum Umdrehen →",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White.copy(alpha = 0.35f),
+                fontSize = 11.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun BackFace(phrase: LearnPhrase, accentColor: Color) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp)
+    ) {
+        // English translation
+        Text(
+            phrase.english,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge,
+            color = accentColor
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        HorizontalDivider(color = accentColor.copy(alpha = 0.25f))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Example sentence (rich text)
+        RichText(
+            text = phrase.exampleSentence,
+            modifier = Modifier.fillMaxWidth(),
+            accentColor = accentColor
+        )
+
+        // Usage tip
+        if (phrase.usageTip.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(accentColor.copy(alpha = 0.1f))
+                    .border(
+                        width = 0.8.dp,
+                        color = accentColor.copy(alpha = 0.25f),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(10.dp)
+            ) {
+                Text(
+                    "💡 ${phrase.usageTip}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            "← Tippe zum Zurückdrehen",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.White.copy(alpha = 0.3f),
+            fontSize = 11.sp,
+            modifier = Modifier.align(Alignment.End)
+        )
     }
 }
 

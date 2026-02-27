@@ -9,6 +9,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,6 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -34,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.deutschb1.navigation.AppNavGraph
 import com.deutschb1.navigation.Screen
 import com.deutschb1.ui.theme.DeutschB1Theme
+import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,8 +73,7 @@ fun DeutschB1App() {
         bottomBar = {
             FloatingGlassNavBar(navController = navController)
         }
-    ) { innerPadding ->
-        // Use fillMaxSize to let content go under the floating bar
+    ) { _ ->
         AppNavGraph(
             navController = navController,
             modifier = Modifier.fillMaxSize()
@@ -88,148 +92,146 @@ fun FloatingGlassNavBar(navController: NavController) {
         NavItem("Learn", Screen.LearnHome.route, Icons.Outlined.School, Icons.Filled.School)
     )
 
+    val selectedIndex = navItems.indexOfFirst { item ->
+        currentRoute == item.route ||
+                (item.route == Screen.ExamsHome.route && currentRoute?.startsWith("exam") == true) ||
+                (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true)
+    }.coerceAtLeast(0)
+
+    // Track x-offset and width of each tab for the sliding indicator
+    val tabOffsets = remember { mutableStateListOf(0f, 0f, 0f) }
+    val tabWidths = remember { mutableStateListOf(0f, 0f, 0f) }
+
+    val indicatorX by animateFloatAsState(
+        targetValue = tabOffsets.getOrElse(selectedIndex) { 0f },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "indicatorX"
+    )
+    val indicatorWidth by animateFloatAsState(
+        targetValue = tabWidths.getOrElse(selectedIndex) { 0f },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "indicatorWidth"
+    )
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp, start = 20.dp, end = 20.dp),
+            .padding(bottom = 20.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        Surface(
+        // Outer glass pill
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(65.dp)
+                .height(72.dp)
                 .shadow(
-                    elevation = 15.dp,
-                    shape = RoundedCornerShape(35.dp),
-                    ambientColor = Color.Black.copy(alpha = 0.5f),
-                    spotColor = Color.Black.copy(alpha = 0.5f)
-                ),
-            shape = RoundedCornerShape(35.dp),
-            color = Color(0xFF1C1C1E).copy(alpha = 0.85f),
-            tonalElevation = 0.dp
+                    elevation = 24.dp,
+                    shape = RoundedCornerShape(36.dp),
+                    ambientColor = Color.Black.copy(alpha = 0.6f),
+                    spotColor = Color.Black.copy(alpha = 0.6f)
+                )
+                .clip(RoundedCornerShape(36.dp))
+                .background(Color(0xFF1C1C1E).copy(alpha = 0.88f))
+                .border(
+                    width = 0.8.dp,
+                    color = Color.White.copy(alpha = 0.18f),
+                    shape = RoundedCornerShape(36.dp)
+                )
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .border(
-                        width = 1.dp,
-                        color = Color.White.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(35.dp)
-                    )
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    navItems.forEach { item ->
-                        val isSelected = currentRoute == item.route ||
-                                (item.route == Screen.ExamsHome.route && currentRoute?.startsWith("exam") == true) ||
-                                (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true)
+            // Sliding pill indicator behind the items
+            if (indicatorWidth > 0f) {
+                Box(
+                    modifier = Modifier
+                        .offset { IntOffset(indicatorX.roundToInt(), 0) }
+                        .width(with(androidx.compose.ui.platform.LocalDensity.current) { indicatorWidth.toDp() })
+                        .fillMaxHeight()
+                        .padding(6.dp)
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(Color.White.copy(alpha = 0.14f))
+                        .border(
+                            width = 0.6.dp,
+                            color = Color.White.copy(alpha = 0.22f),
+                            shape = RoundedCornerShape(30.dp)
+                        )
+                )
+            }
 
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(
-                                    if (isSelected) Color.White.copy(alpha = 0.15f)
-                                    else Color.Transparent
-                                )
-                                .clickable {
-                                    if (!isSelected) {
-                                        // Navigate to the tab's root, clearing back stack up to it
-                                        navController.navigate(item.route) {
-                                            popUpTo(item.route) { inclusive = false }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    } else {
-                                        // Already on this tab – pop back to its root
-                                        navController.popBackStack(item.route, inclusive = false)
-                                    }
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
+            // Tab items
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                navItems.forEachIndexed { index, item ->
+                    val isSelected = index == selectedIndex
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .onGloballyPositioned { coords ->
+                                tabOffsets[index] = coords.positionInParent().x
+                                tabWidths[index] = coords.size.width.toFloat()
+                            }
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
                             ) {
-                                AnimatedContent(
-                                    targetState = isSelected,
-                                    transitionSpec = {
-                                        (fadeIn(animationSpec = tween(300)) +
-                                                scaleIn(initialScale = 0.8f, animationSpec = tween(300))) togetherWith
-                                                (fadeOut(animationSpec = tween(300)) +
-                                                        scaleOut(targetScale = 0.8f, animationSpec = tween(300)))
-                                    },
-                                    label = "icon_animation"
-                                ) { selected ->
-                                    Icon(
-                                        imageVector = if (selected) item.iconFilled else item.iconOutlined,
-                                        contentDescription = item.label,
-                                        tint = if (selected) Color.White else Color.Gray,
-                                        modifier = Modifier.size(26.dp)
-                                    )
+                                if (!isSelected) {
+                                    navController.navigate(item.route) {
+                                        popUpTo(item.route) { inclusive = false }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                } else {
+                                    navController.popBackStack(item.route, inclusive = false)
                                 }
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = item.label,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = if (isSelected) Color.White else Color.Gray,
-                                    fontSize = 10.sp
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        ) {
+                            AnimatedContent(
+                                targetState = isSelected,
+                                transitionSpec = {
+                                    (fadeIn(tween(220)) + scaleIn(initialScale = 0.75f, animationSpec = tween(220))) togetherWith
+                                            (fadeOut(tween(180)) + scaleOut(targetScale = 0.75f, animationSpec = tween(180)))
+                                },
+                                label = "icon_$index"
+                            ) { selected ->
+                                Icon(
+                                    imageVector = if (selected) item.iconFilled else item.iconOutlined,
+                                    contentDescription = item.label,
+                                    tint = if (selected) Color.White else Color.White.copy(alpha = 0.45f),
+                                    modifier = Modifier.size(26.dp)
                                 )
                             }
+                            Spacer(modifier = Modifier.height(3.dp))
+                            // Label with animated alpha
+                            val labelAlpha by animateFloatAsState(
+                                targetValue = if (isSelected) 1f else 0.45f,
+                                animationSpec = tween(200),
+                                label = "labelAlpha_$index"
+                            )
+                            Text(
+                                text = item.label,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White.copy(alpha = labelAlpha),
+                                fontSize = 10.sp
+                            )
                         }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun NavButton(
-    item: NavItem,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(
-                if (isSelected) Color.White.copy(alpha = 0.15f)
-                else Color.Transparent
-            )
-            .clickable { onClick() }
-    ) {
-        AnimatedContent(
-            targetState = isSelected,
-            transitionSpec = {
-                (fadeIn(animationSpec = tween(300)) +
-                        scaleIn(initialScale = 0.8f, animationSpec = tween(300))) togetherWith
-                        (fadeOut(animationSpec = tween(300)) +
-                                scaleOut(targetScale = 0.8f, animationSpec = tween(300)))
-            },
-            label = "icon_animation"
-        ) { selected ->
-            Icon(
-                imageVector = if (selected) item.iconFilled else item.iconOutlined,
-                contentDescription = item.label,
-                tint = if (selected) Color.White else Color.Gray,
-                modifier = Modifier.size(26.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = item.label,
-            style = MaterialTheme.typography.labelSmall,
-            color = if (isSelected) Color.White else Color.Gray,
-            fontSize = 10.sp
-        )
     }
 }
