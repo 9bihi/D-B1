@@ -28,6 +28,15 @@ import com.deutschb1.ui.exam.LastResultsProvider
 import com.deutschb1.ui.learn.flashcards.FlashcardDeckScreen
 import com.deutschb1.ui.learn.flashcards.FlashcardStudyScreen
 import com.deutschb1.data.FlashcardData
+import com.deutschb1.ui.learn.GeschichtenListScreen
+import com.deutschb1.ui.learn.GeschichteReaderScreen
+import com.deutschb1.ui.learn.GrammarDrillTopicsScreen
+import com.deutschb1.ui.learn.GrammarDrillScreen
+import com.deutschb1.ui.learn.WordVaultScreen
+import com.deutschb1.ui.learn.SpielMenuScreen
+import com.deutschb1.ui.learn.games.WordMatchScreen
+import com.deutschb1.ui.learn.games.FillBlankScreen
+import com.deutschb1.ui.ProgressDashboardScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -74,6 +83,33 @@ sealed class Screen(val route: String) {
 
     // Translation
     object Translation : Screen("translation")
+
+    // Geschichten
+    object GeschichtenList : Screen("learn/geschichten")
+    object GeschichteReader : Screen("learn/geschichten/{storyId}") {
+        fun createRoute(storyId: String) = "learn/geschichten/$storyId"
+    }
+
+    // Grammar Drills
+    object GrammarDrillTopics : Screen("learn/grammar")
+    object GrammarDrill : Screen("learn/grammar/{topicId}") {
+        fun createRoute(topicId: String) = "learn/grammar/$topicId"
+    }
+
+    // Word Vault
+    object WordVault : Screen("learn/word-vault")
+
+    // Spiele
+    object SpieleMenu : Screen("learn/spiele")
+    object WordMatch : Screen("learn/spiele/match/{gameId}") {
+        fun createRoute(gameId: String) = "learn/spiele/match/$gameId"
+    }
+    object FillBlank : Screen("learn/spiele/fill/{gameId}") {
+        fun createRoute(gameId: String) = "learn/spiele/fill/$gameId"
+    }
+
+    // Stats
+    object Stats : Screen("stats")
 }
 
 @Composable
@@ -210,6 +246,47 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         // Translation
         composable(Screen.Translation.route) {
             TranslationScreen(navController = navController)
+        }
+
+        // Geschichten
+        composable(Screen.GeschichtenList.route) {
+            GeschichtenListScreen(navController = navController)
+        }
+        composable(Screen.GeschichteReader.route) { backStackEntry ->
+            val storyId = backStackEntry.arguments?.getString("storyId") ?: ""
+            GeschichteReaderScreen(storyId = storyId, navController = navController)
+        }
+
+        // Grammar Drills
+        composable(Screen.GrammarDrillTopics.route) {
+            GrammarDrillTopicsScreen(navController = navController)
+        }
+        composable(Screen.GrammarDrill.route) { backStackEntry ->
+            val topicId = backStackEntry.arguments?.getString("topicId") ?: ""
+            GrammarDrillScreen(topicId = topicId, navController = navController)
+        }
+
+        // Word Vault
+        composable(Screen.WordVault.route) {
+            WordVaultScreen(navController = navController)
+        }
+
+        // Spiele
+        composable(Screen.SpieleMenu.route) {
+            SpielMenuScreen(navController = navController)
+        }
+        composable(Screen.WordMatch.route) { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getString("gameId") ?: ""
+            WordMatchScreen(gameId = gameId, navController = navController)
+        }
+        composable(Screen.FillBlank.route) { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getString("gameId") ?: ""
+            FillBlankScreen(gameId = gameId, navController = navController)
+        }
+
+        // Stats
+        composable(Screen.Stats.route) {
+            ProgressDashboardScreen(navController = navController)
         }
     }
 }

@@ -8,13 +8,15 @@ import androidx.room.TypeConverters
 import com.deutschb1.data.db.entities.UserExamResult
 import com.deutschb1.data.db.entities.FlashcardProgress
 import com.deutschb1.data.db.entities.SavedWord
+import com.deutschb1.data.db.entities.StudySession
 
-@Database(entities = [UserExamResult::class, FlashcardProgress::class, SavedWord::class], version = 1, exportSchema = false)
+@Database(entities = [UserExamResult::class, FlashcardProgress::class, SavedWord::class, StudySession::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userExamResultDao(): UserExamResultDao
     abstract fun flashcardDao(): FlashcardDao
     abstract fun savedWordDao(): SavedWordDao
+    abstract fun studySessionDao(): StudySessionDao
 
     companion object {
         @Volatile

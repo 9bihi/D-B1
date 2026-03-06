@@ -1,5 +1,5 @@
 # Tech Context - Deutsch B1 Exam
-## Version 2.0
+## Version 2.1
 
 ---
 
@@ -11,19 +11,19 @@
 | UI Framework | Jetpack Compose + Material3 |
 | Architecture | Single Activity, Declarative UI, State Hoisting |
 | Navigation | `androidx.navigation:navigation-compose` |
-| Networking | Retrofit 2 + OkHttp 4 |
+| Networking | Retrofit 2 + OkHttp 4 (with disk cache) |
 | Serialization | GSON (Retrofit converter + JSON asset loading) |
-| Persistence | **Room DB** (new in v2.0) |
-| Audio | **Media3 ExoPlayer** (new in v2.0) |
+| Persistence | Room DB |
+| Audio | Media3 ExoPlayer |
 | Image Loading | Coil (`io.coil-kt:coil-compose`) |
-| Settings | **DataStore Preferences** (new — theme toggle) |
+| Settings | DataStore Preferences (theme toggle) |
 | Animations | `AnimatedContent`, `animateFloatAsState`, `spring` |
 | System UI | Accompanist `systemuicontroller` |
 | Icons | Material Icons Extended |
 
 ---
 
-## 📚 Key Dependencies (libs.versions.toml)
+## 📚 Key Dependencies (`libs.versions.toml`)
 
 ```toml
 [versions]
@@ -33,36 +33,37 @@ retrofit = "2.9.0"
 okhttp = "4.12.0"
 gson = "2.10.1"
 coil = "2.5.0"
-room = "2.6.1"        # NEW
-media3 = "1.3.0"      # NEW
-datastore = "1.0.0"   # NEW
+room = "2.6.1"
+media3 = "1.3.0"
+datastore = "1.0.0"
 
 [libraries]
 # Compose
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+androidx-compose-bom      = { group = "androidx.compose",    name = "compose-bom",               version.ref = "compose-bom" }
+androidx-compose-ui       = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-material3= { group = "androidx.compose.material3", name = "material3" }
+androidx-navigation       = { group = "androidx.navigation",  name = "navigation-compose",        version.ref = "navigation-compose" }
 
 # Networking
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+retrofit                  = { group = "com.squareup.retrofit2", name = "retrofit",                version.ref = "retrofit" }
+retrofit-gson             = { group = "com.squareup.retrofit2", name = "converter-gson",          version.ref = "retrofit" }
+okhttp                    = { group = "com.squareup.okhttp3",   name = "okhttp",                  version.ref = "okhttp" }
+okhttp-logging            = { group = "com.squareup.okhttp3",   name = "logging-interceptor",     version.ref = "okhttp" }
 
-# Room (NEW)
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+# Room
+androidx-room-runtime     = { group = "androidx.room", name = "room-runtime",   version.ref = "room" }
+androidx-room-ktx         = { group = "androidx.room", name = "room-ktx",       version.ref = "room" }
+androidx-room-compiler    = { group = "androidx.room", name = "room-compiler",  version.ref = "room" }
 
-# Media3 / ExoPlayer (NEW)
+# Media3 / ExoPlayer
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
-androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
+androidx-media3-ui        = { group = "androidx.media3", name = "media3-ui",        version.ref = "media3" }
 
-# DataStore (NEW)
-androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+# DataStore
+androidx-datastore        = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # Coil
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-compose              = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 ```
 
 ---
@@ -71,18 +72,63 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 - **Gradle**: Kotlin DSL (`.gradle.kts`)
 - **Min SDK**: 26 (Android 8.0 Oreo)
 - **Target SDK**: 34 (Android 14)
-- **Signing**: `release.jks` configured via `local.properties`
+- **Signing**: `release.jks` via `local.properties`
 
 ---
 
-## 🌐 External API Integrations
+## 🌐 External API Integrations (v2.1 — Verified & Working)
 
-| API | Purpose | Endpoint | Risk |
-|---|---|---|---|
-| MyMemory Translation | Free text translation | `https://api.mymemory.translated.net/get?q={text}&langpair={pair}` | 5,000 words/day free limit |
-| Dictionary (Google Books / Web) | Word lookup | `https://www.googleapis.com/books/v1/volumes?q={query}` (inferred) | Rate limits; no API key = lower quota |
+| Tool | API | Endpoint | Key | Free Quota | Notes |
+|---|---|---|---|---|---|
+| Dictionary Browse | German-Words-Library (bundled) | `assets/dictionary/words_5000.json` | None | ♾️ Offline | GPL-3.0; bundle once |
+| Dictionary Lookup | Wiktionary REST API | `en.wiktionary.org/api/rest_v1/page/definition/{word}` | None | No hard limit | Returns `de` section |
+| Verb Conjugation | German Verbs API | `german-verbs-api.onrender.com/german-verbs-api/{verb}` | None | No hard limit | Cold start ~30s on Render free tier |
+| Translation (primary) | MyMemory | `api.mymemory.translated.net/get?q={text}&langpair={pair}` | None | 5,000 words/day | No key needed |
+| Translation (fallback) | LibreTranslate | `libretranslate.com/translate` (POST) | Optional free key | Limited w/o key | Auto-triggered on MyMemory 403 |
 
-**Mitigation for API limits**: Implement response caching using OkHttp's built-in `Cache` (100 MB disk cache). Cache translation results keyed by `{text}+{langpair}` to avoid repeat API hits.
+### Retrofit Client Setup (with Cache)
+```kotlin
+object RetrofitClient {
+    fun build(context: Context): Retrofit {
+        val cache = Cache(File(context.cacheDir, "http_cache"), 100L * 1024 * 1024)
+        val client = OkHttpClient.Builder()
+            .cache(cache)
+            .addInterceptor(HttpLoggingInterceptor().apply { level = Level.BASIC })
+            .build()
+        return Retrofit.Builder()
+            .baseUrl("https://api.mymemory.translated.net/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+}
+```
+Note: Since the app calls 3 different base URLs, use `@Url` annotation in `ApiInterface` for absolute URLs, or create separate Retrofit instances per API.
+
+### API Interface (Key Endpoints)
+```kotlin
+interface ApiInterface {
+    // Translation — MyMemory
+    @GET
+    suspend fun translate(
+        @Url url: String = "https://api.mymemory.translated.net/get",
+        @Query("q") text: String,
+        @Query("langpair") langpair: String
+    ): Response<MyMemoryResponse>
+
+    // Translation — LibreTranslate fallback
+    @POST("https://libretranslate.com/translate")
+    suspend fun translateLibre(@Body body: LibreTranslateRequest): Response<LibreTranslateResponse>
+
+    // Dictionary — Wiktionary
+    @GET
+    suspend fun lookupWord(@Url url: String): Response<Map<String, List<WiktEntry>>>
+
+    // Verb Conjugation
+    @GET
+    suspend fun conjugateVerb(@Url url: String): Response<VerbConjugation>
+}
+```
 
 ---
 
@@ -90,47 +136,35 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 
 ```
 UserExamResult
-├── id: Int (PK autoGenerate)
-├── examProvider: String    -- "GOETHE" | "OESD" | "TELC"
-├── examNumber: Int         -- 1 | 2
-├── skill: String           -- "LESEN" | "HOEREN" | etc.
-├── score: Int
-├── totalQuestions: Int
-└── completedAt: Long       -- epoch millis
+  id: Int (PK), examProvider: String, examNumber: Int,
+  skill: String, score: Int, totalQuestions: Int, completedAt: Long
 
 FlashcardProgress
-├── id: Int (PK autoGenerate)
-├── cardId: String          -- matches Flashcard.id from JSON
-├── deckId: String
-├── mastered: Boolean
-└── lastReviewedAt: Long
+  id: Int (PK), cardId: String, deckId: String,
+  mastered: Boolean, lastReviewedAt: Long
 
 SavedWord
-├── id: Int (PK autoGenerate)
-├── german: String
-├── english: String
-├── contextSentence: String
-└── savedAt: Long
+  id: Int (PK), german: String, english: String,
+  contextSentence: String, savedAt: Long
 
 StudySession
-├── id: Int (PK autoGenerate)
-├── moduleType: String      -- "EXAM" | "FLASHCARD" | "GESCHICHTE" | "DRILL" | "GAME"
-├── durationSeconds: Int
-├── itemsCompleted: Int
-└── completedAt: Long
+  id: Int (PK), moduleType: String, durationSeconds: Int,
+  itemsCompleted: Int, completedAt: Long
 ```
 
 ---
 
 ## ⚡ Performance Constraints
-- **Animations**: Heavy use of `spring` animations requires efficient recomposition. Ensure `remember` is used on all animation states and avoid triggering recomposition from within animated composables.
-- **JSON Loading**: `AssetLoader` calls are synchronous by default. Wrap all `AssetLoader.load()` calls in `LaunchedEffect` or `withContext(Dispatchers.IO)` to avoid blocking the main thread.
-- **Room Queries**: All DAO `@Query` methods returning `List<>` should be `suspend fun` called from `LaunchedEffect`. Avoid calling Room on the main thread.
-- **ExoPlayer**: Must be released in `DisposableEffect.onDispose`. Failure to do so causes memory leaks and audio continuing after navigation.
+- **Animations**: Use `remember` on all `animateFloatAsState` / `animateDpAsState` calls. No recomposition triggers inside animation lambdas.
+- **JSON Loading**: All `AssetLoader.load()` calls must run on `Dispatchers.IO` inside `LaunchedEffect` — never on Main thread.
+- **Room Queries**: All DAO methods must be `suspend fun`. Call from `LaunchedEffect` or coroutine scope only.
+- **ExoPlayer**: Always release in `DisposableEffect.onDispose { player.release() }`.
+- **API Debouncing**: Minimum 500ms debounce on all text fields that trigger API calls (Dictionary, Translation). Never fire on every keystroke.
+- **Verb API Cold Start**: Show a patient loading state with explicit "server starting up" message. Do not let the user think the app is broken.
 
 ---
 
 ## 🔒 Development Constraints
-- **Offline-First**: All exam and learning content must be available without network. Only Translation and Dictionary tools require network; all other screens work fully offline.
-- **API Rate Limits**: MyMemory is rate-limited. Cache responses aggressively. Do NOT fire an API request on every keystroke — debounce text input by 500ms before triggering.
-- **No Authentication**: The app is local-only with no user accounts in the current scope. No PII is collected or transmitted.
+- **Offline-First**: All exam, learn, and dictionary browse content works without network. Only Wiktionary lookup, Verb Conjugation, and Translation require network.
+- **No Authentication**: Local-only app. No user accounts, no PII transmitted or stored.
+- **API Rate Limits**: Cache all API responses with OkHttp. MyMemory is 5,000 words/day — more than sufficient, but cache prevents hitting limits from repeated identical queries.

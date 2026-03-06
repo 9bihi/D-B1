@@ -1016,44 +1016,87 @@ val telcExam1 = ExamContent(
     lesenParts = listOf(
         ReadingPart(
             partNumber = 1,
-            title = "Alltag in Deutschland",
-            instruction = "Lesen Sie den Text und wählen Sie die richtige Antwort.",
-            text = "In Deutschland gibt es viele Möglichkeiten, Deutsch zu lernen. Volkshochschulen bieten günstige Kurse an.",
+            title = "Teil 1 – Informationstexte",
+            instruction = "Welche Überschrift passt zu welchem Text?",
+            text = """
+                Text 1: Die Deutschen reisen gerne. Letztes Jahr war Spanien wieder das beliebteste Ziel, gefolgt von Italien. Knapp 20% machten Urlaub im eigenen Land.
+                Text 2: Das Internet verändert unser Kaufverhalten. Immer mehr Menschen bestellen Kleidung und Technik online, statt in die Stadt zu gehen.
+                Text 3: Sportvereine haben Nachwuchssorgen. Viele Jugendliche spielen lieber Videospiele, als zum Fußballtraining zu gehen.
+            """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wer bietet günstige Kurse an?", listOf("Die Universität", "Volkshochschulen", "Privatschulen"), 1, "Richtig, Volkshochschulen sind bekannt für günstige Kurse.")
+                MultipleChoiceQuestion(1, "Text 1 handelt von...", listOf("Reisegewohnheiten", "Gesunde Ernährung", "Verkehrsmittel"), 0),
+                MultipleChoiceQuestion(2, "Text 2 beschreibt...", listOf("Online-Shopping", "Den Buchhandel", "Mode-Trends"), 0),
+                MultipleChoiceQuestion(3, "Text 3 thematisiert...", listOf("Probleme in Sportvereinen", "Neue Videospiele", "Berühmte Fußballer"), 0)
+            )
+        ),
+        ReadingPart(
+            partNumber = 2,
+            title = "Teil 2 – Zeitungsartikel",
+            instruction = "Lesen Sie den Text und beantworten Sie die Fragen.",
+            text = """
+                Erfolg durch Weiterbildung
+                In der heutigen Arbeitswelt ist lebenslanges Lernen unerlässlich. Wer stehen bleibt, verliert den Anschluss. 
+                Die Bundesregierung unterstützt deshalb Arbeitnehmer mit dem sogenannten 'Bildungsscheck'. 
+                Damit können bis zu 50% der Kursgebühren für berufliche Fortbildungen financed werden.
+                Besonders gefragt sind derzeit IT-Kenntnisse und Fremdsprachen. 
+                Arbeitgeber schätzen Mitarbeiter, die Eigeninitiative zeigen und sich in ihrer Freizeit weiterbilden.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(4, "Was ist der 'Bildungsscheck'?", listOf("Ein Gehaltsbonus", "Eine finanzielle Hilfe für Kurse", "Ein Zeugnis"), 1),
+                MultipleChoiceQuestion(5, "Welche Kurse sind besonders populär?", listOf("Kochen und Backen", "IT und Sprachen", "Sport und Tanz"), 1)
             )
         )
     ),
     hoerenParts = listOf(
         HoerenPart(
             partNumber = 1,
-            title = "Ankunft am Bahnhof",
-            instruction = "Hören Sie die Durchsage und wählen Sie aus.",
-            transcript = "Gleis 4, der ICE nach Frankfurt fährt jetzt ein.",
+            title = "Teil 1 – Kurzmitteilungen",
+            instruction = "Hören Sie die Kurzinformationen.",
+            transcript = """
+                Ansage 1: Verehrte Kunden, der Supermarkt schließt in 15 Minuten. Bitte kommen Sie zur Kasse.
+                Ansage 2: Achtung am Gleis 3. Der Regionalexpress nach Köln hat heute 20 Minuten Verspätung.
+                Ansage 3: Hier spricht die Polizei. Wegen eines Unfalls ist die Hauptstraße gesperrt. Bitte umfahren Sie den Bereich.
+            """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wo fährt der Zug nach Frankfurt ab?", listOf("Gleis 2", "Gleis 4", "Gleis 10"), 1)
-            ),
-            audioAssetPath = "telc_hoeren1.mp3"
+                MultipleChoiceQuestion(1, "Der Supermarkt...", listOf("öffnet gerade", "schließt bald", "hat Sonderangebote"), 1),
+                MultipleChoiceQuestion(2, "Der Zug nach Köln...", listOf("fällt aus", "ist pünktlich", "kommt später"), 2)
+            )
         )
     ),
     schreibenTasks = listOf(
         SchreibenTask(
             taskNumber = 1,
-            title = "E-Mail an den Vermieter",
-            prompt = "Schreiben Sie eine E-Mail wegen der defekten Heizung.",
-            minWords = 80,
-            hints = listOf("Grund nennen", "Terminvorschlag", "Höfliche Anrede")
+            title = "Teil 1 – Beschwerdebrief",
+            prompt = """
+                Sie haben online ein Handy bestellt, aber es ist beschädigt angekommen. 
+                Schreiben Sie an die Firma 'TechWorld':
+                • Grund Ihres Schreibens
+                • Beschreibung des Schadens
+                • Forderung (Reparatur oder Ersatz)
+                • Fristsetzung
+            """.trimIndent(),
+            minWords = 100,
+            hints = listOf("Formelle Anrede", "Bestellnummer nennen", "Höflich aber bestimmt bleiben")
         )
     ),
     sprechenTasks = listOf(
         SprechenTask(
             taskNumber = 1,
-            title = "Gemeinsam etwas planen",
-            instruction = "Planen Sie einen Ausflug mit einem Freund.",
-            topic = "Ausflugsziel, Termin, Verpflegung.",
+            title = "Teil 1 – Kontaktaufnahme",
+            instruction = "Sprechen Sie mit Ihrem Partner über ein Thema.",
+            topic = "Thema: Kleidung und Mode. Tragen Sie gerne Markenkleidung? Wie wichtig ist Ihnen Ihr Aussehen?",
+            prepTimeSec = 60,
+            speakTimeSec = 120,
+            tips = listOf("Eigene Meinung sagen", "Partner fragen", "Beispiele geben")
+        ),
+        SprechenTask(
+            taskNumber = 2,
+            title = "Teil 2 – Ein Thema präsentieren",
+            instruction = "Präsentieren Sie: 'Brauchen Kinder ein eigenes Smartphone?'",
+            topic = "Erfahrung, Situation im Heimatland, Vorteile/Nachteile, Meinung.",
             prepTimeSec = 60,
             speakTimeSec = 180,
-            tips = listOf("Vorschläge machen", "Auf Partner eingehen", "Einigung finden")
+            tips = listOf("Struktur einhalten", "Vor- und Nachteile abwägen")
         )
     )
 )

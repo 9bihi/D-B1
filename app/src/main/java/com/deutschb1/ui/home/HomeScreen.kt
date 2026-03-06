@@ -89,17 +89,34 @@ fun HomeScreen(navController: NavController) {
     ) {
         Spacer(modifier = Modifier.height(60.dp))
 
-        Text(
-            text = "Deutsch B1",
-            style = MaterialTheme.typography.displayLarge,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-        Text(
-            text = "Prüfungsvorbereitung",
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.Gray
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Deutsch B1",
+                    style = MaterialTheme.typography.displayLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = "Prüfungsvorbereitung",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Gray
+                )
+            }
+            IconButton(
+                onClick = { navController.navigate(Screen.Stats.route) },
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(Color.White.copy(alpha = 0.1f))
+            ) {
+                Text("📊", fontSize = 24.sp)
+            }
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 

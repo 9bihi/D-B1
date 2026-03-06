@@ -1,123 +1,125 @@
 # Task List - Deutsch B1 Exam
-## Version 2.0 — Integration & Bug-Fix Sprint
+## Version 2.1 — API Overhaul + Integration Sprint
 
 ---
 
 ## 🚨 ACTIVE TASK
-> Executing Phase 1 Critical Bug Fixes — starting with content population and error handling.
+> **API Overhaul** — Fix all 3 broken API tools (Dictionary, Verb Conjugation, Translation) before any other new feature work.
 
 ---
 
-## 🔴 Phase 1 — Critical Bug Fixes (Block all new features until done)
+## 🔴 Phase 0 — API Overhaul (CURRENT — Do Before Everything Else)
 
-- [ ] **[FIX-1.1a]** Add `lesenParts` content to `GoetheExam2` in `ExamData.kt` (3 parts, 5 MC each)
-- [ ] **[FIX-1.1b]** Add `hoerenParts` content to `GoetheExam2` (3 parts with transcripts + MC)
-- [ ] **[FIX-1.1c]** Add `schreibenTasks` to `GoetheExam2` (formal letter + informal message)
-- [ ] **[FIX-1.1d]** Add `sprechenTasks` to `GoetheExam2` (3 topic cards: Familie, Arbeit, Freizeit)
-- [ ] **[FIX-1.1e]** Repeat all above for `OesdExam2`
-- [ ] **[FIX-1.2a]** Create `ResultSummaryScreen.kt` composable
-- [ ] **[FIX-1.2b]** Wire `ResultSummaryScreen` at end of `LesenScreen` and `HoerenScreen`
-- [ ] **[FIX-1.2c]** Register `Screen.ResultSummary` route in `AppNavGraph.kt`
-- [ ] **[FIX-1.3a]** Create `sealed class ApiResult<T>` in `data/ApiRepository.kt`
-- [ ] **[FIX-1.3b]** Wrap all Retrofit calls in try/catch returning `ApiResult`
-- [ ] **[FIX-1.3c]** Render error state in `TranslationScreen.kt` (Snackbar + Retry button)
-- [ ] **[FIX-1.3d]** Render error state in `DictionaryScreen.kt` (Snackbar + Retry button)
-- [ ] **[FIX-1.3e]** Handle null/empty `body()` response — no more crashes
-- [ ] **[FIX-1.4a]** Add `ContentCopy` IconButton to Translation result card
-- [ ] **[FIX-1.4b]** Wire `ClipboardManager` copy action + show Toast confirmation
+### RetrofitClient.kt
+- [ ] **[API-0.0a]** Add OkHttp `Cache(100 MB)` to `RetrofitClient`
+- [ ] **[API-0.0b]** Add `HttpLoggingInterceptor` (BASIC level) for debugging
+- [ ] **[API-0.0c]** Configure Retrofit to support absolute `@Url` annotations for multi-base-URL calls
+
+### New Data Models
+- [ ] **[API-0.1a]** Create `WiktionaryDefinition` + `WiktEntry` data classes
+- [ ] **[API-0.1b]** Create `VerbConjugation` data class (verb, auxiliary, tense maps)
+- [ ] **[API-0.1c]** Create `MyMemoryResponse` + `LibreTranslateRequest/Response` data classes
+- [ ] **[API-0.1d]** Create `TranslationLangPair` data class for the UI selector
+
+### ApiRepository.kt — Replace All Broken Calls
+- [ ] **[API-0.2a]** Remove Google Books Dictionary call entirely
+- [ ] **[API-0.2b]** Add `suspend fun lookupWord(word: String): ApiResult<WiktionaryDefinition>`
+  - `GET https://en.wiktionary.org/api/rest_v1/page/definition/{word}`
+  - Parse `de[]` key from response
+  - Return `ApiResult.Error("Kein Eintrag gefunden")` if `de` key absent
+- [ ] **[API-0.2c]** Add `fun sanitizeVerbForApi(verb: String): String` (umlaut → ascii)
+- [ ] **[API-0.2d]** Add `suspend fun conjugateVerb(verb: String): ApiResult<VerbConjugation>`
+  - Sanitize verb first
+  - `GET https://german-verbs-api.onrender.com/german-verbs-api/{verb}`
+  - Handle 404 (verb not found) and timeout (cold start) gracefully
+- [ ] **[API-0.2e]** Update `suspend fun translate(text, langpair): ApiResult<String>`
+  - PRIMARY: `GET https://api.mymemory.translated.net/get?q={text}&langpair={pair}`
+  - Check `responseStatus`: 200=success, 403=quota exceeded → trigger fallback
+  - FALLBACK: `POST https://libretranslate.com/translate` with empty `api_key`
+  - Expose `langpair` parameter (de|en, en|de, de|ar, de|fr, de|tr)
+
+### Dictionary Screen (`ui/translation/DictionaryScreen.kt`)
+- [ ] **[API-0.3a]** Download `German-Words-5000.json` → commit to `assets/dictionary/words_5000.json`
+- [ ] **[API-0.3b]** Add **Browse tab**: load JSON via `AssetLoader`, searchable `LazyColumn` A–Z
+- [ ] **[API-0.3c]** Add **Lookup tab**: text field → Wiktionary API → render `WiktEntry` list
+- [ ] **[API-0.3d]** Show `partOfSpeech` chip (Verb / Nomen / Adjektiv) on each entry
+- [ ] **[API-0.3e]** Show example sentences below each definition (collapsible)
+- [ ] **[API-0.3f]** Add 🔖 Bookmark IconButton → `SavedWordDao.insert()`
+- [ ] **[API-0.3g]** Add shimmer loading state + "Kein Eintrag gefunden" empty state
+
+### Verb Conjugation Screen (`ui/translation/VerbConjugationScreen.kt`) — NEW
+- [ ] **[API-0.4a]** Create `VerbConjugationScreen.kt` composable
+- [ ] **[API-0.4b]** TextField for verb input + "Konjugieren" button
+- [ ] **[API-0.4c]** Show cold-start warning card: *"Server startet… (~30 Sekunden)"* during first load
+- [ ] **[API-0.4d]** Shimmer loading skeleton while API is responding
+- [ ] **[API-0.4e]** Tense `TabRow`: Präsens | Präteritum | Perfekt | Konjunktiv II | Imperativ
+- [ ] **[API-0.4f]** Each tab: 6-row conjugation table (Person | Form), Glass card styled
+- [ ] **[API-0.4g]** Show auxiliary info badge ("sein" or "haben") next to verb title
+- [ ] **[API-0.4h]** Error card for verb not found + Retry button
+- [ ] **[API-0.4i]** Register `Screen.VerbConjugation` in `AppNavGraph.kt`
+- [ ] **[API-0.4j]** Wire "Verb Conjugation" card on API Tools screen → `Screen.VerbConjugation`
+
+### Translation Screen (`ui/translation/TranslationScreen.kt`)
+- [ ] **[API-0.5a]** Add `LanguagePairSelector` dropdown with 5 pairs (de↔en, en↔de, de↔ar, de↔fr, de↔tr)
+- [ ] **[API-0.5b]** Replace old LibreTranslate-only call with MyMemory primary + LibreTranslate fallback
+- [ ] **[API-0.5c]** Show "Daily limit reached, using backup..." message on 403 fallback
+- [ ] **[API-0.5d]** Add 📋 `ContentCopy` IconButton → `ClipboardManager` + Toast *"Kopiert!"*
+- [ ] **[API-0.5e]** Add shimmer loading state
+- [ ] **[API-0.5f]** Add character count indicator below input field
+- [ ] **[API-0.5g]** Add `ErrorStateCard` with Retry button on network failure
 
 ---
 
-## 🟡 Phase 2 — Persistence Layer
+## 🔴 Phase 1 — Critical Bug Fixes
 
-- [ ] **[DB-2.1a]** Add Room dependencies to `libs.versions.toml` and `build.gradle.kts`
-- [ ] **[DB-2.1b]** Create `UserExamResult` `@Entity` data class
-- [ ] **[DB-2.1c]** Create `UserExamResultDao` with insert + query methods
-- [ ] **[DB-2.1d]** Build `AppDatabase` singleton
-- [ ] **[DB-2.1e]** Create `DatabaseProvider` object for DI-free access
-- [ ] **[DB-2.2a]** Query exam results in `ModelltestSelectorScreen` and display checkmark/score badge
-- [ ] **[DB-2.2b]** Persist result to DB after `ResultSummaryScreen` is shown
+- [ ] **[FIX-1.1a–e]** Populate all 4 skills for GoetheExam2 and OesdExam2
+- [ ] **[FIX-1.2a–c]** Create `ResultSummaryScreen.kt` + wire at end of Lesen/Hoeren + register route
+- [ ] **[FIX-1.3a–e]** `ApiResult<T>` sealed class across all API calls (partially done in Phase 0)
+- [ ] **[FIX-1.4a–b]** Copy-to-clipboard in Translator (done in API-0.5d above)
+
+---
+
+## 🟡 Phase 2 — Persistence Layer (Room DB)
+
+- [ ] **[DB-2.1a–e]** Room setup: entities, DAOs, AppDatabase, DatabaseProvider
+- [ ] **[DB-2.2a–b]** Completion badges on ModelltestSelectorScreen
 
 ---
 
 ## 🟠 Phase 3 — Audio / ExoPlayer
 
-- [ ] **[AUDIO-3.1a]** Add `media3-exoplayer` + `media3-ui` to dependencies
-- [ ] **[AUDIO-3.1b]** Add `audioAssetPath` field to `HoerenPart` data class
-- [ ] **[AUDIO-3.1c]** Create `AudioPlayerBar` composable (play/pause, seek, time)
-- [ ] **[AUDIO-3.1d]** Initialise ExoPlayer in `HoerenScreen` with `DisposableEffect` lifecycle
-- [ ] **[AUDIO-3.1e]** Add placeholder `.mp3` files to `assets/audio/` for all existing Hoeren parts
-- [ ] **[AUDIO-3.1f]** Link audio asset paths in `ExamData.kt` for existing Modelltest 1 entries
+- [ ] **[AUDIO-3.1a–f]** ExoPlayer in HoerenScreen + AudioPlayerBar composable + mp3 assets
 
 ---
 
-## 🟢 Phase 4 — External Repo Integrations
+## 🟢 Phase 4 — External Repo Integrations (New Modules)
 
-### WordVault Flashcards (saqibroy/deutsch-b1-vokab + greyels/deutsch-b1-prep)
-- [ ] **[INT-4.1a]** Create `Flashcard` data class + 10 topic decks × 30 cards in `FlashcardData.kt`
-- [ ] **[INT-4.1b]** Build `FlashcardDeckScreen` (deck list with study button)
-- [ ] **[INT-4.1c]** Build `FlashcardScreen` (study mode: swipe/tap to flip, track score)
-- [ ] **[INT-4.1d]** Add `FlashcardProgressDao` + Room entity for mastered cards
-- [ ] **[INT-4.1e]** Add "Flashcards" entry to Learn home category list
-
-### Geschichten Module (MohammedDrissi/Deutsche-Geschichten-zum-Lesen)
-- [ ] **[INT-4.2a]** Create `Geschichte` data class + `GeschichtenData.kt` with ≥10 stories
-- [ ] **[INT-4.2b]** Build `GeschichtenListScreen` with level filter (A2 / B1)
-- [ ] **[INT-4.2c]** Build `GeschichteReaderScreen` with tap-word vocab hints
-- [ ] **[INT-4.2d]** Add comprehension MC questions after story end
-- [ ] **[INT-4.2e]** Register Geschichten routes in `AppNavGraph.kt`
-- [ ] **[INT-4.2f]** Add "Geschichten 📖" to Learn home
-
-### Grammar Drill (MohammedDrissi/Grammar-mit-mir)
-- [ ] **[INT-4.3a]** Create `GrammarRule` + `GrammarDrill` data classes
-- [ ] **[INT-4.3b]** Port ≥15 grammar topics into `GrammarDrillData.kt`
-- [ ] **[INT-4.3c]** Build `GrammarDrillScreen` (explanation card → drill exercises)
-- [ ] **[INT-4.3d]** Track completion state per topic in Room DB
-- [ ] **[INT-4.3e]** Hook Grammar Drill into existing Learn > Grammar entry point
-
-### Word Vault Bookmarks (MohammedDrissi/WordVault-Vocabulary-Builder)
-- [ ] **[INT-4.4a]** Create `SavedWord` Room entity + `SavedWordDao`
-- [ ] **[INT-4.4b]** Add bookmark icon to `GeschichteReaderScreen`
-- [ ] **[INT-4.4c]** Add bookmark icon to exam question rows
-- [ ] **[INT-4.4d]** Add bookmark icon to `DictionaryScreen` results
-- [ ] **[INT-4.4e]** Build `WordVaultScreen` (personal saved words list)
-- [ ] **[INT-4.4f]** Add "Review Saved Words" → opens FlashcardScreen with personal deck
-
-### Spiele / Games (deutschimalltag22-hash/sprachspiel-b1)
-- [ ] **[INT-4.5a]** Create `WordPair` + `FillSentence` data classes and `SpielData.kt` with ≥5 sets
-- [ ] **[INT-4.5b]** Build `SpielMenuScreen`
-- [ ] **[INT-4.5c]** Build `WordMatchScreen` (tap-to-match game)
-- [ ] **[INT-4.5d]** Build `FillBlankScreen` (fill-in-the-blank MC game)
-- [ ] **[INT-4.5e]** Add "Spiele 🎮" to Learn home
-
-### Thematic Phrase Enrichment (yunus-topal/Deutsch-Lernen)
-- [ ] **[INT-4.6a]** Add 5 new topic categories to `LearnData.kt` (Reisen, Kochen, Gesundheit, Wohnen, Beziehungen)
-- [ ] **[INT-4.6b]** Expand existing Arbeit and Familie themes with 15+ new phrases each
-- [ ] **[INT-4.6c]** Add `exampleSentence` field to `ThemePhrase` data class
-
-### Progress Dashboard (saqibroy/German-b1-learning-tracker)
-- [ ] **[INT-4.7a]** Create `StudySession` Room entity + DAO
-- [ ] **[INT-4.7b]** Log session after each completed activity (exams, flashcards, stories, drills)
-- [ ] **[INT-4.7c]** Build `ProgressDashboardScreen` with streak, total time, completion %
-- [ ] **[INT-4.7d]** Add Stats icon to Home screen top app bar
+- [ ] **[INT-4.1a–e]** WordVault Flashcards (saqibroy/deutsch-b1-vokab + greyels/deutsch-b1-prep)
+- [ ] **[INT-4.2a–f]** Geschichten Module (MohammedDrissi/Deutsche-Geschichten-zum-Lesen)
+- [ ] **[INT-4.3a–e]** Grammar Drill (MohammedDrissi/Grammar-mit-mir)
+- [ ] **[INT-4.4a–f]** Word Vault Bookmarks (MohammedDrissi/WordVault-Vocabulary-Builder)
+- [ ] **[INT-4.5a–e]** Spiele / Games (deutschimalltag22-hash/sprachspiel-b1)
+- [ ] **[INT-4.6a–c]** Thematic phrase enrichment (yunus-topal/Deutsch-Lernen)
+- [ ] **[INT-4.7a–d]** Progress Dashboard (saqibroy/German-b1-learning-tracker)
 
 ---
 
 ## 🔵 Phase 5 — Polish
 
-- [ ] **[POLISH-5.1]** Create `ShimmerEffect` composable and apply to Translation + Dictionary screens
-- [ ] **[POLISH-5.2]** Add TELC Modelltest 1 content (Lesen + Schreiben minimum) to `ExamData.kt`
-- [ ] **[POLISH-5.3]** Extract all hardcoded UI strings to `res/values/strings.xml`
-- [ ] **[POLISH-5.4]** Add Dark Theme variant toggle ("Full Black" vs "Deep Grey") via DataStore
+- [ ] **[POLISH-5.1]** ShimmerEffect composable for all API screens (partially done in Phase 0)
+- [ ] **[POLISH-5.2]** TELC Modelltest 1 content (Lesen + Schreiben)
+- [ ] **[POLISH-5.3]** Extract all hardcoded strings to `strings.xml`
+- [ ] **[POLISH-5.4]** Dark theme variant toggle (Full Black / Deep Grey) via DataStore
 
 ---
 
 ## ✅ Completed Tasks
-- [x] Create project structure and navigation (`AppNavGraph`, `Screen` sealed class)
-- [x] Implement Glassmorphism theme and custom `FloatingGlassNavBar`
-- [x] Create `ApiRepository` for external API calls (Retrofit + OkHttp)
-- [x] Populate Goethe Modelltest 1 — all 4 skills (Lesen, Hoeren, Schreiben, Sprechen)
-- [x] Populate ÖSD Modelltest 1 — all 4 skills
-- [x] Set up Learn module with Grammar + Vocabulary categories + thematic phrase lists
-- [x] Document project in `memory-bank/` directory
-- [x] Map 8 external GitHub repos to integration targets (this sprint)
+- [x] Project structure, navigation (`AppNavGraph`, `Screen` sealed class)
+- [x] Glassmorphism theme + custom `FloatingGlassNavBar`
+- [x] `ApiRepository` initial setup (Retrofit + OkHttp)
+- [x] Goethe Modelltest 1 — all 4 skills
+- [x] ÖSD Modelltest 1 — all 4 skills
+- [x] Learn module — Grammar + Vocabulary categories
+- [x] Memory Bank v2.1 documentation
+- [x] Map 8 external GitHub repos to integration targets
+- [x] Identify and document 3 verified free replacement APIs

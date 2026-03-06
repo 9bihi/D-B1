@@ -239,6 +239,17 @@ fun TranslationScreen(navController: NavController) {
                 }
             }
 
+            // Output or Shimmer
+            if (isLoading) {
+                Card(
+                    modifier = Modifier.fillMaxWidth().height(120.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1E))
+                ) {
+                    com.deutschb1.ui.components.ShimmerItem(modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(20.dp)))
+                }
+            }
+
             // Output
             AnimatedVisibility(
                 visible = outputText.isNotBlank(),

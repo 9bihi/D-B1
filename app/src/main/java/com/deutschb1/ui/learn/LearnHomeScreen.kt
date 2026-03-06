@@ -98,10 +98,42 @@ fun LearnHomeScreen(navController: NavController) {
 
             ApiToolCard(
                 emoji = "🗂️",
-                title = "WortVault Flashcards",
+                title = "Flashcards",
                 subtitle = "Spaced Repetition · 10 Topics",
                 gradient = listOf(Color(0xFFFF5F6D), Color(0xFFFFC371)),
                 onClick = { navController.navigate(Screen.FlashcardDecks.route) }
+            )
+            Spacer(Modifier.height(10.dp))
+            ApiToolCard(
+                emoji = "🔖",
+                title = "Word Vault",
+                subtitle = "Saved Vocabulary",
+                gradient = listOf(Color(0xFF11998E), Color(0xFF38EF7D)),
+                onClick = { navController.navigate(Screen.WordVault.route) }
+            )
+            Spacer(Modifier.height(10.dp))
+            ApiToolCard(
+                emoji = "📖",
+                title = "Geschichten",
+                subtitle = "Graded Stories · A2-B1",
+                gradient = listOf(Color(0xFF4AC1FF), Color(0xFF7956FF)),
+                onClick = { navController.navigate(Screen.GeschichtenList.route) }
+            )
+            Spacer(Modifier.height(10.dp))
+            ApiToolCard(
+                emoji = "📐",
+                title = "Grammatik Drills",
+                subtitle = "Interactive Exercises",
+                gradient = listOf(Color(0xFFF093FB), Color(0xFFF5576C)),
+                onClick = { navController.navigate(Screen.GrammarDrillTopics.route) }
+            )
+            Spacer(Modifier.height(10.dp))
+            ApiToolCard(
+                emoji = "🎮",
+                title = "Spiele",
+                subtitle = "Gamified Practice",
+                gradient = listOf(Color(0xFF84FAB0), Color(0xFF8FD3F4)),
+                onClick = { navController.navigate(Screen.SpieleMenu.route) }
             )
         }
 

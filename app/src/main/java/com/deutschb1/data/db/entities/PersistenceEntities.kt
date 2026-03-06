@@ -19,3 +19,12 @@ data class SavedWord(
     val example: String = "",
     val savedAt: Long = System.currentTimeMillis()
 )
+
+@Entity(tableName = "study_sessions")
+data class StudySession(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val moduleType: String, // "Exam", "Flashcard", "Story", "Grammar", "Game"
+    val durationSeconds: Int,
+    val itemsCompleted: Int,
+    val completedAt: Long = System.currentTimeMillis()
+)

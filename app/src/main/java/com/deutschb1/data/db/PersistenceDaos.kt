@@ -28,3 +28,18 @@ interface SavedWordDao {
     @Query("SELECT * FROM saved_words ORDER BY savedAt DESC")
     fun getAllSavedWords(): Flow<List<SavedWord>>
 }
+
+@Dao
+interface StudySessionDao {
+    @Insert
+    suspend fun insertSession(session: com.deutschb1.data.db.entities.StudySession)
+
+    @Query("SELECT * FROM study_sessions ORDER BY completedAt DESC")
+    fun getAllSessions(): Flow<List<com.deutschb1.data.db.entities.StudySession>>
+    
+    @Query("SELECT SUM(durationSeconds) FROM study_sessions")
+    fun getTotalStudyTime(): Flow<Int?>
+
+    @Query("SELECT COUNT(DISTINCT(completedAt / 86400000)) FROM study_sessions")
+    fun getUniqueStudyDays(): Flow<Int>
+}

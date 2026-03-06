@@ -61,3 +61,28 @@
 - **Rationale**: The app uses mostly screen-level state with state hoisting, not ViewModels. Introducing Hilt would require a large architectural refactor (ViewModelFactory, Hilt annotations on every screen) that is out of scope for this sprint. A `DatabaseProvider` singleton is sufficient for now.
 - **Alternatives Rejected**: Hilt — large boilerplate cost for limited benefit at current scale. Koin — same concern; not worth adding a new DI framework mid-sprint.
 - **Future Note**: If the app grows to 10+ screens with complex async state, migrate to Hilt + ViewModels.
+
+---
+
+## 2024-03-06: Unified Word Vault Integration
+- **Decision**: Centralize all word-saving functionality (Stories, Dictionary, Exams) into a single `SavedWordDao`.
+- **Rationale**: Previously, each feature thought about "saving" differently. A unified `SavedWord` entity allows the `WordVaultScreen` to serve as a holistic personal dictionary regardless of where the word was discovered.
+- **Implementation**: The story reader and dictionary screens now share the exact same `SavedWord` persistence logic.
+
+---
+
+## 2024-03-06: Standardized Shimmer UI Patterns
+- **Decision**: Adopt a centralized `ShimmerItem` and `shimmerBrush()` for all loading states.
+- **Rationale**: To maintain the premium "wow factor," blank loading screens or standard progress bars were rejected. Shimmers maintain layout stability and visual continuity during async operations (Translation API, DB aggregations).
+
+---
+
+## 2024-03-06: Moved Performance-Critical Aggregations to SQL
+- **Decision**: Shifted stats calculation logic (total hours, unique days) from Kotlin `map/reduce` to Room/SQL `@Query` methods.
+- **Rationale**: As the `StudySession` table grows to hundreds of entries, calculating stats in-memory on the UI thread would cause frame drops. SQL's `SUM`, `COUNT`, and `DISTINCT` on the background dispatcher ensure the `ProgressDashboard` remains fluid.
+
+---
+
+## 2024-03-06: Comprehensive String Extraction to XML
+- **Decision**: Perform a complete pass to migrate hardcoded UI labels to `res/values/strings.xml`.
+- **Rationale**: Essential for long-term maintainability and potential localization. Also standardizes button labels (e.g., "Zurück", "Weiter") across disparate modules (Exams vs Stories).

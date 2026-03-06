@@ -75,7 +75,12 @@ enum class LearnTheme(
     WORTSCHATZ_FARBEN("Farben", "🎨", "Wortschatz zu Farben", "#FF6346"),
     WORTSCHATZ_KÖRPER("Körper", "💪", "Wortschatz zu Körperteilen und Gesundheit", "#CD5C5C"),
     WORTSCHATZ_TIERE("Tiere", "🐶", "Wortschatz zu Tieren", "#8B4513"),
-    WORTSCHATZ_PFLANZEN("Pflanzen", "🌻", "Wortschatz zu Pflanzen und Natur", "#32CD32")
+    WORTSCHATZ_PFLANZEN("Pflanzen", "🌻", "Wortschatz zu Pflanzen und Natur", "#32CD32"),
+    WORTSCHATZ_RECHT("Recht & Gesetz", "⚖️", "Wortschatz zu Gesetz und Rechten", "#7F8C8D"),
+    WORTSCHATZ_POLITIK("Politik", "🗳️", "Wortschatz zu Politik und Staat", "#2C3E50"),
+    WORTSCHATZ_TECHNIK("Technik", "🔧", "Wortschatz zu Technologie und Werkzeugen", "#95A5A6"),
+    WORTSCHATZ_FEIERTAG("Feiertage", "🎉", "Wortschatz zu Festen und Feiertagen", "#E74C3C"),
+    WORTSCHATZ_GESCHICHTE("Geschichte", "📜", "Wortschatz zu Geschichte und Epochen", "#A04000")
 }
 
 
@@ -144,7 +149,17 @@ val ArbeitContent = LearnThemeContent(
         LearnPhrase("die Probezeit", "probationary period", "Die Probezeit dauert in der Regel sechs Monate.", "The probationary period usually lasts six months."),
         LearnPhrase("Vollzeit / Teilzeit", "full-time / part-time", "Sie arbeitet seit der Geburt ihres Kindes nur noch Teilzeit.", "Since the birth of her child, she only works part-time."),
         LearnPhrase("das Betriebsklima", "workplace atmosphere", "Ein gutes Betriebsklima ist sehr wichtig für die Produktivität.", "A good workplace atmosphere is very important for productivity."),
-        LearnPhrase("berufliche Ziele setzen", "to set professional goals", "Es ist wichtig, sich klare berufliche Ziele zu setzen.", "It is important to set clear professional goals.")
+        LearnPhrase("berufliche Ziele setzen", "to set professional goals", "Es ist wichtig, sich klare berufliche Ziele zu setzen.", "It is important to set clear professional goals."),
+        LearnPhrase("die Kernarbeitszeit", "core working hours", "In unserem Unternehmen gilt eine Kernarbeitszeit von 10 bis 15 Uhr.", "In our company, core working hours are from 10 am to 3 pm."),
+        LearnPhrase("Gleitzeit haben", "to have flexible working hours", "Dank Gleitzeit kann ich morgens später anfangen.", "Thanks to flexitime, I can start later in the morning."),
+        LearnPhrase("das Homeoffice", "home office / working from home", "Zweimal pro Woche arbeite ich im Homeoffice.", "I work from home twice a week."),
+        LearnPhrase("der Fachkräftemangel", "shortage of skilled workers", "In der IT-Branche herrscht ein großer Fachkräftemangel.", "There is a great shortage of skilled workers in the IT industry."),
+        LearnPhrase("die Aufstiegschancen", "career opportunities", "Die Aufstiegschancen in diesem Betrieb sind sehr gut.", "Career opportunities in this company are very good."),
+        LearnPhrase("die Gehaltserhöhung", "salary increase", "Nach einem Jahr habe ich eine Gehaltserhöhung bekommen.", "After a year, I got a salary increase."),
+        LearnPhrase("zuständig sein für", "to be responsible for", "Ich bin für die Kundenbetreuung zuständig.", "I am responsible for customer support."),
+        LearnPhrase("die Verantwortung übernehmen", "to take responsibility", "Er möchte mehr Verantwortung im Team übernehmen.", "He wants to take more responsibility in the team."),
+        LearnPhrase("das Netzwerk erweitern", "to expand the network", "Auf Messen kann man sein berufliches Netzwerk erweitern.", "You can expand your professional network at trade fairs."),
+        LearnPhrase("die Kündigungsfrist", "notice period", "Meine Kündigungsfrist beträgt drei Monate zum Quartalsende.", "My notice period is three months to the end of the quarter.")
     )
 )
 
@@ -1340,7 +1355,13 @@ val WortschatzFamilie = LearnThemeContent(
         LearnPhrase("die Verwandten", "relatives", "Zu Weihnachten besuchen wir unsere Verwandten.", "At Christmas we visit our relatives."),
         LearnPhrase("die Hochzeit", "wedding", "Die Hochzeit findet im Sommer statt.", "The wedding takes place in summer."),
         LearnPhrase("geschieden", "divorced", "Meine Eltern sind seit fünf Jahren geschieden.", "My parents have been divorced for five years."),
-        LearnPhrase("verheiratet", "married", "Sie ist seit drei Jahren verheiratet.", "She has been married for three years.")
+        LearnPhrase("verheiratet", "married", "Sie ist seit drei Jahren verheiratet.", "She has been married for three years."),
+        LearnPhrase("die Patchwork-Familie", "patchwork family", "In einer Patchwork-Familie leben Kinder aus verschiedenen Beziehungen.", "In a patchwork family, children from different relationships live together."),
+        LearnPhrase("alleinerziehend", "single parent", "Alleinerziehende Eltern leisten oft Enormes.", "Single parents often achieve an enormous amount."),
+        LearnPhrase("das Sorgerecht", "custody", "Nach der Scheidung wurde das Sorgerecht geteilt.", "After the divorce, custody was shared."),
+        LearnPhrase("die Erziehung", "upbringing", "Eine konsequente Erziehung ist wichtig für Kinder.", "A consistent upbringing is important for children."),
+        LearnPhrase("das Familienmitglied", "family member", "Wir sind fünf Familien成员.", "We are five family members."),
+        LearnPhrase("die Verwandtschaft", "kinship", "Zu unserer Verwandtschaft gehören viele Onkel und Tanten.", "Our relatives include many uncles and aunts.")
     )
 )
 
@@ -1366,7 +1387,12 @@ val WortschatzArbeit = LearnThemeContent(
         LearnPhrase("die Pause", "break", "In der Pause gehe ich oft spazieren.", "During the break I often go for a walk."),
         LearnPhrase("der Urlaub", "vacation", "Nächste Woche habe ich Urlaub.", "Next week I have vacation."),
         LearnPhrase("die Weiterbildung", "further education", "Die Firma bezahlt meine Weiterbildung.", "The company pays for my further education."),
-        LearnPhrase("selbstständig", "self-employed", "Er ist selbstständig und hat eine kleine Firma.", "He is self-employed and has a small company.")
+        LearnPhrase("selbstständig", "self-employed", "Er ist selbstständig und hat eine kleine Firma.", "He is self-employed and has a small company."),
+        LearnPhrase("die Kernarbeitszeit", "core working hours", "In unserem Unternehmen gilt eine Kernarbeitszeit.", "Our company has core working hours."),
+        LearnPhrase("das Homeoffice", "home office", "Zweimal pro Woche arbeite ich im Homeoffice.", "I work from home twice a week."),
+        LearnPhrase("die Gehaltserhöhung", "salary increase", "Nach einem Jahr habe ich eine Gehaltserhöhung bekommen.", "After a year I got a salary increase."),
+        LearnPhrase("zuständig sein für", "to be responsible for", "Ich bin für die Kundenbetreuung zuständig.", "I am responsible for customer support."),
+        LearnPhrase("die Kündigungsfrist", "notice period", "Meine Kündigungsfrist beträgt drei Monate.", "My notice period is three months.")
     )
 )
 
@@ -1895,6 +1921,75 @@ val WortschatzPflanzen = LearnThemeContent(
     )
 )
 
+val WortschatzRecht = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_RECHT,
+    phrases = listOf(
+        LearnPhrase("das Recht", "right/law", "Jeder Mensch hat Rechte.", "Everyone has rights."),
+        LearnPhrase("das Gesetz", "law", "Das Gesetz muss eingehalten werden.", "The law must be obeyed."),
+        LearnPhrase("der Anwalt", "lawyer", "Ich brauche einen Anwalt für den Prozess.", "I need a lawyer for the trial."),
+        LearnPhrase("das Gericht", "court", "Der Fall kommt vor Gericht.", "The case is coming to court."),
+        LearnPhrase("die Klage", "lawsuit", "Er hat eine Klage eingereicht.", "He has filed a lawsuit."),
+        LearnPhrase("die Strafe", "punishment/fine", "Die Strafe für das Vergehen war hoch.", "The punishment for the offense was high."),
+        LearnPhrase("schuldig", "guilty", "Der Angeklagte wurde für schuldig befunden.", "The defendant was found guilty."),
+        LearnPhrase("unschuldig", "innocent", "Er ist unschuldig.", "He is innocent.")
+    )
+)
+
+val WortschatzPolitik = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_POLITIK,
+    phrases = listOf(
+        LearnPhrase("die Politik", "politics", "Politik interessiert mich sehr.", "Politics interests me a lot."),
+        LearnPhrase("die Wahl", "election", "Nächsten Sonntag ist die Wahl.", "Next Sunday is the election."),
+        LearnPhrase("wählen gehen", "to go vote", "Gehst du wählen?", "Are you going to vote?"),
+        LearnPhrase("die Regierung", "government", "Die Regierung plant Reformen.", "The government is planning reforms."),
+        LearnPhrase("die Partei", "political party", "Welche Partei unterstützt du?", "Which party do you support?"),
+        LearnPhrase("der Staat", "state", "Der Staat sorgt für Sicherheit.", "The state provides security."),
+        LearnPhrase("die Demokratie", "democracy", "Wir leben in einer Demokratie.", "We live in a democracy."),
+        LearnPhrase("der Minister", "minister", "Der Minister hielt eine Rede.", "The minister gave a speech.")
+    )
+)
+
+val WortschatzTechnik = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_TECHNIK,
+    phrases = listOf(
+        LearnPhrase("die Technik", "technology", "Die Technik entwickelt sich schnell.", "Technology is developing fast."),
+        LearnPhrase("das Gerät", "device", "Das Gerät ist kaputt.", "The device is broken."),
+        LearnPhrase("funktionieren", "to function", "Wie funktioniert das?", "How does this work?"),
+        LearnPhrase("reparieren", "to repair", "Kannst du das Handy reparieren?", "Can you repair the mobile phone?"),
+        LearnPhrase("die Maschine", "machine", "Die Maschine arbeitet automatisch.", "The machine works automatically."),
+        LearnPhrase("die Energie", "energy", "Wir brauchen mehr grüne Energie.", "We need more green energy."),
+        LearnPhrase("der Strom", "electricity", "Ohne Strom geht nichts.", "Nothing works without electricity."),
+        LearnPhrase("die Erfindung", "invention", "Das Internet ist eine große Erfindung.", "The internet is a great invention.")
+    )
+)
+
+val WortschatzFeiertag = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_FEIERTAG,
+    phrases = listOf(
+        LearnPhrase("der Feiertag", "holiday", "Morgen ist ein gesetzlicher Feiertag.", "Tomorrow is a public holiday."),
+        LearnPhrase("feiern", "to celebrate", "Wir feiern heute Geburtstag.", "We are celebrating a birthday today."),
+        LearnPhrase("das Fest", "festival/party", "Das Fest war sehr schön.", "The festival was very nice."),
+        LearnPhrase("Weihnachten", "Christmas", "Zu Weihnachten gibt es Geschenke.", "At Christmas there are gifts."),
+        LearnPhrase("Ostern", "Easter", "Ostern suchen wir Eier.", "At Easter we look for eggs."),
+        LearnPhrase("das Neujahr", "New Year", "Frohes Neues Jahr!", "Happy New Year!"),
+        LearnPhrase("die Tradition", "tradition", "Diese Tradition ist sehr alt.", "This tradition is very old."),
+        LearnPhrase("die Einladung", "invitation", "Danke für die Einladung!", "Thanks for the invitation!")
+    )
+)
+
+val WortschatzGeschichte = LearnThemeContent(
+    theme = LearnTheme.WORTSCHATZ_GESCHICHTE,
+    phrases = listOf(
+        LearnPhrase("die Geschichte", "history", "Ich lese gerne Bücher über Geschichte.", "I like reading books about history."),
+        LearnPhrase("die Vergangenheit", "past", "In der Vergangenheit war vieles anders.", "Many things were different in the past."),
+        LearnPhrase("die Epoche", "era", "Das Mittelalter war eine interessante Epoche.", "The Middle Ages was an interesting era."),
+        LearnPhrase("das Ereignis", "event", "Das war ein historisches Ereignis.", "That was a historical event."),
+        LearnPhrase("der Krieg", "war", "Niemand möchte Krieg.", "Nobody wants war."),
+        LearnPhrase("der Frieden", "peace", "Frieden ist das Wichtigste.", "Peace is the most important thing."),
+        LearnPhrase("die Revolution", "revolution", "Die französische Revolution veränderte vieles.", "The French Revolution changed many things.")
+    )
+)
+
 // ─── All Learn Content (only vocabulary themes) ────────────────────────────────────────
 
 val allLearnContent: List<LearnThemeContent> = listOf(
@@ -2001,7 +2096,12 @@ val allCategories = listOf(
             WortschatzFarben,
             WortschatzKörper,
             WortschatzTiere,
-            WortschatzPflanzen
+            WortschatzPflanzen,
+            WortschatzRecht,
+            WortschatzPolitik,
+            WortschatzTechnik,
+            WortschatzFeiertag,
+            WortschatzGeschichte
         )
     )
 )

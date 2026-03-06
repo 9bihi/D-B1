@@ -12,16 +12,21 @@ Foundation is stable. Now entering a major content + feature expansion phase dri
 - [x] **App Shell**: MainActivity, Glassmorphism theme, `FloatingGlassNavBar` with spring animations
 - [x] **Navigation**: `AppNavGraph.kt` with type-safe `Screen` sealed class routes
 - [x] **Exams Module**:
-  - [x] Provider selection: Goethe, ÖSD (TELC stub)
+  - [x] Provider selection: Goethe, ÖSD, TELC (Full content integrated)
   - [x] Skill selection: Lesen, Hören, Schreiben, Sprechen
-  - [x] Goethe Modelltest 1 — all 4 skills with full content
-  - [x] ÖSD Modelltest 1 — all 4 skills with full content
+  - [x] Goethe Modelltest 1 & 2 — all 4 skills with full content
+  - [x] ÖSD Modelltest 1 & 2 — all 4 skills with full content
+  - [x] TELC Modelltest 1 — Full content integrated
   - [x] Interactive MC + True/False question UI
 - [x] **Learn Module**: Grammar + Vocabulary categories with thematic phrase lists
-- [x] **Utilities**: Translation (MyMemory API) + Dictionary (Books/Web API) via `ApiRepository`
-- [x] **Visual Design**: Dark mode glassmorphism, blur cards, custom typography
+- [x] **Geschichten (Stories)**: Immersive reading with one-tap word hints & comprehension quizzes
+- [x] **Grammar Drills**: Interactive exercises for B1 grammar topics (Passiv, Konjunktiv, etc.)
+- [x] **Spiele (Games)**: Word Match and Fill-in-the-Blank learning games
+- [x] **Word Vault**: Personal dictionary for bookmarked words with Room persistence
+- [x] **Progress Dashboard**: Statistics tracking (Study time, Streaks, Session history)
+- [x] **Utilities**: Translation (MyMemory + Shimmer) + Dictionary via `ApiRepository`
+- [x] **Visual Design**: Dark mode glassmorphism, blur cards, Shimmer loading states
 - [x] **Memory Bank**: All project docs in `memory-bank/`
-- [x] **Modelltest 2 Content**: Goethe Modelltest 2 fully populated with Reading, listening, writing and speaking tasks
 
 ---
 
@@ -35,41 +40,20 @@ Foundation is stable. Now entering a major content + feature expansion phase dri
 | No Copy button in Translator | ✅ Fixed |
 | Screen.Translation missing & ExamData property mismatches | ✅ Fixed |
 | Dashboard 'timestamp' vs 'completedAt' mismatch | ✅ Fixed |
+| GeschichteReader/WordVault compilation errors | ✅ Fixed |
 
 ---
 
-## 🟡 Planned (Phase 2–5)
-
-### Persistence
-- [x] Room DB with `UserExamResult`, `FlashcardProgress`, `SavedWord` entities
-- [x] Completion badges on Modelltest Selector screen
+## 🟡 Planned (Phase 6)
 
 ### Audio
 - [x] ExoPlayer integration in `HoerenScreen`
 - [x] `AudioPlayerBar` composable (play/pause/seek)
-- [ ] `.mp3` assets wired for all Hoeren parts
+- [ ] `.mp3` assets wired for all Hoeren parts (Pending asset files)
 
-### New Modules (from 8 Repos)
-- [x] **WordVault**: Spaced-repetition flashcards (Integrated `saqibroy/deutsch-b1-vokab` content)
-- [ ] **GrammarGuide**: Interactive grammar cheatsheets (`p-kuen/Deutsch-B1-Grammatik` integration)
+### Advanced Content
 - [ ] **LetterBuilder**: writing templates (`p-kuen/Deutsch-B1-Schreiben` integration)
-- [ ] **Word Vault Bookmarks** — Save any word from anywhere in the app
-- [ ] **Spiele** — Word Match + Fill-Blank games
-- [ ] **Progress Dashboard** — Streak, study time, module completion stats
-
-### Content Completion
-- [x] Goethe Modelltest 2 — all 4 skills
-- [x] ÖSD Modelltest 2 — all 4 skills
-- [x] TELC Modelltest 1 — Lesen + Schreiben minimum
-- [x] 5 new Learn themes (Reisen, Kochen, Gesundheit, Wohnen, Beziehungen)
-
-### Polish & UX
-- [x] Bottom Navbar UI Polish (Floating Glass Pill)
-- [x] Dashboard with Streaks/Stats on Home screen
-- [x] Haptic feedback / subtle animations across interactions
-- [x] Shimmer loading states in API screens
-- [x] All strings extracted to `strings.xml`
-- [x] Dark theme variant toggle (Full Black / Deep Grey)
+- [ ] **GrammarGuide**: Interactive grammar cheatsheets (Static rules expansion)
 
 ---
 
@@ -77,13 +61,13 @@ Foundation is stable. Now entering a major content + feature expansion phase dri
 
 | Module | Before Sprint | After Sprint Target |
 |---|---|---|
-| Exam Content | 50% (2/4 providers × 1 modelltest) | 90% |
-| Learn Content | 70% | 95% |
+| Exam Content | 50% | 100% (Goethe, ÖSD, TELC) |
+| Learn Content | 70% | 98% (Expansion complete) |
 | Bug Fixes | 0% | 100% |
-| New Features | 30% (Flashcards Ready) | 70% |
+| New Features | 30% | 95% (Stories, Drills, Games, Stats done) |
 | Persistence | 100% | 100% |
-| Audio | 80% (Ready, needs mp3 files) | 90% |
-| **Overall** | **~95%** | **~98%** |
+| Audio | 80% | 90% (Code ready, needs mp3s) |
+| **Overall** | **~98%** | **~99%** |
 
 ---
 
@@ -92,10 +76,10 @@ Foundation is stable. Now entering a major content + feature expansion phase dri
 | Repo | Status |
 |---|---|
 | `greyels/deutsch-b1-prep` | ✅ Integrated — FlashcardData vocab source |
-| `MohammedDrissi/Deutsche-Geschichten-zum-Lesen` | 📋 Planned — Geschichten module |
-| `MohammedDrissi/Grammar-mit-mir` | 📋 Planned — Grammar Drill |
-| `MohammedDrissi/WordVault-Vocabulary-Builder` | 📋 Planned — Save-word UX pattern |
-| `deutschimalltag22-hash/sprachspiel-b1` | 📋 Planned — Spiele module |
+| `MohammedDrissi/Deutsche-Geschichten-zum-Lesen` | ✅ Integrated — Geschichten module |
+| `MohammedDrissi/Grammar-mit-mir` | ✅ Integrated — Grammar Drill |
+| `MohammedDrissi/WordVault-Vocabulary-Builder` | ✅ Integrated — Save-word UX pattern |
+| `deutschimalltag22-hash/sprachspiel-b1` | ✅ Integrated — Spiele module |
 | `yunus-topal/Deutsch-Lernen` | ✅ Integrated — Thematic phrase enrichment |
 | `saqibroy/deutsch-b1-vokab` | ✅ Integrated — 800+ vocab for FlashcardData |
 | `saqibroy/German-b1-learning-tracker` | ✅ Integrated — Progress Dashboard schema |
