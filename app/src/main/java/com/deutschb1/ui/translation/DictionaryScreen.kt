@@ -1,6 +1,7 @@
 package com.deutschb1.ui.translation
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -281,7 +283,7 @@ fun WiktEntryCard(entry: WiktEntryDetail) {
                 Surface(
                     color = Color(0xFF5856D6).copy(alpha = 0.2f),
                     shape = RoundedCornerShape(8.dp),
-                    border = border(width = 0.5.dp, color = Color(0xFF5856D6).copy(alpha = 0.5f), shape = RoundedCornerShape(8.dp))
+                    border = BorderStroke(width = 0.5.dp, color = Color(0xFF5856D6).copy(alpha = 0.5f))
                 ) {
                     Text(
                         entry.partOfSpeech,

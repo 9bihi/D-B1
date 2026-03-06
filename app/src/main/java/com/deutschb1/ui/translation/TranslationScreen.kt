@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -197,10 +198,9 @@ fun LanguageChip(pair: TranslationLangPair, isSelected: Boolean, onClick: () -> 
         onClick = onClick,
         modifier = Modifier.clip(RoundedCornerShape(30.dp)),
         color = if (isSelected) Color(0xFF5856D6).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.05f),
-        border = border(
+        border = BorderStroke(
             width = 1.dp,
-            color = if (isSelected) Color(0xFF5856D6) else Color.White.copy(alpha = 0.1f),
-            shape = RoundedCornerShape(30.dp)
+            color = if (isSelected) Color(0xFF5856D6) else Color.White.copy(alpha = 0.1f)
         )
     ) {
         Row(
