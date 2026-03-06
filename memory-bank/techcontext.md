@@ -1,5 +1,5 @@
 # Tech Context - Deutsch B1 Exam
-## Version 2.2
+## Version 2.3
 
 ---
 
@@ -11,131 +11,120 @@
 | UI | Jetpack Compose + Material3 |
 | Architecture | Single Activity, State Hoisting |
 | Navigation | `androidx.navigation:navigation-compose` |
-| HTTP (API tools) | Raw `OkHttpClient` (NOT Retrofit interface) |
-| HTTP (other) | Retrofit 2 + OkHttp 4 (for any remaining Retrofit calls) |
-| JSON parsing | GSON + `org.json.JSONArray` (for Google gtx response) |
-| Offline data | JSON assets via `AssetLoader` |
-| Persistence | Room DB |
-| Audio | Media3 ExoPlayer |
+| HTTP | Retrofit 2 + OkHttp 4 (background, not exposed in UI) |
+| JSON parsing | GSON |
+| Offline content | JSON assets via `AssetLoader` |
+| Persistence | Room DB (Phase 2) |
+| Audio | Media3 ExoPlayer (Phase 3) |
 | Images | Coil |
 | Settings | DataStore Preferences |
-| Animations | `AnimatedContent`, `animateFloatAsState`, `spring` |
+| Animations | spring physics, `AnimatedContent`, `animateFloatAsState` |
 | System UI | Accompanist `systemuicontroller` |
 
 ---
 
-## 🌐 External APIs (v2.2 — All Verified Working)
+## 🗑️ Removed in v2.3
 
-### Translation
-| Property | Value |
+| Feature | Removed From |
 |---|---|
-| API | Google Translate (gtx guest client) |
-| Endpoint | `https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={tgt}&dt=t&q={encoded}` |
-| Method | GET |
-| Key required | ❌ None |
-| Response type | Raw JSON array — use `org.json.JSONArray`, not Gson |
-| Parse path | `response[0][i][0]` for each segment i |
-| Rate limit | None for normal usage |
-| HTTP client | Raw `OkHttpClient` |
+| Translate bottom nav tab | `MainActivity.kt` NavItems |
+| Translation home card | `HomeScreen.kt` |
+| API Tools section | `LearnHomeScreen.kt` |
+| Translation/Dictionary/VerbConjugation routes | `AppNavGraph.kt` |
 
-### Dictionary Lookup
-| Property | Value |
-|---|---|
-| API | Free Dictionary API |
-| Endpoint | `https://api.dictionaryapi.dev/api/v2/entries/de/{word}` |
-| Method | GET |
-| Key required | ❌ None |
-| Response type | `List<DictApiEntry>` — standard Gson |
-| 404 handling | `ApiResult.Error("Kein Eintrag gefunden")` |
-| Rate limit | None documented |
-| HTTP client | Raw `OkHttpClient` |
-
-### Dictionary Browse
-| Property | Value |
-|---|---|
-| Source | German-Words-Library (Jonny-exe) |
-| File | `assets/dictionary/words_5000.json` |
-| Format | `List<String>` JSON array |
-| Network | ❌ None (fully offline) |
-
-### Verb Conjugation
-| Property | Value |
-|---|---|
-| Source | Custom bundled JSON |
-| File | `assets/verbs/conjugations.json` |
-| Coverage | 200 B1-level German verbs, 5 tenses each |
-| Network | ❌ None (fully offline) |
-| Access | `VerbRepository.searchVerb(context, verb)` |
+Bottom nav is now **3 tabs**: Home · Exams · Learn.
 
 ---
 
-## ⚠️ Critical: Why Raw OkHttp (Not Retrofit) for API Tools
-
-```kotlin
-// ✅ CORRECT — use this pattern for Dictionary and Translation calls:
-private val httpClient = OkHttpClient.Builder()
-    .connectTimeout(15, TimeUnit.SECONDS)
-    .readTimeout(15, TimeUnit.SECONDS)
-    .build()
-
-suspend fun translate(text: String, src: String, tgt: String): ApiResult<String> {
-    return withContext(Dispatchers.IO) {
-        try {
-            val encoded = URLEncoder.encode(text, "UTF-8")
-            val url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=$src&tl=$tgt&dt=t&q=$encoded"
-            val response = httpClient.newCall(Request.Builder().url(url).build()).execute()
-            // ... parse JSONArray response
-        } catch (e: Exception) { ApiResult.Error("...") }
-    }
-}
-
-// ❌ DO NOT do this — @Url with different base URL domain causes malformed requests:
-// @GET suspend fun translate(@Url url: String): Response<MyMemoryResponse>
-```
-
----
-
-## 🗃️ Room DB Schema
-
-```
-UserExamResult    (id, examProvider, examNumber, skill, score, totalQuestions, completedAt)
-FlashcardProgress (id, cardId, deckId, mastered, lastReviewedAt)
-SavedWord         (id, german, english, contextSentence, savedAt)
-StudySession      (id, moduleType, durationSeconds, itemsCompleted, completedAt)
-```
-
----
-
-## 📁 Asset Structure
+## 🆕 New Asset Structure (v2.3)
 
 ```
 app/src/main/assets/
-├── dictionary/
-│   └── words_5000.json          ← German-Words-Library 5k list
-├── verbs/
-│   └── conjugations.json        ← 200 B1 verbs, all tenses (offline)
 ├── flashcards/
-│   └── deck_<topic>.json        ← Phase 4
+│   └── decks.json          ← 10 decks × 30 cards (300 total)
 ├── geschichten/
-│   └── stories.json             ← Phase 4
-├── grammar/
-│   └── drills.json              ← Phase 4
-└── spiele/
-    └── games.json               ← Phase 4
+│   └── stories.json        ← 10 graded stories (4×A2, 6×B1)
+├── spiele/
+│   ├── wortpaare.json      ← 5 sets × 10 word pairs
+│   ├── lueckentext.json    ← 5 sets × 5–10 fill-in sentences
+│   └── satzordnung.json    ← sentence ordering challenges
+└── audio/
+    └── *.mp3               ← Hören audio (Phase 3)
 ```
 
 ---
 
-## ⚡ Performance Constraints
-- `AssetLoader` calls must run on `Dispatchers.IO` in `LaunchedEffect` — never on Main thread.
-- `VerbRepository` caches the verb list in memory after first load — don't reload on every search.
-- Room DAO queries must be `suspend fun` — never call on Main thread.
-- ExoPlayer must be released in `DisposableEffect.onDispose { player.release() }`.
-- API text input: 500ms debounce before firing requests — never fire on every keystroke.
+## 🆕 New Data Classes (v2.3)
+
+```kotlin
+// Flashcards
+data class FlashcardDeck(val deckId: String, val deckName: String, val icon: String, val cards: List<Flashcard>)
+data class Flashcard(val id: String, val german: String, val article: String?, val plural: String?, val english: String, val exampleSentence: String)
+
+// Geschichten
+data class Story(val id: String, val title: String, val level: String, val readingTimeMinutes: Int, val topic: String, val body: String, val vocabHints: List<VocabHint>, val questions: List<StoryQuestion>)
+data class VocabHint(val word: String, val definition: String)
+data class StoryQuestion(val question: String, val options: List<String>, val correctIndex: Int, val explanation: String)
+
+// Spielen
+data class WortpaarSet(val setId: String, val title: String, val pairs: List<WordPair>)
+data class WordPair(val german: String, val english: String)
+data class LueckentextSentence(val template: String, val answer: String, val distractors: List<String>, val explanation: String)
+data class SatzordnungSentence(val words: List<String>, val correctOrder: List<Int>, val correctSentence: String, val explanation: String)
+```
+
+---
+
+## 🆕 New Repositories (v2.3)
+
+```kotlin
+// All are object singletons, load once from assets, cache in memory
+
+object FlashcardRepository {
+    fun loadDecks(context: Context): List<FlashcardDeck>
+    fun getDeck(context: Context, deckId: String): FlashcardDeck?
+}
+
+object GeschichtenRepository {
+    fun loadStories(context: Context): List<Story>
+    fun getStory(context: Context, storyId: String): Story?
+    fun getByLevel(context: Context, level: String): List<Story>
+}
+
+object SpielRepository {
+    fun loadWortpaare(context: Context): List<WortpaarSet>
+    fun loadLueckentext(context: Context): List<LueckentextSet>
+    fun loadSatzordnung(context: Context): List<SatzordnungSet>
+}
+```
+
+---
+
+## 🆕 New Screens (v2.3)
+
+| Screen | Route | Description |
+|---|---|---|
+| `FlashcardDeckListScreen` | `Screen.FlashcardDeckList` | Grid of 10 deck cards |
+| `FlashcardStudyScreen` | `Screen.FlashcardStudy/{deckId}` | Flip-card study mode |
+| `GeschichtenListScreen` | `Screen.GeschichtenList` | Story list with level badges |
+| `GeschichteReaderScreen` | `Screen.GeschichteReader/{storyId}` | Reader + vocab + quiz |
+| `SpielMenuScreen` | `Screen.SpielMenu` | 3 game type selector |
+| `WortpaarMatchScreen` | `Screen.WortpaarMatch/{setId}` | Tap-to-match game |
+| `LueckentextScreen` | `Screen.Lueckentext/{setId}` | Fill-in-the-blank |
+| `SatzordnungScreen` | `Screen.Satzordnung/{setId}` | Word ordering |
+
+---
+
+## ⚡ Performance Rules (unchanged)
+- `AssetLoader` always on `Dispatchers.IO`
+- Repository objects cache after first load — never re-parse
+- Room DAOs always `suspend fun`
+- All animations use `spring(dampingRatio = Spring.DampingRatioMediumBouncy)`
+- API calls: 500ms debounce
 
 ---
 
 ## 🔒 Constraints
-- **Offline-first**: Dictionary browse + verb conjugation work with zero network. Only translation and dictionary lookup require network.
-- **No authentication**: No user accounts, no PII transmitted.
-- **No Retrofit for API tools**: Use raw OkHttp to avoid base URL conflicts.
+- No network calls in UI-visible features (v2.3 removes all API tools from UI)
+- All content works 100% offline
+- No user authentication / no PII

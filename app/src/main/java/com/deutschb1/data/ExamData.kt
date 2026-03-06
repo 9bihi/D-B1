@@ -36,7 +36,7 @@ enum class ExamSkill(val displayName: String, val icon: String, val durationMin:
 // ─── Question Types ──────────────────────────────────────────────────────────
 
 data class MultipleChoiceQuestion(
-    val id: Int,
+    val id: String,
     val text: String,
     val options: List<String>,
     val correctIndex: Int,
@@ -44,7 +44,7 @@ data class MultipleChoiceQuestion(
 )
 
 data class TrueFalseQuestion(
-    val id: Int,
+    val id: String,
     val statement: String,
     val isTrue: Boolean,
     val explanation: String = ""
@@ -56,7 +56,8 @@ data class ReadingPart(
     val partNumber: Int,
     val title: String,
     val instruction: String,
-    val text: String,
+    val text: String = "",
+    val contextText: String? = null,
     val questions: List<MultipleChoiceQuestion>
 )
 
@@ -72,19 +73,19 @@ data class HoerenPart(
 data class SchreibenTask(
     val taskNumber: Int,
     val title: String,
-    val prompt: String,
-    val minWords: Int,
-    val hints: List<String>
+    val instruction: String,
+    val wordCount: String,
+    val keyPoints: List<String>
 )
 
 data class SprechenTask(
     val taskNumber: Int,
     val title: String,
     val instruction: String,
-    val topic: String,
-    val prepTimeSec: Int,
-    val speakTimeSec: Int,
-    val tips: List<String>
+    val topics: List<String> = emptyList(),
+    val prepTimeSec: Int = 0,
+    val speakTimeSec: Int = 0,
+    val tips: List<String> = emptyList()
 )
 
 data class ExamContent(
@@ -116,9 +117,9 @@ val GoetheExam1 = ExamContent(
                 Die Berliner Verkehrsbetriebe (BVG) zeigen sich trotzdem optimistisch und versprechen, bis Ende 2025 mindestens 50 Prozent der Busflotte zu elektrifizieren.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Berlin will seinen öffentlichen Nahverkehr bis 2030 komplett elektrifizieren.", listOf("Richtig", "Falsch"), 0, "Im Text steht: 'bis 2030 den öffentlichen Nahverkehr vollständig auf elektrische Busse umzustellen'."),
-                MultipleChoiceQuestion(2, "Die E-Busse werden vollständig aus städtischen Mitteln finanziert.", listOf("Richtig", "Falsch"), 1, "Der Text sagt, dass europäische Fördermittel genutzt werden sollen."),
-                MultipleChoiceQuestion(3, "Die BVG plant, bis 2025 mehr als die Hälfte ihrer Busse zu elektrifizieren.", listOf("Richtig", "Falsch"), 0, "BVG will bis Ende 2025 mindestens 50 Prozent elektrifizieren.")
+                MultipleChoiceQuestion("1", "Berlin will seinen öffentlichen Nahverkehr bis 2030 komplett elektrifizieren.", listOf("Richtig", "Falsch"), 0, "Im Text steht: 'bis 2030 den öffentlichen Nahverkehr vollständig auf elektrische Busse umzustellen'."),
+                MultipleChoiceQuestion("2", "Die E-Busse werden vollständig aus städtischen Mitteln finanziert.", listOf("Richtig", "Falsch"), 1, "Der Text sagt, dass europäische Fördermittel genutzt werden sollen."),
+                MultipleChoiceQuestion("3", "Die BVG plant, bis 2025 mehr als die Hälfte ihrer Busse zu elektrifizieren.", listOf("Richtig", "Falsch"), 0, "BVG will bis Ende 2025 mindestens 50 Prozent elektrifizieren.")
             )
         ),
         ReadingPart(
@@ -143,9 +144,9 @@ val GoetheExam1 = ExamContent(
                 mittwochs 16-20 Uhr. 12€/Std. babysitter@familie-jung.de
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(4, "Sven lernt Deutsch und kann gut rechnen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 0, "Er kann Mathe beibringen und sucht Deutschkurs = Anzeige A passt."),
-                MultipleChoiceQuestion(5, "Maria braucht jemanden, der nachmittags auf ihre Kinder aufpasst.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 3, "Anzeige D sucht Babysitter nachmittags mittwochs."),
-                MultipleChoiceQuestion(6, "Thomas zieht nach Berlin und sucht eine günstige Unterkunft.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 1, "Anzeige B bietet Zimmer in WG an.")
+                MultipleChoiceQuestion("4", "Sven lernt Deutsch und kann gut rechnen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 0, "Er kann Mathe beibringen und sucht Deutschkurs = Anzeige A passt."),
+                MultipleChoiceQuestion("5", "Maria braucht jemanden, der nachmittags auf ihre Kinder aufpasst.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 3, "Anzeige D sucht Babysitter nachmittags mittwochs."),
+                MultipleChoiceQuestion("6", "Thomas zieht nach Berlin und sucht eine günstige Unterkunft.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 1, "Anzeige B bietet Zimmer in WG an.")
             )
         ),
         ReadingPart(
@@ -165,13 +166,13 @@ val GoetheExam1 = ExamContent(
                 Auch in Supermärkten nimmt das Angebot an Fleischersatzprodukten kontinuierlich zu – der Markt wächst jährlich um etwa 20 Prozent.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(7, "Wie viele Deutsche essen laut dem Text kein Fleisch?",
+                MultipleChoiceQuestion("7", "Wie viele Deutsche essen laut dem Text kein Fleisch?",
                     listOf("Fast 2 Millionen", "Fast 9 Millionen", "Fast 10 Millionen"), 1,
                     "10% der Deutschen = fast neun Millionen Menschen."),
-                MultipleChoiceQuestion(8, "Was ist der häufigste Grund für Vegetarismus in Deutschland?",
+                MultipleChoiceQuestion("8", "Was ist der häufigste Grund für Vegetarismus in Deutschland?",
                     listOf("Gesundheit", "Tierschutz", "Umweltschutz"), 1,
                     "Tierschutz wird von 68% der Befragten als Hauptgrund genannt."),
-                MultipleChoiceQuestion(9, "Wie hat sich die Zahl der veganen Restaurants in München entwickelt?",
+                MultipleChoiceQuestion("9", "Wie hat sich die Zahl der veganen Restaurants in München entwickelt?",
                     listOf("Sie hat sich verdoppelt", "Sie ist gleich geblieben", "Sie hat sich verdreifacht"), 2,
                     "Die Zahl der pflanzlichen Restaurants hat sich in den letzten fünf Jahren verdreifacht.")
             )
@@ -202,13 +203,13 @@ val GoetheExam1 = ExamContent(
                 Patient: Nur gelegentlich Aspirin gegen die Kopfschmerzen.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wann fährt der nächste Zug nach München?",
+                MultipleChoiceQuestion("1", "Wann fährt der nächste Zug nach München?",
                     listOf("14:23 Uhr", "14:32 Uhr", "15:05 Uhr"), 1,
                     "Der Zug fährt um 14:32 Uhr."),
-                MultipleChoiceQuestion(2, "Wann muss Herr Müller den Bericht fertigstellen?",
+                MultipleChoiceQuestion("2", "Wann muss Herr Müller den Bericht fertigstellen?",
                     listOf("In zwei Stunden", "Um 16 Uhr", "Morgen früh"), 1,
                     "Der Chef braucht den Bericht bis 16 Uhr."),
-                MultipleChoiceQuestion(3, "Was nimmt der Patient gegen Kopfschmerzen?",
+                MultipleChoiceQuestion("3", "Was nimmt der Patient gegen Kopfschmerzen?",
                     listOf("Nichts", "Aspirin", "Ibuprofen"), 1,
                     "Er nimmt gelegentlich Aspirin.")
             )
@@ -230,10 +231,10 @@ val GoetheExam1 = ExamContent(
                 Zweitens, jeden Tag mindestens 30 Minuten Bewegung. Und drittens, Zeit für Familie und Freunde planen – das ist kein Luxus, das ist Notwendigkeit.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(4, "Was empfiehlt Dr. Schmidt als erste Maßnahme?",
+                MultipleChoiceQuestion("4", "Was empfiehlt Dr. Schmidt als erste Maßnahme?",
                     listOf("Sport treiben", "Das Handy ausschalten", "Mehr Urlaub nehmen"), 1,
                     "Sie empfiehlt, das Handy nach 19 Uhr auszuschalten."),
-                MultipleChoiceQuestion(5, "Wie lange soll man laut Dr. Schmidt täglich Sport machen?",
+                MultipleChoiceQuestion("5", "Wie lange soll man laut Dr. Schmidt täglich Sport machen?",
                     listOf("15 Minuten", "30 Minuten", "Eine Stunde"), 1,
                     "Sie empfiehlt mindestens 30 Minuten Bewegung täglich.")
             )
@@ -243,7 +244,7 @@ val GoetheExam1 = ExamContent(
         SchreibenTask(
             taskNumber = 1,
             title = "Teil 1 – Mitteilung schreiben",
-            prompt = """
+            instruction = """
                 Sie haben gehört, dass Ihr Nachbar Markus Heizungsprobleme hat und für zwei Wochen zu seiner Familie verreist. 
                 Er bat Sie, seine Wohnung im Blick zu haben.
                 
@@ -252,8 +253,8 @@ val GoetheExam1 = ExamContent(
                 • Teilen Sie mit, was Sie festgestellt haben
                 • Fragen Sie, was Sie tun sollen, wenn ein Problem auftritt
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf(
+            wordCount = "80",
+            keyPoints = listOf(
                 "Benutzen Sie eine höfliche Anrede (Lieber Markus, ...)",
                 "Verwenden Sie Konnektoren: zunächst, dann, außerdem, abschließend",
                 "Achten Sie auf Modalverben: können, sollen, müssen",
@@ -263,7 +264,7 @@ val GoetheExam1 = ExamContent(
         SchreibenTask(
             taskNumber = 2,
             title = "Teil 2 – Aufsatz",
-            prompt = """
+            instruction = """
                 Wählen Sie ein Thema und schreiben Sie einen Aufsatz (circa 150 Wörter):
                 
                 THEMA A: „Soziale Medien verbinden Menschen – oder trennen sie?"
@@ -277,8 +278,8 @@ val GoetheExam1 = ExamContent(
                 • Hauptteil (Argumente pro und contra)
                 • Schluss (Ihre Meinung)
             """.trimIndent(),
-            minWords = 150,
-            hints = listOf(
+            wordCount = "150",
+            keyPoints = listOf(
                 "Einleitung: Stellen Sie das Thema vor",
                 "Hauptteil: Mindestens 2 Argumente pro Seite",
                 "Benutzen Sie Meinungsausdrücke: Meiner Meinung nach, Ich denke, dass...",
@@ -292,7 +293,7 @@ val GoetheExam1 = ExamContent(
             taskNumber = 1,
             title = "Teil 1 – Sich vorstellen",
             instruction = "Stellen Sie sich Ihrem Gesprächspartner vor.",
-            topic = "Erzählen Sie über sich: Herkunft, Beruf/Studium, Familie, Hobbys und warum Sie Deutsch lernen.",
+            topics = listOf("Erzählen Sie über sich: Herkunft, Beruf/Studium, Familie, Hobbys und warum Sie Deutsch lernen."),
             prepTimeSec = 60,
             speakTimeSec = 120,
             tips = listOf(
@@ -307,7 +308,7 @@ val GoetheExam1 = ExamContent(
             taskNumber = 2,
             title = "Teil 2 – Gemeinsam planen",
             instruction = "Sie wollen mit Ihrem Partner etwas gemeinsam planen. Diskutieren Sie und einigen Sie sich.",
-            topic = "Sie und ein Freund/eine Freundin wollen zusammen Urlaub machen. Einigen Sie sich auf: Reiseziel, Unterkunft, Transport und Aktivitäten.",
+            topics = listOf("Sie und ein Freund/eine Freundin wollen zusammen Urlaub machen. Einigen Sie sich auf: Reiseziel, Unterkunft, Transport und Aktivitäten."),
             prepTimeSec = 60,
             speakTimeSec = 180,
             tips = listOf(
@@ -322,7 +323,7 @@ val GoetheExam1 = ExamContent(
             taskNumber = 3,
             title = "Teil 3 – Bild beschreiben",
             instruction = "Beschreiben Sie das Bild und äußern Sie Ihre Meinung dazu.",
-            topic = "Das Bild zeigt Menschen in einem Café, die auf ihre Smartphones schauen, anstatt miteinander zu reden. Beschreiben Sie die Szene und sagen Sie, was Sie darüber denken.",
+            topics = listOf("Das Bild zeigt Menschen in einem Café, die auf ihre Smartphones schauen, anstatt miteinander zu reden. Beschreiben Sie die Szene und sagen Sie, was Sie darüber denken."),
             prepTimeSec = 60,
             speakTimeSec = 120,
             tips = listOf(
@@ -353,9 +354,9 @@ val GoetheExam2 = ExamContent(
                 Experten glauben, dass dieses Modell besonders für junge Fachkräfte ein wichtiges Argument bei der Jobsuche ist.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Die Vier-Tage-Woche senkt laut Studie die Produktivität massiv.", listOf("Richtig", "Falsch"), 1, "Text sagt: Produktivität blieb gleich oder verbesserte sich."),
-                MultipleChoiceQuestion(2, "80% der Firmen sind zufriedener mit dem neuen Modell.", listOf("Richtig", "Falsch"), 0, "Text sagt: 80% berichten von höherer Zufriedenheit."),
-                MultipleChoiceQuestion(3, "Junge Fachkräfte finden die Vier-Tage-Woche unattraktiv.", listOf("Richtig", "Falsch"), 1, "Experten glauben, es ist ein wichtiges Argument für junge Fachkräfte.")
+                MultipleChoiceQuestion("1", "Die Vier-Tage-Woche senkt laut Studie die Produktivität massiv.", listOf("Richtig", "Falsch"), 1, "Text sagt: Produktivität blieb gleich oder verbesserte sich."),
+                MultipleChoiceQuestion("2", "80% der Firmen sind zufriedener mit dem neuen Modell.", listOf("Richtig", "Falsch"), 0, "Text sagt: 80% berichten von höherer Zufriedenheit."),
+                MultipleChoiceQuestion("3", "Junge Fachkräfte finden die Vier-Tage-Woche unattraktiv.", listOf("Richtig", "Falsch"), 1, "Experten glauben, es ist ein wichtiges Argument für junge Fachkräfte.")
             )
         ),
         ReadingPart(
@@ -380,9 +381,9 @@ val GoetheExam2 = ExamContent(
                 15€/Std + Pizza. Bitte melden bei jan.mayer@web.de
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(4, "Lukas studiert in Köln und sucht eine günstige Bleibe.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 0, "Anzeige A ist ein WG-Zimmer in Köln für 350€."),
-                MultipleChoiceQuestion(5, "Familie Müller plant einen Sommerurlaub am Meer mit ihrem Hund.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 1, "Anzeige B bietet eine Ferienwohnung an der Ostsee, Haustiere erlaubt."),
-                MultipleChoiceQuestion(6, "Frau Schmidt wohnt in Steglitz und braucht einen Parkplatz für ihr neues Auto.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 2, "Anzeige C bietet eine Garage in Steglitz an.")
+                MultipleChoiceQuestion("4", "Lukas studiert in Köln und sucht eine günstige Bleibe.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 0, "Anzeige A ist ein WG-Zimmer in Köln für 350€."),
+                MultipleChoiceQuestion("5", "Familie Müller plant einen Sommerurlaub am Meer mit ihrem Hund.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 1, "Anzeige B bietet eine Ferienwohnung an der Ostsee, Haustiere erlaubt."),
+                MultipleChoiceQuestion("6", "Frau Schmidt wohnt in Steglitz und braucht einen Parkplatz für ihr neues Auto.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 2, "Anzeige C bietet eine Garage in Steglitz an.")
             )
         ),
         ReadingPart(
@@ -403,13 +404,13 @@ val GoetheExam2 = ExamContent(
                 das gute Gewissen beim Einkauf.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(7, "Was machen fast die Hälfte der Befragten für den Klimaschutz?",
+                MultipleChoiceQuestion("7", "Was machen fast die Hälfte der Befragten für den Klimaschutz?",
                     listOf("Sie fliegen weniger", "Sie fahren mehr Fahrrad", "Sie kaufen in Unverpackt-Läden"), 1,
                     "45% nutzen öfter das Fahrrad statt das Auto."),
-                MultipleChoiceQuestion(8, "Warum fliegen 30% der Befragten nicht mehr innerhalb Europas?",
+                MultipleChoiceQuestion("8", "Warum fliegen 30% der Befragten nicht mehr innerhalb Europas?",
                     listOf("Es ist zu teuer", "Wegen der Umweltbelastung", "Weil sie lieber im Inland bleiben"), 1,
                     "Sie verzichten darauf, um CO2-Emissionen zu vermeiden."),
-                MultipleChoiceQuestion(9, "Was ist das Hauptmerkmal von Unverpackt-Läden?",
+                MultipleChoiceQuestion("9", "Was ist das Hauptmerkmal von Unverpackt-Läden?",
                     listOf("Sie sind sehr günstig", "Man muss eigene Gefäße mitbringen", "Sie verkaufen nur Bio-Obst"), 1,
                     "Kunden bringen ihre eigenen Behälter mit.")
             )
@@ -440,13 +441,13 @@ val GoetheExam2 = ExamContent(
                 Frau: Nein, er fährt direkt zum Bahnhof. Zum Marktplatz müssen Sie die Linie 12 nehmen.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wo kann der Mann Schmuck finden?",
+                MultipleChoiceQuestion("1", "Wo kann der Mann Schmuck finden?",
                     listOf("Hinter der Kasse", "In der ersten Etage", "Im Nebengebäude"), 1,
                     "Die Verkäuferin sagt: 'In der ersten Etage'."),
-                MultipleChoiceQuestion(2, "Wann treffen sie sich vor dem Kino?",
+                MultipleChoiceQuestion("2", "Wann treffen sie sich vor dem Kino?",
                     listOf("19:00 Uhr", "19:30 Uhr", "20:00 Uhr"), 1,
                     "Sie treffen sich um halb acht, also 19:30 Uhr."),
-                MultipleChoiceQuestion(3, "Wohin fährt dieser Bus?",
+                MultipleChoiceQuestion("3", "Wohin fährt dieser Bus?",
                     listOf("Zum Marktplatz", "Zum Bahnhof", "Direkt in die Stadt"), 1,
                     "Die Frau sagt: 'Er fährt direkt zum Bahnhof'.")
             )
@@ -462,10 +463,10 @@ val GoetheExam2 = ExamContent(
                 Marc Weber: Hauptsächlich Freiwillige. Letztes Wochenende hatten wir über 50 Helfer, sogar viele Kinder waren dabei. Wir hoffen, bis Jahresende 1000 neue Bäume gepflanzt zu haben.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(4, "Was ist ein Vorteil von Bäumen in der Stadt laut Herrn Weber?",
+                MultipleChoiceQuestion("4", "Was ist ein Vorteil von Bäumen in der Stadt laut Herrn Weber?",
                     listOf("Sie spenden Schatten für Autos", "Sie kühlen die Luft ab", "Sie locken Vögel an"), 1,
                     "Er sagt, sie kühlen die Luft um bis zu 5 Grad ab."),
-                MultipleChoiceQuestion(5, "Wie viele Bäume will der Verein insgesamt dieses Jahr pflanzen?",
+                MultipleChoiceQuestion("5", "Wie viele Bäume will der Verein insgesamt dieses Jahr pflanzen?",
                     listOf("50 Bäume", "100 Bäume", "1000 Bäume"), 2,
                     "Er hofft auf 1000 neue Bäume bis Jahresende.")
             )
@@ -475,7 +476,7 @@ val GoetheExam2 = ExamContent(
         SchreibenTask(
             taskNumber = 1,
             title = "Teil 1 – Einladung",
-            prompt = """
+            instruction = """
                 Sie haben nächste Woche Geburtstag und möchten eine Party feiern.
                 Schreiben Sie eine E-Mail an Ihre Freunde (circa 80 Wörter):
                 • Laden Sie sie zur Party ein
@@ -483,8 +484,8 @@ val GoetheExam2 = ExamContent(
                 • Erklären Sie, was die Gäste mitbringen sollen
                 • Bitten Sie um eine Antwort bis Freitag
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf(
+            wordCount = "80",
+            keyPoints = listOf(
                 "Informelle Anrede",
                 "Datum und Uhrzeit nennen",
                 "Getränke oder Essen vorschlagen",
@@ -494,7 +495,7 @@ val GoetheExam2 = ExamContent(
         SchreibenTask(
             taskNumber = 2,
             title = "Teil 2 – Meinung äußern",
-            prompt = """
+            instruction = """
                 Schreiben Sie einen kurzen Aufsatz (circa 150 Wörter) zum Thema:
                 „Ist es sinnvoll, im Ausland zu studieren?"
                 
@@ -503,8 +504,8 @@ val GoetheExam2 = ExamContent(
                 • Was sind die Herausforderungen (z.B. Sprache, Heimweh)?
                 • Ihre eigene Meinung dazu.
             """.trimIndent(),
-            minWords = 150,
-            hints = listOf(
+            wordCount = "150",
+            keyPoints = listOf(
                 "Vorteile: Sprache lernen, neue Kultur",
                 "Nachteile: Kosten, Distanz zur Familie",
                 "Verknüpfungswörter benutzen",
@@ -517,7 +518,7 @@ val GoetheExam2 = ExamContent(
             taskNumber = 1,
             title = "Teil 1 – Kennenlernen",
             instruction = "Sprechen Sie über sich.",
-            topic = "Stellen Sie sich vor: Name, Alter, Wohnort, Familie, Hobbys und Ihre Pläne für die Zukunft.",
+            topics = listOf("Stellen Sie sich vor: Name, Alter, Wohnort, Familie, Hobbys und Ihre Pläne für die Zukunft."),
             prepTimeSec = 60,
             speakTimeSec = 120,
             tips = listOf("Flüssig sprechen", "Details zu Hobbys nennen", "Zukunftspläne (Beruf/Reise) erläutern")
@@ -526,7 +527,7 @@ val GoetheExam2 = ExamContent(
             taskNumber = 2,
             title = "Teil 2 – Planung",
             instruction = "Planen Sie mit Ihrem Partner eine Überraschung.",
-            topic = "Ein gemeinsamer Freund hat das B1-Zertifikat bestanden. Planen Sie ein kleines Geschenk und eine Feier.",
+            topics = listOf("Ein gemeinsamer Freund hat das B1-Zertifikat bestanden. Planen Sie ein kleines Geschenk und eine Feier."),
             prepTimeSec = 60,
             speakTimeSec = 180,
             tips = listOf("Vorschläge machen", "Auf Partner eingehen", "Termin und Budget klären")
@@ -535,7 +536,7 @@ val GoetheExam2 = ExamContent(
             taskNumber = 3,
             title = "Teil 3 – Präsentation",
             instruction = "Beschreiben Sie ein Bild und geben Sie Ihre Meinung.",
-            topic = "Thema: Homeschooling. Das Bild zeigt ein Kind, das allein am Laptop lernt. Beschreiben Sie die Situation und diskutieren Sie Vor- und Nachteile.",
+            topics = listOf("Thema: Homeschooling. Das Bild zeigt ein Kind, das allein am Laptop lernt. Beschreiben Sie die Situation und diskutieren Sie Vor- und Nachteile."),
             prepTimeSec = 60,
             speakTimeSec = 120,
             tips = listOf("Bilddetails nennen", "Bezug zum Thema Unterricht / Internet", "Eigene Meinung zum Online-Lernen")
@@ -558,13 +559,13 @@ val OesdExam1 = ExamContent(
                 AZUBI Clara Mein neues Leben hat begonnen! Seit gestern bin ich nun also Auszubildende (AZUBI) in der Firma und lerne im dualen System. Nach drei Jahren praktischer Ausbildung im Betrieb plus Berufsschule bin ich dann hoffentlich am Ziel: Bürokauffrau. Ja, jetzt denke ich schon an das Ziel, dabei war gestern gerade mal mein erster Tag in der Firma. Ich hatte Riesenglück, dass ich so schnell eine Ausbildungsstelle gefunden habe. Heutzutage ist das nämlich gar nicht so einfach. Meine Mitschülerinnen können ein Lied davon singen. Aber ich bin ein echter Glückspilz und so war auch mein erster Tag ein Glückstag. Früh morgens nahm ich die Straßenbahn zum Marktplatz und nach 5 Minuten Fußmarsch war ich pünktlich um 8 in der Firma. Ich meldete mich gleich in der Personalabteilung im Büro von Frau Mellert, die ich schon vom Vorstellungsgespräch kannte. Da war auch schon Piet, der mit mir zusammen die Ausbildung macht und in meiner Parallelklasse war. Frau Mellert führte uns als erstes durch die Firma. Sie stellte uns allen Kollegen und Kolleginnen vor und zeigte uns sämtliche Räume. Puh! Das Gebäude ist ein Labyrinth, ich glaube, ich brauche einen Kompass, um meinen Arbeitsplatz zu finden. Zum Glück konnte sich Piet den Weg ganz gut merken. Dafür kann ich mich an die Namen der Leute besser erinnern. Am Infoschalter sitzt ein lustiger Mensch mit blonden Haaren, ich glaube, er heißt Zimmermann. In der Buchhaltung habe ich mir Frau Hentel merken können, weil wir da auch gleich Papiere ausfüllen mussten. Herr Wagner ist unser Chef, mit dem werden wir aber nicht viel Kontakt haben, denn er ist ständig auf Reisen. Frau Lenzig ist für mich zuständig und Piet ist gleich im Büro nebenan bei Frau Andersson, die mit einem Schweden verheiratet ist. OK, die anderen Namen kommen später, morgen ist auch noch ein Tag! Das Wichtigste ist, dass im Haus noch mehr AZUBIs sind, nämlich Leon, Sandra, Tina und Vero! Sie haben uns zur Frühstückspause in der Kantine mit Butterbrezeln und Kaffee überrascht. Leon und Sandra sind im dritten Lehrjahr und machen bald Prüfungen. Tina und Vero sind im zweiten Lehrjahr und haben uns versprochen, uns bei allem zu helfen. Wie wir so gemütlich beisammen saßen, haben wir ihnen auch gleich Löcher in den Bauch gefragt, denn für uns ist ja alles so neu. Wer kennt sich schon aus mit den zukünftigen Aufgaben, wie Bürokommunikation, Personalwirtschaft, Marketing usw. Jedenfalls war es ein guter Anfang und übermorgen beginnt dann auch die Schule. ☺
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Clara schreibt über ihren ersten Schultag.", listOf("Richtig", "Falsch"), 1, "Sie schreibt über ihren ersten Tag in der Firma, die Schule beginnt erst übermorgen."),
-                MultipleChoiceQuestion(2, "Die Ausbildung zur Bürokauffrau dauert 3 Jahre.", listOf("Richtig", "Falsch"), 0, "Text: 'Nach drei Jahren praktischer Ausbildung...'"),
-                MultipleChoiceQuestion(3, "Clara und Piet waren rechtzeitig in der Firma.", listOf("Richtig", "Falsch"), 0, "Text: '...war ich pünktlich um 8 in der Firma.'"),
-                MultipleChoiceQuestion(4, "Der Chef zeigt ihnen alles im Haus.", listOf("Richtig", "Falsch"), 1, "Frau Mellert aus der Personalabteilung führte sie durch die Firma."),
-                MultipleChoiceQuestion(5, "Frau Lenzig organisiert Geschäftsreisen.", listOf("Richtig", "Falsch"), 1, "Herr Wagner ist ständig auf Reisen; Frau Lenzig ist für Clara zuständig."),
-                MultipleChoiceQuestion(6, "Die Firma hat sechs AZUBIs.", listOf("Richtig", "Falsch"), 0, "Clara, Piet, Leon, Sandra, Tina und Vero = 6 AZUBIs."),
-                MultipleChoiceQuestion(7, "In zwei Tagen ist der erste Schultag im dualen Ausbildungssystem.", listOf("Richtig", "Falsch"), 0, "Text: '...übermorgen beginnt dann auch die Schule.'")
+                MultipleChoiceQuestion("1", "Clara schreibt über ihren ersten Schultag.", listOf("Richtig", "Falsch"), 1, "Sie schreibt über ihren ersten Tag in der Firma, die Schule beginnt erst übermorgen."),
+                MultipleChoiceQuestion("2", "Die Ausbildung zur Bürokauffrau dauert 3 Jahre.", listOf("Richtig", "Falsch"), 0, "Text: 'Nach drei Jahren praktischer Ausbildung...'"),
+                MultipleChoiceQuestion("3", "Clara und Piet waren rechtzeitig in der Firma.", listOf("Richtig", "Falsch"), 0, "Text: '...war ich pünktlich um 8 in der Firma.'"),
+                MultipleChoiceQuestion("4", "Der Chef zeigt ihnen alles im Haus.", listOf("Richtig", "Falsch"), 1, "Frau Mellert aus der Personalabteilung führte sie durch die Firma."),
+                MultipleChoiceQuestion("5", "Frau Lenzig organisiert Geschäftsreisen.", listOf("Richtig", "Falsch"), 1, "Herr Wagner ist ständig auf Reisen; Frau Lenzig ist für Clara zuständig."),
+                MultipleChoiceQuestion("6", "Die Firma hat sechs AZUBIs.", listOf("Richtig", "Falsch"), 0, "Clara, Piet, Leon, Sandra, Tina und Vero = 6 AZUBIs."),
+                MultipleChoiceQuestion("7", "In zwei Tagen ist der erste Schultag im dualen Ausbildungssystem.", listOf("Richtig", "Falsch"), 0, "Text: '...übermorgen beginnt dann auch die Schule.'")
             )
         ),
         ReadingPart(
@@ -576,9 +577,9 @@ val OesdExam1 = ExamContent(
                 In eigener Sache meldete sich ein Tierheim in Dortmund. Es ist bekannt, dass gerade in der Vorweihnachtszeit viele ein Tier aus dem Tierheim holen wollen, um die Lieben damit zu beschenken. Aber gerade davor warnt das Tierheim. Nach einer Umfrage, die im Oktober am „Tag der offenen Tür“ durchgeführt wurde, stimmte die Mehrheit der Besucher sogar für einen Vermittlungsstopp, demnach soll die Abgabe von Tieren an Interessenten in der Weihnachtszeit nicht möglich sein. Frau Scheffer, Vorsitzende des Tierschutzvereins unterstützt diese Maßnahme. Sie meint, dass die Freude über das Tier oft nicht lange anhält. Spätestens wenn die Besitzer erkennen, dass ein Tier nicht nur Liebe braucht und die täglichen Pflichten unangenehm sind, landen die neuen Freunde schnell wieder im Tierheim oder gar auf der Straße. Die Anschaffung eines Tieres sollte gut überlegt werden. Jedes Tier hat seine eigenen Bedürfnisse, die den zukünftigen Besitzer Raum, Geld und Zeit kosten. Eine wichtige Rolle spielt dabei auch die Lebenserwartung, denn ein Tier kann ein Begleiter für viele Jahre sein. Man verschenkt besser ein Stofftier, aber wer unbedingt ein lebendiges Tier verschenken will, sollte das mit den zukünftigen Besitzern und Angehörigen unterm Weihnachtsbaum besprechen. Im Januar kann dann das Versprechen guten Gewissens eingelöst werden.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(8, "Frau Scheffer sagt, ...", listOf("dass man die Liebe zum Tier pflegen muss.", "dass die Liebe zum Tier ein Leben lang hält.", "dass die Freude über das Tier oft schnell vergeht."), 2),
-                MultipleChoiceQuestion(9, "Wer ein Tier möchte, ...", listOf("muss die Bedürfnisse des Tieres berücksichtigen.", "muss die Bedürfnisse des Besitzers kennen.", "braucht eine hohe Lebenserwartung."), 0),
-                MultipleChoiceQuestion(10, "Wer ein Tier schenken möchte, ...", listOf("muss sich rechtzeitig melden.", "sollte das vorher mit den Besitzern klären.", "kann es unter den Weihnachtsbaum legen."), 1)
+                MultipleChoiceQuestion("8", "Frau Scheffer sagt, ...", listOf("dass man die Liebe zum Tier pflegen muss.", "dass die Liebe zum Tier ein Leben lang hält.", "dass die Freude über das Tier oft schnell vergeht."), 2),
+                MultipleChoiceQuestion("9", "Wer ein Tier möchte, ...", listOf("muss die Bedürfnisse des Tieres berücksichtigen.", "muss die Bedürfnisse des Besitzers kennen.", "braucht eine hohe Lebenserwartung."), 0),
+                MultipleChoiceQuestion("10", "Wer ein Tier schenken möchte, ...", listOf("muss sich rechtzeitig melden.", "sollte das vorher mit den Besitzern klären.", "kann es unter den Weihnachtsbaum legen."), 1)
             )
         ),
         ReadingPart(
@@ -590,9 +591,9 @@ val OesdExam1 = ExamContent(
                 Post und ADAC planen mit modernem Fernbusnetz der Bahn Konkurrenz zu machen. Die Konkurrenz belebt den Markt. Poststationen, wie man sie von alten Bildern her kennt. Die Post beforderte nicht nur Briefe und Pakete, sondern war schon immer ein beliebtes Reisemittel. Ob mit der Postkutsche oder mit dem Postbus, mit der Post fuhr man durch das Land, um von einem Ort zum anderen zu kommen. Was in den Sechzigerjahren nicht mehr rentabel war und darum eingestellt wurde, soll jetzt wieder eingerichtet werden. Dahinter steckt keine neue Idee, sondern ein neuer Partner. Die Kooperation ist mit dem Automobilclub ADAC geplant. Der Grund dafür ist, dass ab 2013 private Firmen bundesweiten Linienverkehr anbieten durfen. Das Monopol der Bahn für den Langstreckenverkehr wurde aufgehoben und gibt der Konkurrenz eine Chance. Kaufen wir in Zukunft im Postamt zusammen mit den Briefmarken unsere Fahrschein für gelbe Busse im ganzen Land? Die Konkurrenz schläft nicht. Private Omnibusunternehmen können ihr Fernstreckennetz leicht umstellen. Im Fokus steht die Zusammenarbeit vieler regionaler Anbieter unter einer gemeinsamen Organisation. Das gilt auch für Firmen außerhalb der Landesgrenzen. Interesse zeigen bereits Verkehrskonzerne aus Frankreich und Großbritannien, die Erfahrung mit Fernlinien haben.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(11, "Der Busfernverkehr ...", listOf("soll neu organisiert werden.", "ist ein Monopol der Bahn.", "ist nicht mehr rentabel."), 0),
-                MultipleChoiceQuestion(12, "Private Busunternehmen ...", listOf("planen ein landesweites Streckennetz.", "wollen mit der Bahn zusammen arbeiten.", "haben nach 2013 keine Chance."), 0),
-                MultipleChoiceQuestion(13, "Europäische Verkehrskonzerne ...", listOf("wollen mit der Deutschen Post zusammen arbeiten.", "können ihre Erfahrungen einbringen.", "ordnen sich regionalen Interessen unter."), 1)
+                MultipleChoiceQuestion("11", "Der Busfernverkehr ...", listOf("soll neu organisiert werden.", "ist ein Monopol der Bahn.", "ist nicht mehr rentabel."), 0),
+                MultipleChoiceQuestion("12", "Private Busunternehmen ...", listOf("planen ein landesweites Streckennetz.", "wollen mit der Bahn zusammen arbeiten.", "haben nach 2013 keine Chance."), 0),
+                MultipleChoiceQuestion("13", "Europäische Verkehrskonzerne ...", listOf("wollen mit der Deutschen Post zusammen arbeiten.", "können ihre Erfahrungen einbringen.", "ordnen sich regionalen Interessen unter."), 1)
             )
         ),
         ReadingPart(
@@ -613,13 +614,13 @@ val OesdExam1 = ExamContent(
                 J: Werbefachmann sucht Büroräume, ca. 60 Quadratmeter im Großraum Stuttgart.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(14, "Jens hat ein altes Haus geerbt und möchte es renovieren lassen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 10),
-                MultipleChoiceQuestion(15, "Frau Scheidt ist das Einfamilienhaus zu groß und sie möchte es vermieten.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 0),
-                MultipleChoiceQuestion(16, "Frau Wenzel ist Architektin und sucht ein größeres Wohnbüro.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 9),
-                MultipleChoiceQuestion(17, "Freunde aus Holland wollen sich eine kleine Wohnung in Stuttgart kaufen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 3),
-                MultipleChoiceQuestion(18, "Sarah ist Studentin und sucht ein Zimmer in München.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 6),
-                MultipleChoiceQuestion(19, "Familie Walter möchte ihre Wohnung für drei Monate im Sommer vermieten.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 10),
-                MultipleChoiceQuestion(20, "Herr Rollberg will sich eine schöne und bequeme Wohnung in München kaufen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 2)
+                MultipleChoiceQuestion("14", "Jens hat ein altes Haus geerbt und möchte es renovieren lassen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 10),
+                MultipleChoiceQuestion("15", "Frau Scheidt ist das Einfamilienhaus zu groß und sie möchte es vermieten.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 0),
+                MultipleChoiceQuestion("16", "Frau Wenzel ist Architektin und sucht ein größeres Wohnbüro.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 9),
+                MultipleChoiceQuestion("17", "Freunde aus Holland wollen sich eine kleine Wohnung in Stuttgart kaufen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 3),
+                MultipleChoiceQuestion("18", "Sarah ist Studentin und sucht ein Zimmer in München.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 6),
+                MultipleChoiceQuestion("19", "Familie Walter möchte ihre Wohnung für drei Monate im Sommer vermieten.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 10),
+                MultipleChoiceQuestion("20", "Herr Rollberg will sich eine schöne und bequeme Wohnung in München kaufen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende Anzeige)"), 2)
             )
         ),
         ReadingPart(
@@ -637,13 +638,13 @@ val OesdExam1 = ExamContent(
                 26: Schwester M. (44) sieht in der Natur die Lösung für viele Leiden.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(21, "Lena, 18, Berlin", listOf("Ja", "Nein"), 0),
-                MultipleChoiceQuestion(22, "Nickel, 26, Wallis", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(23, "Ferdinand, 48, Graz", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(24, "Steiner, 39, Köln", listOf("Ja", "Nein"), 0),
-                MultipleChoiceQuestion(25, "Dr. Turm, 61, München", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(26, "Sarah Wick, 23, Rostock", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(27, "Schwester M., 44, Kehl", listOf("Ja", "Nein"), 0)
+                MultipleChoiceQuestion("21", "Lena, 18, Berlin", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion("22", "Nickel, 26, Wallis", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("23", "Ferdinand, 48, Graz", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("24", "Steiner, 39, Köln", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion("25", "Dr. Turm, 61, München", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("26", "Sarah Wick, 23, Rostock", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("27", "Schwester M., 44, Kehl", listOf("Ja", "Nein"), 0)
             )
         ),
         ReadingPart(
@@ -664,10 +665,10 @@ val OesdExam1 = ExamContent(
                 10. Anweisungen des Personals befolgen.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(28, "Auf dem Gelände der Museumsbahn ...", listOf("dürfen keine Autos fahren.", "gelten die allgemeinen Verkehrsregeln.", "dürfen nur Züge fahren."), 1),
-                MultipleChoiceQuestion(29, "Es ist nicht erlaubt, ...", listOf("die Fahrzeuge anzufassen.", "auf die Fahrzeugen zu klettern.", "Sport zu treiben."), 1),
-                MultipleChoiceQuestion(30, "Es ist verboten, ...", listOf("während der Fahrt aufzustehen.", "Hunde mitzuführen.", "bei fahrendem Zug Blumen zu pflücken."), 2),
-                MultipleChoiceQuestion(31, "Fotos ...", listOf("kann man am Kiosk kaufen.", "dürfen keine gemacht werden.", "dürfen nur für den privaten Gebrauch gemacht werden."), 2)
+                MultipleChoiceQuestion("28", "Auf dem Gelände der Museumsbahn ...", listOf("dürfen keine Autos fahren.", "gelten die allgemeinen Verkehrsregeln.", "dürfen nur Züge fahren."), 1),
+                MultipleChoiceQuestion("29", "Es ist nicht erlaubt, ...", listOf("die Fahrzeuge anzufassen.", "auf die Fahrzeugen zu klettern.", "Sport zu treiben."), 1),
+                MultipleChoiceQuestion("30", "Es ist verboten, ...", listOf("während der Fahrt aufzustehen.", "Hunde mitzuführen.", "bei fahrendem Zug Blumen zu pflücken."), 2),
+                MultipleChoiceQuestion("31", "Fotos ...", listOf("kann man am Kiosk kaufen.", "dürfen keine gemacht werden.", "dürfen nur für den privaten Gebrauch gemacht werden."), 2)
             )
         )
     ),
@@ -678,12 +679,12 @@ val OesdExam1 = ExamContent(
             instruction = "Sie hören fünf kurze Texte. Lösen Sie die Aufgaben.",
             transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(101, "Text 1: Die andalusischen Apfelsinen kosten 34 Cent das Kilo.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(102, "Text 1: Das Angebot gilt ...", listOf("bis nächste Woche.", "solange es diese Produkte noch gibt.", "nur für Kunden mit der Bonuskarte."), 0),
-                MultipleChoiceQuestion(103, "Text 2: Die Maschine ist in der Luft und fliegt nach Frankfurt.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(104, "Text 2: Der Flug dauert heute länger aufgrund ...", listOf("des starken Flugverkehrs.", "des Gegenwinds.", "der verspäteten Starterlaubnis."), 0),
-                MultipleChoiceQuestion(105, "Text 3: Der Zug fährt nicht bis Venedig.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(106, "Text 3: Passagiere müssen in Turin ...", listOf("in einen Bus umsteigen.", "einen anderen Zug nehmen.", "auf Anweisungen warten."), 0)
+                MultipleChoiceQuestion("101", "Text 1: Die andalusischen Apfelsinen kosten 34 Cent das Kilo.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("102", "Text 1: Das Angebot gilt ...", listOf("bis nächste Woche.", "solange es diese Produkte noch gibt.", "nur für Kunden mit der Bonuskarte."), 0),
+                MultipleChoiceQuestion("103", "Text 2: Die Maschine ist in der Luft und fliegt nach Frankfurt.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("104", "Text 2: Der Flug dauert heute länger aufgrund ...", listOf("des starken Flugverkehrs.", "des Gegenwinds.", "der verspäteten Starterlaubnis."), 0),
+                MultipleChoiceQuestion("105", "Text 3: Der Zug fährt nicht bis Venedig.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("106", "Text 3: Passagiere müssen in Turin ...", listOf("in einen Bus umsteigen.", "einen anderen Zug nehmen.", "auf Anweisungen warten."), 0)
             )
         ),
         HoerenPart(
@@ -692,9 +693,9 @@ val OesdExam1 = ExamContent(
             instruction = "Wählen Sie die richtige Lösung a, b oder c.",
             transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(201, "Die Person, die die Einführung macht, ist ...", listOf("Student.", "vom Bibliothekspersonal.", "Mitarbeiter der Universität."), 0),
-                MultipleChoiceQuestion(202, "Im Leseraum kann man ...", listOf("Magazine aus dem Sortiment lesen.", "nur nach Anmeldung lesen.", "nur Material aus dem Archiv lesen."), 0),
-                MultipleChoiceQuestion(203, "Bücher über Partneruniversitäten erhält man ...", listOf("über das OPAC-Programm.", "mit einem Aufpreis.", "bei Frau Mertens."), 0)
+                MultipleChoiceQuestion("201", "Die Person, die die Einführung macht, ist ...", listOf("Student.", "vom Bibliothekspersonal.", "Mitarbeiter der Universität."), 0),
+                MultipleChoiceQuestion("202", "Im Leseraum kann man ...", listOf("Magazine aus dem Sortiment lesen.", "nur nach Anmeldung lesen.", "nur Material aus dem Archiv lesen."), 0),
+                MultipleChoiceQuestion("203", "Bücher über Partneruniversitäten erhält man ...", listOf("über das OPAC-Programm.", "mit einem Aufpreis.", "bei Frau Mertens."), 0)
             )
         ),
         HoerenPart(
@@ -703,9 +704,9 @@ val OesdExam1 = ExamContent(
             instruction = "Sind die Aufgaben richtig oder falsch?",
             transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(301, "Hannelore kam über eine Recherche zu ihrem Job.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(302, "Hannelore war von der Familie begeistert.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(303, "Hannelores Reise nach Australien war anstrengend.", listOf("Richtig", "Falsch"), 0)
+                MultipleChoiceQuestion("301", "Hannelore kam über eine Recherche zu ihrem Job.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("302", "Hannelore war von der Familie begeistert.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("303", "Hannelores Reise nach Australien war anstrengend.", listOf("Richtig", "Falsch"), 0)
             )
         ),
         HoerenPart(
@@ -714,9 +715,9 @@ val OesdExam1 = ExamContent(
             instruction = "Ordnen Sie die Aussagen zu: Wer sagt was?",
             transcript = "Moderatorin, Anna Wenz und Anton Grubauer diskutieren.",
             questions = listOf(
-                MultipleChoiceQuestion(401, "Die deutsche Sprache hat auch die englische Sprache beeinflusst.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0),
-                MultipleChoiceQuestion(402, "Nicht alle Bundesbürger sprechen Englisch.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0),
-                MultipleChoiceQuestion(403, "Man braucht Zeit, ein neues Wort zu verstehen und zu benutzen.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0)
+                MultipleChoiceQuestion("401", "Die deutsche Sprache hat auch die englische Sprache beeinflusst.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0),
+                MultipleChoiceQuestion("402", "Nicht alle Bundesbürger sprechen Englisch.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0),
+                MultipleChoiceQuestion("403", "Man braucht Zeit, ein neues Wort zu verstehen und zu benutzen.", listOf("Moderatorin", "Anna Wenz", "Anton Grubauer"), 0)
             )
         )
     ),
@@ -724,34 +725,34 @@ val OesdExam1 = ExamContent(
         SchreibenTask(
             taskNumber = 1,
             title = "Aufgabe 1 – E-Mail über einen Ausflug",
-            prompt = """
+            instruction = """
                 Sie haben am Wochenende einen Ausflug gemacht. 
                 Beschreiben Sie: Wo waren Sie und wie ist die Stadt?
                 Begründen Sie: Wie war der Ausflug?
                 Empfehlen Sie Ihrem Freund/Ihrer Freundin, diese Stadt zu besuchen.
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf("Anrede", "Einleitung", "Hauptteil", "Schluss")
+            wordCount = "80",
+            keyPoints = listOf("Anrede", "Einleitung", "Hauptteil", "Schluss")
         ),
         SchreibenTask(
             taskNumber = 2,
             title = "Aufgabe 2 – Blogbeitrag: Kinos sterben",
-            prompt = """
+            instruction = """
                 Gästebuch-Meinung: „Ich finde es schade, dass Kinos schließen. Kinobesuch mit Freunden ist besser als allein fernsehen.“
                 Schreiben Sie Ihre Meinung dazu.
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf("Eigene Meinung", "Begründung")
+            wordCount = "80",
+            keyPoints = listOf("Eigene Meinung", "Begründung")
         ),
         SchreibenTask(
             taskNumber = 3,
             title = "Aufgabe 3 – Besichtigungstermin",
-            prompt = """
+            instruction = """
                 Der Vermieter, Herr Schneider, hat Ihnen einen Besichtigungstermin vorgeschlagen. 
                 Bedanken Sie sich und schreiben Sie, ob Ihnen der Termin passt.
             """.trimIndent(),
-            minWords = 40,
-            hints = listOf("Höfliche Form", "Zusage/Absage")
+            wordCount = "40",
+            keyPoints = listOf("Höfliche Form", "Zusage/Absage")
         )
     ),
     sprechenTasks = listOf(
@@ -759,7 +760,7 @@ val OesdExam1 = ExamContent(
             taskNumber = 1,
             title = "Teil 1 – Gemeinsam etwas planen",
             instruction = "Planen Sie den Besuch eines Freundes am Wochenende.",
-            topic = "Treffpunkt, Verkehrsmittel, Sehenswürdigkeiten, Abendgestaltung.",
+            topics = listOf("Treffpunkt, Verkehrsmittel, Sehenswürdigkeiten, Abendgestaltung."),
             prepTimeSec = 60,
             speakTimeSec = 180,
             tips = listOf("Vorschläge machen", "Reagieren", "Einigung finden")
@@ -768,7 +769,7 @@ val OesdExam1 = ExamContent(
             taskNumber = 2,
             title = "Teil 2 – Thema präsentieren",
             instruction = "Präsentieren Sie das Thema: „Schokolade macht glücklich!“",
-            topic = "Inhalt/Struktur, persönliche Erfahrungen, Situation im Heimatland, Vor-/Nachteile, Abschluss.",
+            topics = listOf("Inhalt/Struktur, persönliche Erfahrungen, Situation im Heimatland, Vor-/Nachteile, Abschluss."),
             prepTimeSec = 120,
             speakTimeSec = 180,
             tips = listOf("Foliengliederung folgen", "Beispiele nennen")
@@ -777,7 +778,7 @@ val OesdExam1 = ExamContent(
             taskNumber = 3,
             title = "Teil 3 – Über ein Thema sprechen",
             instruction = "Reagieren Sie auf Rückmeldungen und stellen Sie Fragen.",
-            topic = "Feedback geben, eine Frage zur Präsentation des Partners stellen.",
+            topics = listOf("Feedback geben, eine Frage zur Präsentation des Partners stellen."),
             prepTimeSec = 30,
             speakTimeSec = 60,
             tips = listOf("Interessantes hervorheben", "Anschlussfrage stellen")
@@ -801,13 +802,13 @@ val OesdExam2 = ExamContent(
                 Nachdem ich nun Metropolen und Ballungsgebiete hinter mir gelassen habe, wende ich mich dem landlichen Sudwesten zu. Die Hälfte meiner Familie stammt aus dem Schwarzwald, darum fuhr ich mit der Bahn gleich mal mitten hinein, nämlich ins Kinzigtal. Noch während die Landschaft mit ihren idyllischen Tälern und Orten an mir vorbeigleitet, steigen Erinnerungen in mir hoch. Dann hält der Zug im Bahnhof und ich steige aus. Ist es die Luft, ist es der Geruch nach frisch geschnittenem Heu: gleich waren sie da, die Bilder aus Kindertagen. Ich lächle und winke meinem Cousin, der mich mit dem Auto abholt. Erst einmal begrüßen und ankommen. So viele Augen, so viele Hände und Arme, herzliche Wärme empfängt mich. Es gibt auch gleich Vesper mit Bauernbrot, Wurst und Speck vom „Brettle“. Mit scharfem Messer hauchdünn geschnitten, zergeht mir die Erinnerung auf der Zunge. Als Getränk kann ich wählen zwischen Most vom Bauern oder doch ein „Tannenzäpfle“, falls ich Lust auf ein Bier habe. Das Wasser ist schließlich zum Waschen und für die Tiere da. Und mit der Nahrung nehme ich auch gleich ein Sprachbad. Wie lange habe ich diesen Klang der Sprache nicht gehört! Auch das ist Deutsch, eine Behauptung, für die mich die meisten meiner Kollegen spöttisch belächeln, weil Alemannisch für sie eine Fremdsprache ist. Dabei ist Dialekt heutzutage wieder im Trend. Wie viel ärmer wäre die Sprache ohne die Mundart. Vielleicht ist die Sprache der Umgebung auch so ein bisschen etwas wie Heimat, die man mit sich im Herzen trägt. Beim Abendspaziergang um den Waldsee, besprechen wir Pläne für eine kleine Wanderung am nächsten Tag. Nach langer Diskussion, ob es auf den Brandenkopf, zu den Nillhöfen oder auf die Heidburg gehen soll, beschließen wir das Auto in der Garage stehen zu lassen und nur so weit zu gehen, wie uns die Füße von der Haustüre aus tragen. Das war eine kluge und pragmatische Entscheidung. Zum Einen hätten wir gar nicht alle in ein Auto gepasst und es wäre ein zweites Auto nötig gewesen. Zum Anderen wollte ich schließlich Natur pur genießen. Noch während ich hier in meinen Laptop tippe, erinnere ich mich an glückliche Kindertage, rieche die Waldluft und freue mich auf morgen.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Der Bericht handelt von einem Reise-Souvenir aus Deutschland.", listOf("Richtig", "Falsch"), 1),
-                MultipleChoiceQuestion(2, "Der Schreiber war zuerst in großen Städten.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(3, "Ein Verwandter holt ihn ab.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(4, "Nach der Ankunft gibt es etwas zu Essen.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(5, "Sie trinken Wasser.", listOf("Richtig", "Falsch"), 1),
-                MultipleChoiceQuestion(6, "Die Kollegen mögen den süddeutschen Dialekt.", listOf("Richtig", "Falsch"), 1),
-                MultipleChoiceQuestion(7, "Sie wollen zu Fuß gehen und nicht mit dem Auto fahren.", listOf("Richtig", "Falsch"), 0)
+                MultipleChoiceQuestion("1", "Der Bericht handelt von einem Reise-Souvenir aus Deutschland.", listOf("Richtig", "Falsch"), 1),
+                MultipleChoiceQuestion("2", "Der Schreiber war zuerst in großen Städten.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("3", "Ein Verwandter holt ihn ab.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("4", "Nach der Ankunft gibt es etwas zu Essen.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("5", "Sie trinken Wasser.", listOf("Richtig", "Falsch"), 1),
+                MultipleChoiceQuestion("6", "Die Kollegen mögen den süddeutschen Dialekt.", listOf("Richtig", "Falsch"), 1),
+                MultipleChoiceQuestion("7", "Sie wollen zu Fuß gehen und nicht mit dem Auto fahren.", listOf("Richtig", "Falsch"), 0)
             )
         ),
         ReadingPart(
@@ -819,9 +820,9 @@ val OesdExam2 = ExamContent(
                 Huch, Bio-Produkte sind gar nicht gesünder als konventionelle? Ein Skandal? Was für ein Quatsch. Wer Bio für grundsätzlich gesünder hält, der kann Bio-Zigaretten rauchen und sich von Bio-Schokolade ernähren. Nein, der Öko-Landwirtschaft geht es um Nachhaltigkeit. Und skandalös ist dabei etwas ganz anderes. Eine Studie bestätigt, was sich jeder mit ein bisschen Verstand auch selbst denken kann. Ein Apfel ist nicht einfach gesünder, nur weil er vom Bio-Bauern kommt. Viele Bio-Produkte entsprechen nicht den Geschmacksvorstellungen der Konsumenten. Der Begriff „gesund“ ist schon fragwürdig. Eine mit viel Butter und Zucker angerührte Schokoladentorte macht auch dann nicht schlank, wenn sie aus Bio-Produkten hergestellt wird. Auch ein Bio-Lutscher kann Karies verursachen. Und, ja, auch Tabak aus Bio-Anbau ist krebserregend. Wie immer, wenn es um Ernährung geht, geht es um ausgewogene Ernährung. Bio ist nicht gleich Bio. Wer Wert darauf legt, dass ein Produkt nicht nur weitgehend pestizidfrei ist und umweltschonend angebaut wird, muss schon genau hinsehen. Auch aufgepasst, wer sicher sein will, Fleisch von halbwegs glücklichen Hühnern, Schweinen und Rindern zu essen. Für die strengen Kriterien muss man leider meist auch mehr bezahlen, aber es lohnt sich. Bio hat nun mal seinen Preis, wenn im Einklang mit der Natur angebaut wurde.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(8, "Es wurde festgestellt,...", listOf("a) dass Bio-Äpfel besser schmecken.", "b) dass Bio-Bauern gesund leben.", "c) dass „Bio“ nicht selbstverständlich auch gesünder ist."), 2),
-                MultipleChoiceQuestion(9, "Wer Bio-Qualität sucht,...", listOf("a) muss die Produkte genau prüfen.", "b) muss Glück haben.", "c) hat eine hohe Lebenserwartung."), 0),
-                MultipleChoiceQuestion(10, "Der Preis für Bio-Produkte ...", listOf("a) wird streng kontrolliert.", "b) ist oft hoch.", "c) häng von der Natur ab."), 1)
+                MultipleChoiceQuestion("8", "Es wurde festgestellt,...", listOf("a) dass Bio-Äpfel besser schmecken.", "b) dass Bio-Bauern gesund leben.", "c) dass „Bio“ nicht selbstverständlich auch gesünder ist."), 2),
+                MultipleChoiceQuestion("9", "Wer Bio-Qualität sucht,...", listOf("a) muss die Produkte genau prüfen.", "b) muss Glück haben.", "c) hat eine hohe Lebenserwartung."), 0),
+                MultipleChoiceQuestion("10", "Der Preis für Bio-Produkte ...", listOf("a) wird streng kontrolliert.", "b) ist oft hoch.", "c) häng von der Natur ab."), 1)
             )
         ),
         ReadingPart(
@@ -833,9 +834,9 @@ val OesdExam2 = ExamContent(
                 Großer Andrang herrschte beim diesjährigen Informationsfest der Europaschule in Köln. Wie jedes Jahr öffnete die Europaschule ihre Pforten, um sich allen Interessierten vorzustellen. Grundschulkinder und -eltern nahmen die Gelegenheit zu Unterrichtsbesuchen im 5. und 6. Jahrgang wahr. In separaten Veranstaltungen wurde über die möglichen Schullaufbahnen sowie das Schulprogramm in beiden Sekundarstufen informiert. Führungen durch das Schulgebäude sorgten für die nötige Orientierung. Vielfältige Ausstellungen, Aufführungen und Aktionen zeigten einen repräsentativen Querschnitt des Schulalltags. Der Schriftsteller Alexander Rothe wurde eingeladen und feierlich zum offiziellen Lesepaten der Europaschule ernannt, natürlich mit einer kurzen Lesung im Theatersaal. In der Vorstellung der Wahlsprachen lag der besondere Fokus in diesem Jahr auf dem Fach Russisch. Hierzu gab es ein buntes Programm mit verschiedenen Aufführungen und russischen Spezialitäten. Das Mensa-Team und die Schülerfirma „milchig“ sorgten für weitere Stärkungen im England-Café. Auch die Gäste konnten aktiv werden, beim Märchenquiz raten, in der Disko tanzen, ein Tombola-Los kaufen oder die Spieler vom Kickerturnier unterstützen. Natürlich ist ein solch umfangreiches Programm nicht ohne die Hilfe aller möglich. Ein besonderer Dank geht an alle Eltern, die Schülerinnen und Schüler, die Kolleginnen und Kollegen sowie die Mitarbeiter der Europaschule, die in der Vorbereitung dieses Tages mit großem Einsatz bei der Sache waren.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(11, "Die Besucher ...", listOf("a) verloren auf dem Fest die Orientierung.", "b) beschwerten sich über den großen Andrang auf dem Fest.", "c) konnten sich über die Europaschule in Köln informieren."), 2),
-                MultipleChoiceQuestion(12, "Die Schüler ...", listOf("a) zeigten Beispiele aus dem täglichen Schulleben.", "b) lasen Texte des Schriftstellers Alexander Rothe.", "c) machten Werbung für die Schülerfirma „milchig“."), 0),
-                MultipleChoiceQuestion(13, "Der Dank gilt ...", listOf("a) der Schulleitung.", "b) allen, die mitgeholfen haben.", "c) dem Programm-Team."), 1)
+                MultipleChoiceQuestion("11", "Die Besucher ...", listOf("a) verloren auf dem Fest die Orientierung.", "b) beschwerten sich über den großen Andrang auf dem Fest.", "c) konnten sich über die Europaschule in Köln informieren."), 2),
+                MultipleChoiceQuestion("12", "Die Schüler ...", listOf("a) zeigten Beispiele aus dem täglichen Schulleben.", "b) lasen Texte des Schriftstellers Alexander Rothe.", "c) machten Werbung für die Schülerfirma „milchig“."), 0),
+                MultipleChoiceQuestion("13", "Der Dank gilt ...", listOf("a) der Schulleitung.", "b) allen, die mitgeholfen haben.", "c) dem Programm-Team."), 1)
             )
         ),
         ReadingPart(
@@ -856,13 +857,13 @@ val OesdExam2 = ExamContent(
                 J: (Keine passende Anzeige)
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(14, "Herr Berger möchte mittags preiswert und gut essen gehen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 3),
-                MultipleChoiceQuestion(15, "Franz möchte einen richtig guten italienischen Espresso trinken.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 5),
-                MultipleChoiceQuestion(16, "Herr Wengert möchte nach der Arbeit mit Kollegen Bier trinken und eine Kleinigkeit essen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 0),
-                MultipleChoiceQuestion(17, "Frau Ehlert sucht ein Restaurant mit Musik aus der Jugend ihrer Eltern.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 10),
-                MultipleChoiceQuestion(18, "Frau Bär sucht ein Restaurant, wo sie vegetarisch essen kann.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 2),
-                MultipleChoiceQuestion(19, "Frau Sulcher möchte ausländisch essen gehen und dabei draußen sitzen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 1),
-                MultipleChoiceQuestion(20, "Herr Thomas sucht einen Partyservice für eine Gartenparty.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 10)
+                MultipleChoiceQuestion("14", "Herr Berger möchte mittags preiswert und gut essen gehen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 3),
+                MultipleChoiceQuestion("15", "Franz möchte einen richtig guten italienischen Espresso trinken.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 5),
+                MultipleChoiceQuestion("16", "Herr Wengert möchte nach der Arbeit mit Kollegen Bier trinken und eine Kleinigkeit essen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 0),
+                MultipleChoiceQuestion("17", "Frau Ehlert sucht ein Restaurant mit Musik aus der Jugend ihrer Eltern.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 10),
+                MultipleChoiceQuestion("18", "Frau Bär sucht ein Restaurant, wo sie vegetarisch essen kann.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 2),
+                MultipleChoiceQuestion("19", "Frau Sulcher möchte ausländisch essen gehen und dabei draußen sitzen.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 1),
+                MultipleChoiceQuestion("20", "Herr Thomas sucht einen Partyservice für eine Gartenparty.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D", "Anzeige E", "Anzeige F", "Anzeige G", "Anzeige H", "Anzeige I", "Anzeige J", "0 (Keine passende)"), 10)
             )
         ),
         ReadingPart(
@@ -880,13 +881,13 @@ val OesdExam2 = ExamContent(
                 26: Svenja R. findet das Streben nach Leistungsmessung nach jahrelangem Training ganz natürlich.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(21, "U. Filsmann, 46, Landshut", listOf("Ja", "Nein"), 0),
-                MultipleChoiceQuestion(22, "Norbert P., 52, Konstanz", listOf("Ja", "Nein"), 0),
-                MultipleChoiceQuestion(23, "Wilma J., 39, Leipzig", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(24, "Nicole, 39, Freiburg", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(25, "Walther, 42, Baden-Baden", listOf("Ja", "Nein"), 1),
-                MultipleChoiceQuestion(26, "Dr. Rosner, 56, Wien", listOf("Ja", "Nein"), 0),
-                MultipleChoiceQuestion(27, "Svenja R., 29, Flensburg", listOf("Ja", "Nein"), 1)
+                MultipleChoiceQuestion("21", "U. Filsmann, 46, Landshut", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion("22", "Norbert P., 52, Konstanz", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion("23", "Wilma J., 39, Leipzig", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("24", "Nicole, 39, Freiburg", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("25", "Walther, 42, Baden-Baden", listOf("Ja", "Nein"), 1),
+                MultipleChoiceQuestion("26", "Dr. Rosner, 56, Wien", listOf("Ja", "Nein"), 0),
+                MultipleChoiceQuestion("27", "Svenja R., 29, Flensburg", listOf("Ja", "Nein"), 1)
             )
         ),
         ReadingPart(
@@ -903,10 +904,10 @@ val OesdExam2 = ExamContent(
                 Dauer: Eine Stunde und etwas mehr.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(28, "Der Berliner Zoo ...", listOf("a) feiert Geburtstag.", "b) feiert mit den Tieren Geburtstag.", "c) bietet Geburtstagsführungen an."), 2),
-                MultipleChoiceQuestion(29, "Das Programm ...", listOf("a) beinhaltet meistens auch eine Fütterung.", "b) ist bei Regen riskant.", "c) wird in der Regel bei schönem Wetter geplant."), 0),
-                MultipleChoiceQuestion(30, "Zielgruppen sind ...", listOf("a) Besucher unter fünf Jahren.", "b) Erwachsene mit Kindern.", "c) Kinder im Alter ab fünf."), 2),
-                MultipleChoiceQuestion(31, "Die Führung ...", listOf("a) dauert den ganzen Tag.", "b) ist an Wochentagen nur nachmittags möglich.", "c) kann man Samstag und Sonntag nur vormittags buchen."), 1)
+                MultipleChoiceQuestion("28", "Der Berliner Zoo ...", listOf("a) feiert Geburtstag.", "b) feiert mit den Tieren Geburtstag.", "c) bietet Geburtstagsführungen an."), 2),
+                MultipleChoiceQuestion("29", "Das Programm ...", listOf("a) beinhaltet meistens auch eine Fütterung.", "b) ist bei Regen riskant.", "c) wird in der Regel bei schönem Wetter geplant."), 0),
+                MultipleChoiceQuestion("30", "Zielgruppen sind ...", listOf("a) Besucher unter fünf Jahren.", "b) Erwachsene mit Kindern.", "c) Kinder im Alter ab fünf."), 2),
+                MultipleChoiceQuestion("31", "Die Führung ...", listOf("a) dauert den ganzen Tag.", "b) ist an Wochentagen nur nachmittags möglich.", "c) kann man Samstag und Sonntag nur vormittags buchen."), 1)
             )
         )
     ),
@@ -917,11 +918,11 @@ val OesdExam2 = ExamContent(
             instruction = "Fünf kurze Texte. Wählen Sie die richtige Lösung.",
             transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(101, "Text 1: Man kann ab dem 12. April indische Tiger und Löwen sehen.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(102, "Text 1: Der Tierpark ist ...", listOf("täglich geöffnet.", "bis zum 12. April geöffnet.", "erst ab dem 12. April geöffnet."), 0),
-                MultipleChoiceQuestion(103, "Text 2: Das Möbelhaus verschenkt nur 200 Euro-Wertgutscheine.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(104, "Text 2: Die Wertgutscheine ...", listOf("gelten nur für die Sommerkollektion.", "gelten nur für Möbelstücke mit dem roten Punkt.", "gelten für alle Möbelstücke im ganzen Möbelhaus."), 0),
-                MultipleChoiceQuestion(105, "Text 3: Gaby bekommt Besuch von ihrer Mutter.", listOf("Richtig", "Falsch"), 0)
+                MultipleChoiceQuestion("101", "Text 1: Man kann ab dem 12. April indische Tiger und Löwen sehen.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("102", "Text 1: Der Tierpark ist ...", listOf("täglich geöffnet.", "bis zum 12. April geöffnet.", "erst ab dem 12. April geöffnet."), 0),
+                MultipleChoiceQuestion("103", "Text 2: Das Möbelhaus verschenkt nur 200 Euro-Wertgutscheine.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("104", "Text 2: Die Wertgutscheine ...", listOf("gelten nur für die Sommerkollektion.", "gelten nur für Möbelstücke mit dem roten Punkt.", "gelten für alle Möbelstücke im ganzen Möbelhaus."), 0),
+                MultipleChoiceQuestion("105", "Text 3: Gaby bekommt Besuch von ihrer Mutter.", listOf("Richtig", "Falsch"), 0)
             )
         ),
         HoerenPart(
@@ -930,9 +931,9 @@ val OesdExam2 = ExamContent(
             instruction = "Wählen Sie die richtige Lösung a, b oder c.",
             transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(201, "Die Führung erzählt das Leben ...", listOf("der Ritter und Krieger.", "des Grafen Friedbergs.", "des Grafen Wertburgs."), 0),
-                MultipleChoiceQuestion(202, "Die Burg entstand ...", listOf("im 6. Jahrhundert.", "im Jahr 1545.", "in der Neuzeit."), 0),
-                MultipleChoiceQuestion(203, "Warum schrieb Graf Friedberg Märchen?", listOf("Es machte ihm Spaß.", "Er wollte seinem Sohn eine Freude machen.", "Er wollte ein Märchenbuch schreiben."), 0)
+                MultipleChoiceQuestion("201", "Die Führung erzählt das Leben ...", listOf("der Ritter und Krieger.", "des Grafen Friedbergs.", "des Grafen Wertburgs."), 0),
+                MultipleChoiceQuestion("202", "Die Burg entstand ...", listOf("im 6. Jahrhundert.", "im Jahr 1545.", "in der Neuzeit."), 0),
+                MultipleChoiceQuestion("203", "Warum schrieb Graf Friedberg Märchen?", listOf("Es machte ihm Spaß.", "Er wollte seinem Sohn eine Freude machen.", "Er wollte ein Märchenbuch schreiben."), 0)
             )
         ),
         HoerenPart(
@@ -941,9 +942,9 @@ val OesdExam2 = ExamContent(
             instruction = "Sind die Aufgaben Richtig oder Falsch?",
             transcript = "Audiomaterial wird benötigt.",
             questions = listOf(
-                MultipleChoiceQuestion(301, "Die Dschungelwanderung war eine spontane Entscheidung.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(302, "Die Dschungelwanderer waren nicht immer in Begleitung.", listOf("Richtig", "Falsch"), 0),
-                MultipleChoiceQuestion(303, "Der Sonnenuntergang in den Anden war wunderschön.", listOf("Richtig", "Falsch"), 0)
+                MultipleChoiceQuestion("301", "Die Dschungelwanderung war eine spontane Entscheidung.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("302", "Die Dschungelwanderer waren nicht immer in Begleitung.", listOf("Richtig", "Falsch"), 0),
+                MultipleChoiceQuestion("303", "Der Sonnenuntergang in den Anden war wunderschön.", listOf("Richtig", "Falsch"), 0)
             )
         ),
         HoerenPart(
@@ -952,9 +953,9 @@ val OesdExam2 = ExamContent(
             instruction = "Ordnen Sie die Aussagen zu: Wer sagt was?",
             transcript = "Moderatorin, Bernd Bechstein und Ulrike Meyer diskutieren.",
             questions = listOf(
-                MultipleChoiceQuestion(401, "Nur ältere Menschen verbinden die Deutschen noch mit dem Krieg.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0),
-                MultipleChoiceQuestion(402, "Es gibt Menschen, die mehr als Deutsche arbeiten.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0),
-                MultipleChoiceQuestion(403, "Ausländer sind Deutschen gegenüber sehr freundlich.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0)
+                MultipleChoiceQuestion("401", "Nur ältere Menschen verbinden die Deutschen noch mit dem Krieg.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0),
+                MultipleChoiceQuestion("402", "Es gibt Menschen, die mehr als Deutsche arbeiten.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0),
+                MultipleChoiceQuestion("403", "Ausländer sind Deutschen gegenüber sehr freundlich.", listOf("Moderatorin", "Ulrike Meyer", "Bernd Bechstein"), 0)
             )
         )
     ),
@@ -962,34 +963,34 @@ val OesdExam2 = ExamContent(
         SchreibenTask(
             taskNumber = 1,
             title = "Aufgabe 1 – Italienischkurs",
-            prompt = """
+            instruction = """
                 Sie machen einen Italienischkurs für Ihren Urlaub.
                 Begründen Sie die Wahl des Instituts.
                 Beschreiben Sie den Unterricht.
                 Schlagen Sie Ihrem Freund vor, auch zu lernen.
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf("Begründung", "Unterricht", "Vorschlag")
+            wordCount = "80",
+            keyPoints = listOf("Begründung", "Unterricht", "Vorschlag")
         ),
         SchreibenTask(
             taskNumber = 2,
             title = "Aufgabe 2 – Blog: Make-up für 10-Jährige",
-            prompt = """
+            instruction = """
                 Meinung: „Schminken für kleine Mädchen unmöglich! Zeitungen wissen nicht mehr was sie schreiben sollen.“
                 Schreiben Sie Ihre Meinung dazu.
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf("Eigene Meinung")
+            wordCount = "80",
+            keyPoints = listOf("Eigene Meinung")
         ),
         SchreibenTask(
             taskNumber = 3,
             title = "Aufgabe 3 – Absage Goldene Hochzeit",
-            prompt = """
+            instruction = """
                 Einladung zur goldenen Hochzeit von Herrn/Frau Sanders. Sie sind verreist.
                 Bedanken Sie sich und sagen Sie ab.
             """.trimIndent(),
-            minWords = 40,
-            hints = listOf("Dank", "Absage")
+            wordCount = "40",
+            keyPoints = listOf("Dank", "Absage")
         )
     ),
     sprechenTasks = listOf(
@@ -997,7 +998,7 @@ val OesdExam2 = ExamContent(
             taskNumber = 1,
             title = "Teil 1 – Überraschungsparty organisieren",
             instruction = "Planen Sie eine Überraschungsparty für einen Freund.",
-            topic = "Ort, Gäste, Einkauf, Information.",
+            topics = listOf("Ort, Gäste, Einkauf, Information."),
             prepTimeSec = 60,
             speakTimeSec = 180,
             tips = listOf("Vorschläge machen", "Entscheiden")
@@ -1006,7 +1007,7 @@ val OesdExam2 = ExamContent(
             taskNumber = 2,
             title = "Teil 2 – Thema präsentieren",
             instruction = "Präsentieren Sie das Thema: „Ist Facebook nützlich?“",
-            topic = "Erfahrung, Situation im Heimatland, Vor-/Nachteile, Abschluss.",
+            topics = listOf("Erfahrung, Situation im Heimatland, Vor-/Nachteile, Abschluss."),
             prepTimeSec = 120,
             speakTimeSec = 180,
             tips = listOf("Struktur folgen", "Beispiele")
@@ -1015,7 +1016,7 @@ val OesdExam2 = ExamContent(
             taskNumber = 3,
             title = "Teil 3 – Über ein Thema sprechen",
             instruction = "Reagieren Sie auf Rückmeldungen und stellen Sie Fragen.",
-            topic = "Rückmeldung geben und Frage stellen zur Partner-Präsentation.",
+            topics = listOf("Rückmeldung geben und Frage stellen zur Partner-Präsentation."),
             prepTimeSec = 30,
             speakTimeSec = 60,
             tips = listOf("Feedback", "Frage")
@@ -1040,9 +1041,9 @@ val telcExam1 = ExamContent(
                 Text 3: Sportvereine haben Nachwuchssorgen. Viele Jugendliche spielen lieber Videospiele, als zum Fußballtraining zu gehen.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Text 1 handelt von...", listOf("Reisegewohnheiten", "Gesunde Ernährung", "Verkehrsmittel"), 0),
-                MultipleChoiceQuestion(2, "Text 2 beschreibt...", listOf("Online-Shopping", "Den Buchhandel", "Mode-Trends"), 0),
-                MultipleChoiceQuestion(3, "Text 3 thematisiert...", listOf("Probleme in Sportvereinen", "Neue Videospiele", "Berühmte Fußballer"), 0)
+                MultipleChoiceQuestion("1", "Text 1 handelt von...", listOf("Reisegewohnheiten", "Gesunde Ernährung", "Verkehrsmittel"), 0),
+                MultipleChoiceQuestion("2", "Text 2 beschreibt...", listOf("Online-Shopping", "Den Buchhandel", "Mode-Trends"), 0),
+                MultipleChoiceQuestion("3", "Text 3 thematisiert...", listOf("Probleme in Sportvereinen", "Neue Videospiele", "Berühmte Fußballer"), 0)
             )
         ),
         ReadingPart(
@@ -1058,8 +1059,8 @@ val telcExam1 = ExamContent(
                 Arbeitgeber schätzen Mitarbeiter, die Eigeninitiative zeigen und sich in ihrer Freizeit weiterbilden.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(4, "Was ist der 'Bildungsscheck'?", listOf("Ein Gehaltsbonus", "Eine finanzielle Hilfe für Kurse", "Ein Zeugnis"), 1),
-                MultipleChoiceQuestion(5, "Welche Kurse sind besonders populär?", listOf("Kochen und Backen", "IT und Sprachen", "Sport und Tanz"), 1)
+                MultipleChoiceQuestion("4", "Was ist der 'Bildungsscheck'?", listOf("Ein Gehaltsbonus", "Eine finanzielle Hilfe für Kurse", "Ein Zeugnis"), 1),
+                MultipleChoiceQuestion("5", "Welche Kurse sind besonders populär?", listOf("Kochen und Backen", "IT und Sprachen", "Sport und Tanz"), 1)
             )
         )
     ),
@@ -1074,8 +1075,8 @@ val telcExam1 = ExamContent(
                 Ansage 3: Hier spricht die Polizei. Wegen eines Unfalls ist die Hauptstraße gesperrt. Bitte umfahren Sie den Bereich.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Der Supermarkt...", listOf("öffnet gerade", "schließt bald", "hat Sonderangebote"), 1),
-                MultipleChoiceQuestion(2, "Der Zug nach Köln...", listOf("fällt aus", "ist pünktlich", "kommt später"), 2)
+                MultipleChoiceQuestion("1", "Der Supermarkt...", listOf("öffnet gerade", "schließt bald", "hat Sonderangebote"), 1),
+                MultipleChoiceQuestion("2", "Der Zug nach Köln...", listOf("fällt aus", "ist pünktlich", "kommt später"), 2)
             )
         )
     ),
@@ -1083,7 +1084,7 @@ val telcExam1 = ExamContent(
         SchreibenTask(
             taskNumber = 1,
             title = "Teil 1 – Beschwerdebrief",
-            prompt = """
+            instruction = """
                 Sie haben online ein Handy bestellt, aber es ist beschädigt angekommen. 
                 Schreiben Sie an die Firma 'TechWorld':
                 • Grund Ihres Schreibens
@@ -1091,8 +1092,8 @@ val telcExam1 = ExamContent(
                 • Forderung (Reparatur oder Ersatz)
                 • Fristsetzung
             """.trimIndent(),
-            minWords = 100,
-            hints = listOf("Formelle Anrede", "Bestellnummer nennen", "Höflich aber bestimmt bleiben")
+            wordCount = "100",
+            keyPoints = listOf("Formelle Anrede", "Bestellnummer nennen", "Höflich aber bestimmt bleiben")
         )
     ),
     sprechenTasks = listOf(
@@ -1100,7 +1101,7 @@ val telcExam1 = ExamContent(
             taskNumber = 1,
             title = "Teil 1 – Kontaktaufnahme",
             instruction = "Sprechen Sie mit Ihrem Partner über ein Thema.",
-            topic = "Thema: Kleidung und Mode. Tragen Sie gerne Markenkleidung? Wie wichtig ist Ihnen Ihr Aussehen?",
+            topics = listOf("Thema: Kleidung und Mode. Tragen Sie gerne Markenkleidung? Wie wichtig ist Ihnen Ihr Aussehen?"),
             prepTimeSec = 60,
             speakTimeSec = 120,
             tips = listOf("Eigene Meinung sagen", "Partner fragen", "Beispiele geben")
@@ -1109,7 +1110,7 @@ val telcExam1 = ExamContent(
             taskNumber = 2,
             title = "Teil 2 – Ein Thema präsentieren",
             instruction = "Präsentieren Sie: 'Brauchen Kinder ein eigenes Smartphone?'",
-            topic = "Erfahrung, Situation im Heimatland, Vorteile/Nachteile, Meinung.",
+            topics = listOf("Erfahrung, Situation im Heimatland, Vorteile/Nachteile, Meinung."),
             prepTimeSec = 60,
             speakTimeSec = 180,
             tips = listOf("Struktur einhalten", "Vor- und Nachteile abwägen")
@@ -1132,9 +1133,9 @@ val telcExam2 = ExamContent(
                 Text 3: Urban Gardening ist im Trend. Bewohner von Großstädten pflanzen Gemüse und Kräuter in Kisten auf ihren Balkonen oder in Gemeinschaftsgärten.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Text 1 thematisiert...", listOf("Solarenergie privat nutzen", "Neue Fenster einbauen", "Strom sparen im Haushalt"), 0),
-                MultipleChoiceQuestion(2, "Text 2 beschreibt...", listOf("Wohnungsnot in Städten", "Hausbau auf dem Land", "Umzugstipps für Familien"), 0),
-                MultipleChoiceQuestion(3, "Text 3 handelt von...", listOf("Gärtnern in der Stadt", "Kochen mit Kräutern", "Urlaub auf dem Bauernhof"), 0)
+                MultipleChoiceQuestion("1", "Text 1 thematisiert...", listOf("Solarenergie privat nutzen", "Neue Fenster einbauen", "Strom sparen im Haushalt"), 0),
+                MultipleChoiceQuestion("2", "Text 2 beschreibt...", listOf("Wohnungsnot in Städten", "Hausbau auf dem Land", "Umzugstipps für Familien"), 0),
+                MultipleChoiceQuestion("3", "Text 3 handelt von...", listOf("Gärtnern in der Stadt", "Kochen mit Kräutern", "Urlaub auf dem Bauernhof"), 0)
             )
         )
     ),
@@ -1149,8 +1150,8 @@ val telcExam2 = ExamContent(
                 Meldung 3: Die Autobahn A8 ist nach einem Unfall gesperrt. Reisende Richtung Stuttgart müssen mit langen Staus rechnen.
             """.trimIndent(),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wie wird das Wetter morgen?", listOf("Regnerisch", "Sonnig und warm", "Kalt und windig"), 1),
-                MultipleChoiceQuestion(2, "Am Flughafen Frankfurt...", listOf("wird weiter gestreikt", "gibt es keine Flüge mehr", "läuft alles wieder normal"), 2)
+                MultipleChoiceQuestion("1", "Wie wird das Wetter morgen?", listOf("Regnerisch", "Sonnig und warm", "Kalt und windig"), 1),
+                MultipleChoiceQuestion("2", "Am Flughafen Frankfurt...", listOf("wird weiter gestreikt", "gibt es keine Flüge mehr", "läuft alles wieder normal"), 2)
             )
         )
     ),
@@ -1158,15 +1159,15 @@ val telcExam2 = ExamContent(
         SchreibenTask(
             taskNumber = 1,
             title = "Teil 1 – Bewerbung um ein Praktikum",
-            prompt = """
+            instruction = """
                 Sie haben eine Anzeige für ein Praktikum im Hotel 'Sonnenblick' gesehen. 
                 Schreiben Sie eine E-Mail an die Personalabteilung:
                 • Warum interessieren Sie sich für das Praktikum?
                 • Welche Kenntnisse bringen Sie mit?
                 • Wann haben Sie Zeit?
             """.trimIndent(),
-            minWords = 80,
-            hints = listOf("Formelle Anrede", "Berufserfahrung erwähnen", "Höfliche Verabschiedung")
+            wordCount = "80",
+            keyPoints = listOf("Formelle Anrede", "Berufserfahrung erwähnen", "Höfliche Verabschiedung")
         )
     ),
     sprechenTasks = listOf(
@@ -1174,7 +1175,7 @@ val telcExam2 = ExamContent(
             taskNumber = 1,
             title = "Teil 1 – Über Erfahrungen sprechen",
             instruction = "Erzählen Sie Ihrem Partner von Ihrer letzten Reise.",
-            topic = "Wohin sind Sie gereist? Was haben Sie erlebt? Was war das Highlight?",
+            topics = listOf("Wohin sind Sie gereist? Was haben Sie erlebt? Was war das Highlight?"),
             prepTimeSec = 60,
             speakTimeSec = 120,
             tips = listOf("Vergangenheit benutzen", "Emotionen einbauen")

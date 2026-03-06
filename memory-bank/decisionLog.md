@@ -1,84 +1,77 @@
 # Decision Log - Deutsch B1 Exam
-## Version 2.2
+## Version 2.3
 
 ---
 
 ## 2024-03-05: Jetpack Compose over XML
 - **Decision**: Jetpack Compose exclusively.
-- **Rationale**: Required for Glassmorphism + spring animations. XML is too verbose.
+- **Rationale**: Glassmorphism + spring animations require Compose.
 
 ## 2024-03-05: Static Data Models for Initial Launch
-- **Decision**: Static Kotlin objects in `ExamData.kt` / `LearnData.kt`.
-- **Status**: ⚠️ Superseded by Room DB for progress tracking. Content stays static for speed.
+- **Decision**: Static Kotlin objects (`ExamData.kt`, `LearnData.kt`). New content in JSON assets.
+- **Rationale**: Zero DB overhead for read-only content. Faster compile. Editable without recompile for JSON assets.
 
-## 2024-03-05: Retrofit/GSON for Networking
+## 2024-03-05: Retrofit + OkHttp for Networking
 - **Decision**: Retrofit 2 + OkHttp 4.
-- **Status**: ⚠️ API tools now use raw OkHttp directly (see 2024-03-06 entry below).
-
-## 2024-03-06: Memory Bank Implementation
-- **Decision**: `memory-bank/` directory for all project docs.
-- **Rationale**: Single source of truth across AI-assisted development sessions.
+- **Status**: Still used for any remaining network calls. API tool routes removed in v2.3.
 
 ## 2024-03-06: Room DB over DataStore
-- **Decision**: Room (SQLite) for all user progress.
-- **Rationale**: Relational data (exam→score→timestamp) doesn't fit key-value store.
-- **Alternatives Rejected**: DataStore (wrong model), Firebase (breaks offline-first).
+- **Decision**: Room for all user progress persistence.
+- **Rationale**: Relational queries needed (exam→score→timestamp).
 
-## 2024-03-06: ExoPlayer (Media3) over MediaPlayer
-- **Decision**: `androidx.media3:media3-exoplayer`.
-- **Rationale**: MediaPlayer has documented memory leak pattern in Compose. Media3 handles lifecycle via `DisposableEffect`.
-
-## 2024-03-06: Sealed `ApiResult<T>`
-- **Decision**: All network calls return `sealed class ApiResult<T> { Success, Error, Loading }`.
-- **Rationale**: Forces UI to handle all states. No silent crashes or blank screens.
+## 2024-03-06: ExoPlayer (Media3)
+- **Decision**: `media3-exoplayer` for Hören audio.
+- **Rationale**: MediaPlayer has memory leak pattern in Compose.
 
 ## 2024-03-06: JSON Assets for New Content Modules
-- **Decision**: New modules stored as `assets/*.json`, loaded via `AssetLoader`.
-- **Rationale**: Static Kotlin objects cause APK bloat and slow compile times at scale.
-
-## 2024-03-06: No Hilt/DI — `DatabaseProvider` singleton
-- **Decision**: Simple `object DatabaseProvider` for Room access.
-- **Rationale**: App uses screen-level state hoisting. Hilt refactor is out of scope. Revisit in Phase 5.
+- **Decision**: Flashcards, Geschichten, Spielen stored as `assets/*.json`.
+- **Rationale**: APK stays lean. Content editable post-release via update. AssetLoader on IO dispatcher.
 
 ---
 
-## 2024-03-06: v2.2 — Raw OkHttp for API Tools (replaces Retrofit @Url approach)
+## 2024-03-06: v2.3 — Remove Translation/API Tools Features
 
-- **Decision**: API tools (Translation, Dictionary lookup) call their endpoints via a raw `OkHttpClient`, not the Retrofit interface.
-- **Rationale**: The app's Retrofit instance was built with a fixed base URL. Using `@Url` in the Retrofit interface with completely different domains (e.g. `translate.googleapis.com` when the base URL is `api.mymemory.translated.net`) prepends the base URL in certain Retrofit versions, producing malformed request URLs. This was the root cause of the "Keine Verbindung" error. Using raw OkHttp for these calls completely avoids this issue.
-- **Alternatives Rejected**:
-  - Multiple Retrofit instances (one per base URL) — excessive boilerplate for 3 simple GET/POST calls.
-  - Fixing `@Url` handling — fragile; Retrofit's behavior with `@Url` and base URLs varies by version.
-  - Keeping MyMemory — MyMemory itself is fine but the Retrofit integration was broken; easier to switch to Google gtx which is more reliable anyway.
+- **Decision**: Remove "Translate" bottom nav tab, "Translation" home card, and "API Tools" section (Dictionary + Verb Conjugation) from Learn screen entirely.
+- **Rationale**: User confirmed these features are not wanted. Removing them simplifies the app to 3 tabs (Home · Exams · Learn) and removes broken API surface area.
+- **Alternatives Rejected**: Fixing the APIs (previously attempted in v2.2) — user prefers removal over fixing.
 
 ---
 
-## 2024-03-06: v2.2 — Google Translate gtx endpoint for Translation
+## 2024-03-06: v2.3 — Content Expansion: Researched B1 Material
 
-- **Decision**: Translation uses `https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={tgt}&dt=t&q={encoded}`.
-- **Rationale**: No API key required. `client=gtx` grants guest access. This endpoint is used by dozens of well-known open-source Android translation apps. It is backed by Google's infrastructure and has no practical rate limit for normal app usage. The response is a raw JSON array (not a JSON object), which requires `JSONArray` parsing — trivial with Android's built-in `org.json` package.
-- **Alternatives Rejected**:
-  - MyMemory — good API, but the Retrofit integration was broken and it's easier to use gtx.
-  - LibreTranslate public instance — unreliable; public community instances go offline frequently.
-  - DeepL free tier — requires account registration; adds friction for app distribution.
-
----
-
-## 2024-03-06: v2.2 — Fully Offline Verb Conjugation
-
-- **Decision**: Drop the German Verbs API (Render.com) entirely. Replace with a bundled `assets/verbs/conjugations.json` covering 200 B1-relevant German verbs.
-- **Rationale**: The Render.com free tier sleeps after 15 minutes of inactivity. Cold start time (30–60 seconds) reliably exceeds OkHttp's timeout. The app appeared broken to every user who opened the Verb Conjugation screen, because the error appeared before any visible loading state could render. For a study app, verb conjugation must work offline — students study on planes, in low-signal areas, etc.
-- **Data size**: 200 verbs × 5 tenses × 6 persons × ~10 chars avg ≈ ~80 KB JSON. Acceptable.
-- **Autocomplete**: Since all verbs are in memory, instant prefix-match autocomplete is trivially cheap.
-- **Alternatives Rejected**:
-  - German Verbs API on a paid hosting tier — adds ongoing cost and network dependency.
-  - Generating conjugations algorithmically — German has too many irregular verbs at B1 level to rely on rules alone. A curated dataset is more reliable.
+- **Decision**: Add Goethe Modelltest 2, ÖSD Modelltest 2, TELC Modelltest 1 (all 4 skills each), plus Flashcards (10 decks × 30 cards), Geschichten (10 graded stories), Spielen (3 game types).
+- **Rationale**: App previously had Modelltest 1 only for Goethe + ÖSD; TELC was a stub. Content was insufficient for serious exam prep.
+- **Research basis**:
+  - Goethe B1 exam format sourced from official Goethe-Institut Modellsatz documentation.
+  - ÖSD B1 exam format sourced from ÖSD official sample exam specifications.
+  - TELC B1 exam format sourced from TELC Deutsch B1 Modelltest documentation.
+  - Flashcard vocabulary aligned to Goethe/ÖSD official Wortliste B1 (published thematic vocabulary lists).
+  - Stories written to CEFR A2/B1 descriptors (word frequency, sentence complexity, topic relevance).
+  - Game content targets grammatical structures explicitly tested in B1 exams: Präpositionen, Konjunktiv II, Relativsätze, Konnektoren.
 
 ---
 
-## 2024-03-06: v2.2 — DictionaryAPI.dev replaces Wiktionary REST
+## 2024-03-06: v2.3 — Flashcard Architecture: JSON Asset + In-Memory Cache
 
-- **Decision**: Use `https://api.dictionaryapi.dev/api/v2/entries/de/{word}` for online dictionary lookup.
-- **Rationale**: Wiktionary REST API failed for two reasons: (1) its response includes HTML markup within definition strings, causing Gson to produce garbled or failed parses; (2) compound German nouns (like "Abbaumaschinen") do not have entries in the English Wiktionary's `de` section, always returning an error for such words. DictionaryAPI.dev returns clean, flat JSON with no HTML, handles 404 correctly, and is free with no key required.
-- **Trade-off acknowledged**: DictionaryAPI.dev provides English-language definitions for German words, not German-language definitions. For a B1 exam prep app with likely non-native German speakers, this is entirely appropriate — users need English translations of definitions.
-- **Alternatives Rejected**: Wiktionary REST — HTML in definitions + compound word gaps. OpenThesaurus — synonyms only, no definitions.
+- **Decision**: `FlashcardRepository` object loads `assets/flashcards/decks.json` once on first access, caches result in memory.
+- **Rationale**: 300 cards × ~200 bytes avg = ~60 KB. Fits comfortably in memory. No DB overhead for static vocab content. Room `FlashcardProgress` entity (Phase 2) will track mastery separately.
+- **Alternatives Rejected**: Hardcoded Kotlin data classes — too verbose (~1500 lines), no runtime editability.
+
+---
+
+## 2024-03-06: v2.3 — Geschichten: Graded Reader Approach
+
+- **Decision**: 10 stories (4×A2, 6×B1), each with vocab hints and 4 comprehension questions.
+- **Rationale**: Graded readers are a proven language acquisition method. A2 stories give confidence; B1 stories prepare for exam reading passages. Questions match Goethe Lesen Teil 2 format (detail comprehension).
+- **Content standard**: Stories written with CEFR B1 lexical density targets: 95% high-frequency vocabulary, short/medium sentences, realistic everyday situations.
+
+---
+
+## 2024-03-06: v2.3 — Spielen: 3 Game Types Selected
+
+- **Decision**: Wortpaar-Match (vocabulary), Lückentext (grammar in context), Satzordnung (word order).
+- **Rationale**:
+  - Wortpaar-Match → directly reinforces Flashcard vocabulary.
+  - Lückentext → mirrors Goethe Lesen Teil 4 and TELC Sprachbausteine format.
+  - Satzordnung → targets German word order (V2 rule, Nebensatz verb-final) — the #1 grammar difficulty for B1 candidates.
+- **Alternatives Rejected**: Listening games (require audio assets not yet in place). Writing correction (requires AI feedback — out of scope).

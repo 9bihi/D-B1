@@ -37,9 +37,9 @@ object GeschichtenData {
                 VocabHint("wedelte", "wagged")
             ),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Woher kommt Herr Müller?", listOf("Berlin", "Hamburg", "München"), 1),
-                MultipleChoiceQuestion(2, "Was hat Herr Müller dabei?", listOf("Einen Vogel", "Einen Hund", "Eine Katze"), 1),
-                MultipleChoiceQuestion(3, "Wann hat die Nachbarin Herrn Müller begrüßt?", listOf("Am Morgen", "Am Mittag", "Am Nachmittag"), 2)
+                MultipleChoiceQuestion("1", "Woher kommt Herr Müller?", listOf("Berlin", "Hamburg", "München"), 1),
+                MultipleChoiceQuestion("2", "Was hat Herr Müller dabei?", listOf("Einen Vogel", "Einen Hund", "Eine Katze"), 1),
+                MultipleChoiceQuestion("3", "Wann hat die Nachbarin Herrn Müller begrüßt?", listOf("Am Morgen", "Am Mittag", "Am Nachmittag"), 2)
             ),
             estimatedReadTimeMin = 3
         ),
@@ -65,9 +65,9 @@ object GeschichtenData {
                 VocabHint("Gewitter", "thunderstorm")
             ),
             questions = listOf(
-                MultipleChoiceQuestion(1, "Wohin sind die Freunde gefahren?", listOf("In die Berge", "Zum Wannsee", "In den Wald"), 1),
-                MultipleChoiceQuestion(2, "Was haben sie für das Picknick mitgebracht?", listOf("Brot und Käse", "Wasser und Obst", "Pizza und Cola"), 1),
-                MultipleChoiceQuestion(3, "Warum mussten sie den Ausflug früher beenden?", listOf("Weil sie müde waren", "Wegen eines Gewitters", "Weil es zu heiß war"), 1)
+                MultipleChoiceQuestion("1", "Wohin sind die Freunde gefahren?", listOf("In die Berge", "Zum Wannsee", "In den Wald"), 1),
+                MultipleChoiceQuestion("2", "Was haben sie für das Picknick mitgebracht?", listOf("Brot und Käse", "Wasser und Obst", "Pizza und Cola"), 1),
+                MultipleChoiceQuestion("3", "Warum mussten sie den Ausflug früher beenden?", listOf("Weil sie müde waren", "Wegen eines Gewitters", "Weil es zu heiß war"), 1)
             ),
             estimatedReadTimeMin = 4
         ),
@@ -93,11 +93,67 @@ object GeschichtenData {
                 VocabHint("Erfahrungen", "experiences")
             ),
             questions = listOf(
-                MultipleChoiceQuestion(1, "In welcher Stadt war das Vorstellungsgespräch?", listOf("Berlin", "Frankfurt", "Hamburg"), 1),
-                MultipleChoiceQuestion(2, "Wie viele Personen saßen im Konferenzraum?", listOf("Zwei", "Drei", "Vier"), 1),
-                MultipleChoiceQuestion(3, "Wann bekommt Thomas eine Rückmeldung?", listOf("Morgen", "Bis Ende der Woche", "In zwei Wochen"), 1)
+                MultipleChoiceQuestion("1", "In welcher Stadt war das Vorstellungsgespräch?", listOf("Berlin", "Frankfurt", "Hamburg"), 1),
+                MultipleChoiceQuestion("2", "Wie viele Personen saßen im Konferenzraum?", listOf("Zwei", "Drei", "Vier"), 1),
+                MultipleChoiceQuestion("3", "Wann bekommt Thomas eine Rückmeldung?", listOf("Morgen", "Bis Ende der Woche", "In zwei Wochen"), 1)
             ),
             estimatedReadTimeMin = 5
+        ),
+        Geschichte(
+            id = "story_4",
+            title = "Die verlorene Geldbörse",
+            level = "B1",
+            bodyText = """
+                Sophie war auf dem Markt, um frisches Gemüse für das Abendessen zu kaufen.
+                Sie hatte Tomaten, Paprika und Zwiebeln in ihrem Korb. Als sie an der Kasse bezahlen wollte,
+                griff sie in ihre Tasche, aber ihre Geldbörse war weg!
+                Panik stieg in ihr auf. Sie suchte überall in der großen Tasche, doch ohne Erfolg.
+                "Haben Sie sie vielleicht dort drüben beim Obststand liegengelassen?", fragte der Verkäufer freundlich.
+                Sophie eilte zurück. Da sah sie einen jungen Mann, der den Marktleiter ansprach und etwas hochhielt.
+                Es war ihre rote Geldbörse! Sie bedankte sich überschwänglich bei dem ehrlichen Finder und kaufte
+                ihm als Dankeschön einen Kaffee. Alles war wieder in Ordnung.
+            """.trimIndent(),
+            vocabHints = listOf(
+                VocabHint("die Geldbörse", "wallet/purse"),
+                VocabHint("stieg auf", "rose"),
+                VocabHint("eilte", "hurried"),
+                VocabHint("überschwänglich", "effusively/exuberantly")
+            ),
+            questions = listOf(
+                MultipleChoiceQuestion("1", "Was wollte Sophie auf dem Markt tun?", listOf("Einen Kaffee trinken", "Gemüse kaufen", "Sich mit einem Freund treffen"), 1),
+                MultipleChoiceQuestion("2", "Was fragte der Verkäufer?", listOf("Wo ihr Korb ist", "Ob sie die Geldbörse beim Obststand gelassen hat", "Ob sie genug Geld hat"), 1),
+                MultipleChoiceQuestion("3", "Wie reagierte Sophie?", listOf("Sie ging nach Hause", "Sie weinte", "Sie bedankte sich und zahlte einen Kaffee"), 2)
+            ),
+            estimatedReadTimeMin = 3
+        ),
+        Geschichte(
+            id = "story_5",
+            title = "Der Umzug nach Berlin",
+            level = "B1",
+            bodyText = """
+                Nach drei Jahren in München bekam Julia ein tolles Jobangebot in Berlin.
+                Die Entscheidung fiel ihr nicht schwer, aber der Umzug war furchtbar anstrengend.
+                Wochenlang packte sie Kisten, sortierte alte Kleidung aus und zerlegte ihre Möbel.
+                Zum Glück halfen ihr drei gute Freunde am Umzugstag.
+                Zusammen luden sie alles in den großen Transporter. Die Fahrt dauerte fast sechs Stunden,
+                und als sie endlich in Berlin-Kreuzberg ankamen, waren alle erschöpft.
+                Ihre neue Wohnung lag im vierten Stock ohne Aufzug. 
+                Als Belohnung für die harte Arbeit bestellte Julia am Abend drei riesige Pizzen.
+                Sie tranken Bier, saßen auf Bananenkisten und freuten sich auf den neuen Lebensabschnitt.
+            """.trimIndent(),
+            vocabHints = listOf(
+                VocabHint("der Umzug", "move/relocation"),
+                VocabHint("zerlegte", "dismantled/took apart"),
+                VocabHint("erschöpft", "exhausted"),
+                VocabHint("die Belohnung", "reward"),
+                VocabHint("Lebensabschnitt", "stage of life")
+            ),
+            questions = listOf(
+                MultipleChoiceQuestion("1", "Warum zog Julia nach Berlin?", listOf("Wegen eines neuen Jobs", "Um zu studieren", "Um nah bei der Familie zu sein"), 0),
+                MultipleChoiceQuestion("2", "Wer half ihr beim Umzug?", listOf("Ihre Nachbarn", "Eine Umzugsfirma", "Gute Freunde"), 2),
+                MultipleChoiceQuestion("3", "Auf welcher Etage lag Julias neue Wohnung?", listOf("Im Erdgeschoss", "Im dritten Stock", "Im vierten Stock"), 2)
+            ),
+            estimatedReadTimeMin = 4
         )
     )
 }

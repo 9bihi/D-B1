@@ -47,7 +47,7 @@ fun LesenScreen(exam: ExamContent, navController: NavController) {
     val context = LocalContext.current
     var currentPartIndex by remember { mutableStateOf(0) }
     var showResults by remember { mutableStateOf(false) }
-    val answers = remember { mutableStateMapOf<Int, Int>() }
+    val answers = remember { mutableStateMapOf<String, Int>() }
 
     val parts = exam.lesenParts
     val currentPart = parts.getOrNull(currentPartIndex) ?: return
@@ -194,8 +194,8 @@ fun LesenScreen(exam: ExamContent, navController: NavController) {
 @Composable
 fun ReadingPartContent(
     part: ReadingPart,
-    answers: Map<Int, Int>,
-    onAnswer: (Int, Int) -> Unit
+    answers: Map<String, Int>,
+    onAnswer: (String, Int) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -232,6 +232,16 @@ fun ReadingPartContent(
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(8.dp))
+            if (!part.contextText.isNullOrBlank()) {
+                Text(
+                    part.contextText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 20.sp,
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
             Text(
                 part.text,
                 style = MaterialTheme.typography.bodyMedium,
@@ -326,7 +336,7 @@ fun QuestionCard(
 @Composable
 fun LesenResults(
     parts: List<ReadingPart>,
-    answers: Map<Int, Int>,
+    answers: Map<String, Int>,
     onRestart: () -> Unit,
     navController: NavController
 ) {

@@ -142,7 +142,7 @@ fun SprechenTaskContent(task: SprechenTask) {
                 elevation = CardDefaults.cardElevation(0.dp)
             ) {
                 Text(
-                    "🗣️ " + task.topic,
+                    task.topics.joinToString(separator = "\n") { "• $it" },
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     lineHeight = 24.sp,

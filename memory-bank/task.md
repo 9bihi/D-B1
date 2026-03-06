@@ -1,98 +1,78 @@
 # Task List - Deutsch B1 Exam
-## Version 2.2
+## Version 2.3 — UI Cleanup + Content Expansion
 
 ---
 
 ## 🚨 ACTIVE TASK
-> **Fix 2 confirmed live bugs**: (1) Provider icon broken on skill selector screen. (2) All 3 API tools failing. Do these before any other work.
+> Remove Translation tab + API Tools from UI. Then add Exams (Modelltest 2 + TELC 1), Flashcards (10 decks × 30), Geschichten (10 stories), Spielen (3 game types).
 
 ---
 
-## 🔴 Phase 0 — CURRENT: Icon Fix + API Rewrite
+## 🔴 Phase 0-A — UI REMOVALS (Do First)
 
-### A. Provider Icon Fix (Quick win — do this first, ~30 min)
-- [ ] **[ICON-A1]** Open `ExamProviderListScreen.kt` — identify exact drawable names and method used to render provider icons (`painterResource(R.drawable.ic_goethe)` etc.)
-- [ ] **[ICON-A2]** Add `fun ExamProvider.toIconRes(): Int` extension mapping each provider to its drawable
-- [ ] **[ICON-A3]** Add `fun ExamProvider.toBrandColor(): Color` extension (Goethe=`#00A550`, ÖSD=`#0070C0`, TELC=`#E2001A`)
-- [ ] **[ICON-A4]** In `ProviderSkillSelectorScreen.kt`, find the provider header card and replace broken icon with `Image(painter = painterResource(provider.toIconRes()), ...)`
-- [ ] **[ICON-A5]** Wrap icon in `Box` with `background(provider.toBrandColor())` and `clip(RoundedCornerShape(14.dp))`
-- [ ] **[ICON-A6]** Test: tap all 3 providers — all show correct logo and brand color
-
-### B. Translation Fix — Google Translate gtx via raw OkHttp
-- [ ] **[TRANS-B1]** Add `private val httpClient = OkHttpClient.Builder().connectTimeout(15s).readTimeout(15s).build()` to `ApiRepository`
-- [ ] **[TRANS-B2]** Add `suspend fun translate(text, sourceLang, targetLang): ApiResult<String>` using raw OkHttp
-  - URL: `https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={tgt}&dt=t&q={encoded}`
-  - Parse: `JSONArray(body)[0]` → iterate segments → concatenate `[i][0]`
-- [ ] **[TRANS-B3]** Add `data class LangPair(label, source, target, emoji)` and list of 5 pairs
-- [ ] **[TRANS-B4]** Update `TranslationScreen.kt`:
-  - [ ] Add `LazyRow` of `FilterChip`s for language pair selection
-  - [ ] Input `TextField` multiline + `"${text.length}/300"` counter
-  - [ ] "Übersetzen" `Button` (disabled when blank)
-  - [ ] `ApiResult` states: Loading shimmer | Success card with copy button | Error card with retry
-  - [ ] `ContentCopy` `IconButton` → `ClipboardManager.setText()` + Toast "Kopiert!"
-- [ ] **[TRANS-B5]** Test de→en: "Guten Morgen" → "Good Morning". Test de→ar. Test airplane mode → error card.
-
-### C. Verb Conjugation Fix — Fully Offline JSON
-- [ ] **[VERB-C1]** Create directory `app/src/main/assets/verbs/`
-- [ ] **[VERB-C2]** Create `conjugations.json` with **all 200 B1 verbs** (schema defined in implementation-plan.md). Must include at minimum: sein, haben, werden, können, müssen, wollen, sollen, dürfen, mögen, gehen, kommen, machen, sagen, wissen, sehen, sprechen, arbeiten, lernen, fahren, wohnen, kaufen, lesen, schreiben, hören, verstehen, denken, glauben, finden, zeigen, brauchen, helfen, geben, nehmen, bringen, stellen, legen, setzen, fragen, antworten, erklären, besuchen, reisen, warten, bleiben, heißen, leben, kennen, laufen, schlafen, essen, trinken, kochen, spielen, studieren, bezahlen, öffnen, schließen, anfangen, aufhören, einladen, empfehlen, vergessen, erinnern, passieren, gefallen, interessieren, entscheiden, versuchen, schaffen, erreichen + 130 more
-- [ ] **[VERB-C3]** Create `data/VerbRepository.kt` with `loadVerbs(context)`, `searchVerb(context, query)`, `getSuggestions(context, prefix)`
-- [ ] **[VERB-C4]** Create/update `VerbConjugationScreen.kt`:
-  - [ ] TextField + "Konjugieren" button
-  - [ ] Autocomplete suggestions dropdown (prefix match, 8 results max)
-  - [ ] Initial empty state card with usage hint
-  - [ ] Success: verb title + auxiliary badge + `ScrollableTabRow` (5 tenses) + conjugation table (6 rows)
-  - [ ] Not-found state: helpful error with example verbs
-- [ ] **[VERB-C5]** Ensure `Screen.VerbConjugation` is registered in `AppNavGraph.kt`
-- [ ] **[VERB-C6]** Ensure "Verb Conjugation" card on API Tools screen navigates to `Screen.VerbConjugation`
-- [ ] **[VERB-C7]** Test: "gehen" → all tenses correct. "müssen" → works (umlaut in infinitiv). "xyz" → not-found message. App offline → still works.
-
-### D. Dictionary Fix — Offline Browse + DictionaryAPI.dev
-- [ ] **[DICT-D1]** Download `German-Words-5000.json` from GitHub raw URL, save to `assets/dictionary/words_5000.json`
-- [ ] **[DICT-D2]** Add `suspend fun lookupWord(word: String): ApiResult<List<DictApiEntry>>` to `ApiRepository` using raw OkHttp
-  - URL: `https://api.dictionaryapi.dev/api/v2/entries/de/{word}`
-  - Handle 404 gracefully: return `ApiResult.Error("Kein Eintrag gefunden")`
-- [ ] **[DICT-D3]** Create `DictApiEntry`, `DictMeaning`, `DictDefinition` data classes
-- [ ] **[DICT-D4]** Update `DictionaryScreen.kt`:
-  - [ ] Tab 0 (Wörterbuch): load words_5000.json on `LaunchedEffect(Unit)`, show in `LazyColumn`, search TextField filters in memory
-  - [ ] Tapping a word in Browse tab → switch to Tab 1 and auto-search that word
-  - [ ] Tab 1 (Nachschlagen): TextField + Suchen button + `ApiResult` states (shimmer/entries/error)
-  - [ ] Each entry: `partOfSpeech` chip + definition text + example sentence (italic, if available)
-  - [ ] 🔖 bookmark icon on each entry card
-- [ ] **[DICT-D5]** Test: Browse tab loads with no network. Search "Buch" in browse → filters. Lookup "machen" → definitions shown. Lookup "Abbaumaschinen" → graceful 404 message.
+### Remove Translation everywhere
+- [ ] **[RM-1]** `MainActivity.kt` → Remove `NavItem("Translate", ...)` from bottom nav list. Recalibrate FloatingGlassNavBar for 3 tabs.
+- [ ] **[RM-2]** `ui/home/HomeScreen.kt` → Remove "Translation" quick card (subtitle: "Deutsch ↔ English · LibreTranslate").
+- [ ] **[RM-3]** `ui/learn/LearnHomeScreen.kt` → Remove entire "API Tools" section (Online Dictionary card + Verb Conjugation card + "🔧 API Tools" header).
+- [ ] **[RM-4]** `navigation/AppNavGraph.kt` → Remove `composable(Screen.Translation.route){}`, `composable(Screen.Dictionary.route){}`, `composable(Screen.VerbConjugation.route){}` blocks.
+- [ ] **[RM-5]** Delete or keep-but-orphan: `ui/translation/TranslationScreen.kt`, `ui/learn/DictionaryScreen.kt`, `ui/learn/VerbConjugationScreen.kt` (keep files, just no nav entry).
 
 ---
 
-## 🔴 Phase 1 — Critical Content Bugs
+## 🔴 Phase 0-B — EXAM CONTENT
 
-- [ ] **[FIX-1.1]** Populate all 4 skills for GoetheExam2 and OesdExam2 in `ExamData.kt`
-- [ ] **[FIX-1.2]** Create `ResultSummaryScreen.kt` and wire at end of Lesen/Hoeren screens
-- [ ] **[FIX-1.3]** Ensure `ApiResult<T>` sealed class is applied to all remaining network calls
-
----
-
-## 🟡 Phase 2 — Room DB Persistence
-- [ ] Room setup: entities, DAOs, AppDatabase, DatabaseProvider
-- [ ] Completion badges on ModelltestSelectorScreen
-
-## 🟠 Phase 3 — Audio / ExoPlayer
-- [ ] ExoPlayer in HoerenScreen + AudioPlayerBar + mp3 assets
-
-## 🟢 Phase 4 — External Repo Integrations
-- [ ] Flashcards, Geschichten, Grammar Drill, WordVault, Spiele, LearnData enrichment, Progress Dashboard
-
-## 🔵 Phase 5 — Polish
-- [ ] Shimmer refinement, TELC content, strings.xml, theme toggle
+- [ ] **[EX-1]** Add `GoetheExam2LesenParts` to `ExamData.kt` (3 Lesen parts, 15 questions — see implementation-plan.md)
+- [ ] **[EX-2]** Add `GoetheExam2HoerenParts` to `ExamData.kt` (transcript + 5 questions)
+- [ ] **[EX-3]** Add `GoetheExam2SchreibenTasks` to `ExamData.kt` (2 writing tasks with key points)
+- [ ] **[EX-4]** Add `GoetheExam2SprechenTasks` to `ExamData.kt` (3 speaking tasks)
+- [ ] **[EX-5]** Mirror above for `OesdExam2` — all 4 skills populated
+- [ ] **[EX-6]** Add `TelcExam1LesenParts` (2 parts), `TelcExam1SchreibenTasks`, `TelcExam1SprechenTasks`
+- [ ] **[EX-7]** Wire all new exam data into the `ModelltestSelectorScreen` and exam flow
 
 ---
 
-## ✅ Completed
-- [x] Project structure, NavGraph, Screen sealed class
-- [x] Glassmorphism theme + FloatingGlassNavBar
+## 🔴 Phase 0-C — FLASHCARDS MODULE
+
+- [ ] **[FC-1]** Create `assets/flashcards/decks.json` — 10 decks × 30 cards = 300 cards total
+- [ ] **[FC-2]** Create `data/FlashcardData.kt` with `Flashcard` and `FlashcardDeck` data classes
+- [ ] **[FC-3]** Create `data/FlashcardRepository.kt` — loads JSON from assets, caches in memory
+- [ ] **[FC-4]** Create `ui/learn/FlashcardDeckListScreen.kt` — grid of deck cards with icon + name + count
+- [ ] **[FC-5]** Create `ui/learn/FlashcardStudyScreen.kt` — flip card animation, progress bar, known/unknown buttons
+- [ ] **[FC-6]** Register `Screen.FlashcardDeckList` and `Screen.FlashcardStudy(deckId)` in `AppNavGraph.kt`
+- [ ] **[FC-7]** Add "Lernkarten" card to `LearnHomeScreen.kt` above existing content
+
+---
+
+## 🔴 Phase 0-D — GESCHICHTEN MODULE
+
+- [ ] **[GS-1]** Create `assets/geschichten/stories.json` — 10 stories (4×A2, 6×B1) with vocab hints + questions
+- [ ] **[GS-2]** Create `data/GeschichtenData.kt` with `Story`, `VocabHint`, `StoryQuestion` data classes
+- [ ] **[GS-3]** Create `data/GeschichtenRepository.kt`
+- [ ] **[GS-4]** Create `ui/learn/GeschichtenListScreen.kt` — list with level badges (A2=blue, B1=green), reading time, topic tag
+- [ ] **[GS-5]** Create `ui/learn/GeschichteReaderScreen.kt` — full story text + vocab hints (collapsible) + quiz at end
+- [ ] **[GS-6]** Register `Screen.GeschichtenList` and `Screen.GeschichteReader(storyId)` in NavGraph
+- [ ] **[GS-7]** Add "Geschichten" card to `LearnHomeScreen.kt`
+
+---
+
+## 🔴 Phase 0-E — SPIELEN MODULE
+
+- [ ] **[SP-1]** Create `assets/spiele/wortpaare.json` — 5 sets × 10 word pairs
+- [ ] **[SP-2]** Create `assets/spiele/lueckentext.json` — 5 sets × 5–10 sentences
+- [ ] **[SP-3]** Create `assets/spiele/satzordnung.json` — 2 sets of scrambled sentences
+- [ ] **[SP-4]** Create `data/SpielData.kt` with all game data classes
+- [ ] **[SP-5]** Create `ui/learn/SpielMenuScreen.kt` — 3 game type cards
+- [ ] **[SP-6]** Create `ui/learn/WortpaarMatchScreen.kt` — tap German → tap English matching game, timer, score
+- [ ] **[SP-7]** Create `ui/learn/LueckentextScreen.kt` — sentence with blank, 4 MC options, explanation on answer
+- [ ] **[SP-8]** Create `ui/learn/SatzordnungScreen.kt` — draggable word chips → arrange into sentence
+- [ ] **[SP-9]** Register all `Screen.Spiele*` routes in NavGraph
+- [ ] **[SP-10]** Add "Spielen" card to `LearnHomeScreen.kt`
+
+---
+
+## ✅ Done
+- [x] App shell, NavGraph, FloatingGlassNavBar
 - [x] Goethe + ÖSD Modelltest 1 — all 4 skills
-- [x] Learn module base (Grammar + Vocab categories)
-- [x] ApiResult<T> sealed class established
-- [x] Error cards + shimmer UI components built
-- [x] TranslationScreen UI structure (langpair selector, copy button, char counter)
-- [x] VerbConjugationScreen UI structure (tense tabs, conjugation table)
-- [x] DictionaryScreen UI structure (browse + lookup tabs)
-- [x] Memory Bank v2.2 updated
+- [x] Glassmorphism dark theme
+- [x] Learn module base (Grammatik, Konnektoren, Wortschatz, Sprechen B1)
+- [x] Memory Bank v2.3 initialized

@@ -37,6 +37,13 @@ object SpielData {
             description = "Fülle die Lücken im Satz aus.",
             emoji = "📝",
             type = GameType.FILL_BLANK
+        ),
+        GameSet(
+            id = "match_travel",
+            title = "Reise Vokabeln",
+            description = "Finde das passende englische Wort für den Urlaub.",
+            emoji = "🏖️",
+            type = GameType.WORD_MATCH
         )
     )
 
@@ -50,6 +57,16 @@ object SpielData {
             WordPair("der Stift", "the pen"),
             WordPair("die Lampe", "the lamp"),
             WordPair("der Spiegel", "the mirror")
+        ),
+        "match_travel" to listOf(
+            WordPair("der Flughafen", "the airport"),
+            WordPair("das Flugzeug", "the airplane"),
+            WordPair("der Bahnhof", "the train station"),
+            WordPair("die Fahrkarte", "the ticket"),
+            WordPair("das Gepäck", "the luggage"),
+            WordPair("der Koffer", "the suitcase"),
+            WordPair("das Hotel", "the hotel"),
+            WordPair("der Strand", "the beach")
         )
     )
 

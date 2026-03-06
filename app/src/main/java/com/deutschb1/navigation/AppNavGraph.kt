@@ -208,12 +208,14 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 ThemePhraseListScreen(content = content, navController = navController)
             }
         }
+/*
         composable(Screen.OnlineDictionary.route) {
             DictionaryScreen(navController = navController)
         }
         composable(Screen.VerbConjugation.route) {
             VerbConjugationScreen(navController = navController)
         }
+*/
         composable(Screen.FlashcardDecks.route) {
             FlashcardDeckScreen(navController = navController)
         }
@@ -245,10 +247,11 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             )
         }
 
-        // Translation
+/*
         composable(Screen.Translation.route) {
             TranslationScreen(navController = navController)
         }
+*/
 
         // Geschichten
         composable(Screen.GeschichtenList.route) {

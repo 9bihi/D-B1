@@ -89,10 +89,11 @@ fun SchreibenTaskContent(task: SchreibenTask) {
     var userText by remember(task.taskNumber) { mutableStateOf("") }
     var hintsExpanded by remember { mutableStateOf(false) }
     val wordCount = userText.trim().split("\\s+".toRegex()).count { it.isNotEmpty() }
-    val progress = (wordCount.toFloat() / task.minWords.toFloat()).coerceIn(0f, 1f)
+    val targetWords = task.wordCount.filter { it.isDigit() }.toIntOrNull() ?: 80
+    val progress = (wordCount.toFloat() / targetWords.toFloat()).coerceIn(0f, 1f)
     val progressColor = when {
-        wordCount < task.minWords * 0.5 -> IosOrange
-        wordCount < task.minWords -> IosBlue
+        wordCount < targetWords * 0.5 -> IosOrange
+        wordCount < targetWords -> IosBlue
         else -> IosGreen
     }
 
@@ -109,10 +110,10 @@ fun SchreibenTaskContent(task: SchreibenTask) {
             Text("✍️ Aufgabenstellung", style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.height(6.dp))
-            Text(task.prompt, style = MaterialTheme.typography.bodyMedium, lineHeight = 22.sp)
+            Text(task.instruction, style = MaterialTheme.typography.bodyMedium, lineHeight = 22.sp)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                "Mindestanzahl Wörter: ${task.minWords}",
+                "Ziel: ${task.wordCount}",
                 style = MaterialTheme.typography.labelMedium,
                 color = IosOrange, fontWeight = FontWeight.SemiBold
             )
@@ -134,22 +135,22 @@ fun SchreibenTaskContent(task: SchreibenTask) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("💡 Schreibtipps", fontWeight = FontWeight.SemiBold,
+                Text("💡 Leitpunkte", fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.headlineSmall)
                 IconButton(onClick = { hintsExpanded = !hintsExpanded }) {
                     Icon(
                         if (hintsExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        "Tipps"
+                        "Punkte"
                     )
                 }
             }
             if (hintsExpanded) {
                 Spacer(modifier = Modifier.height(8.dp))
-                task.hints.forEach { hint ->
+                task.keyPoints.forEach { point ->
                     Row(modifier = Modifier.padding(vertical = 3.dp)) {
                         Text("•", color = IosOrange, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(hint, style = MaterialTheme.typography.bodySmall)
+                        Text(point, style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -162,7 +163,7 @@ fun SchreibenTaskContent(task: SchreibenTask) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text("Wörter: ", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(
-            "$wordCount / ${task.minWords}",
+            "$wordCount / $targetWords",
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = progressColor
@@ -195,7 +196,7 @@ fun SchreibenTaskContent(task: SchreibenTask) {
     )
 
     Spacer(modifier = Modifier.height(12.dp))
-    if (wordCount >= task.minWords) {
+    if (wordCount >= targetWords) {
         Card(
             modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = IosGreen.copy(alpha = 0.1f)),

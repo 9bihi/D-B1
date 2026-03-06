@@ -169,41 +169,6 @@ fun LearnHomeScreen(navController: NavController) {
             )
         }
 
-        // API Tools section
-        item {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "🔌 API Tools",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text(
-                "Live data from online APIs",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-            Spacer(Modifier.height(10.dp))
-
-            // Dictionary card
-            ApiToolCard(
-                emoji = "📖",
-                title = "Online Dictionary",
-                subtitle = "Browse 5,000 German B1 words",
-                gradient = listOf(Color(0xFF4ECDC4), Color(0xFF44A08D)),
-                onClick = { navController.navigate(Screen.OnlineDictionary.route) }
-            )
-            Spacer(Modifier.height(10.dp))
-            
-            // Verb Conjugation card
-            ApiToolCard(
-                emoji = "⚡",
-                title = "Verb Conjugation",
-                subtitle = "8,000 verbs · All tenses",
-                gradient = listOf(Color(0xFF5856D6), Color(0xFF8E8CE1)),
-                onClick = { navController.navigate(Screen.VerbConjugation.route) }
-            )
-        }
     }
 }
 

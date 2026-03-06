@@ -1,10 +1,10 @@
 # Architecture - Deutsch B1 Exam
-## Version 2.2 — Offline-First Integration Baseline
+## Version 2.3 — UI Cleanup + Content Expansion
 
 ---
 
 ## System Overview
-Single-activity Android app built entirely in Jetpack Compose. Uses a modern modular UI architecture with declarative navigation, a robust persistence layer (Room), and hybrid content loading (static objects for core exams, JSON-based assets for stories/games/flashcards). **Version 2.2** introduces a dedicated offline verb engine and optimized third-party API routes.
+Single-activity Android app built entirely in Jetpack Compose. Uses a modern modular UI architecture with declarative navigation, a robust persistence layer (Room), and hybrid content loading (static objects for core exams, JSON-based assets for stories/games/flashcards). **Version 2.3** focuses on offline-first content expansion, removing external dependencies and APIs like translation and dictionary.
 
 ---
 
@@ -33,11 +33,7 @@ Single-activity Android app built entirely in Jetpack Compose. Uses a modern mod
               |       |       +-- [Spiele (Games)] (Word Match, Fill-in-the-Blank)
               |       |       +-- [WordVaultScreen] (Personal saved dictionary)
               |       |
-              |       +-- [TranslationScreen] (Google Translate gtx engine)
-              |       +-- [DictionaryScreen] (Browse 5000 words + DictionaryAPI.dev)
-              |       +-- [VerbConjugationScreen] (Offline logic via VerbRepository)
-              |
-              +-- [FloatingGlassNavBar] (Custom Pill-shaped Bottom Bar)
+              +-- [FloatingGlassNavBar] (Custom Pill-shaped Bottom Bar: Home, Exams, Learn)
 ```
 
 ---
@@ -67,8 +63,6 @@ USER PERSISTENCE LAYER (Room DB)
 NETWORK LAYER (ApiRepository)
 ┌─────────────────────────────────────────────────────────┐
 │  ApiResult<T> Pattern (Loading/Success/Error states)    │
-│  Google Translate gtx (Direct OkHttp implementation)    │
-│  DictionaryAPI.dev (Online definitions fallback)        │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -109,6 +103,6 @@ The `ExamProvider` enum in `ExamData.kt` uses extension functions (`toIconRes()`
 | No Result Summary | ✅ Resolved | Persisted history now visible in Stats dashboard |
 | Asset Loading UI | ✅ Resolved | Shimmer implemented for all deferred loading |
 | Provider Icon Rendering | ✅ Resolved | Fixed white square bug via Extension + Icon tinted image |
-| Flaky Translation API | ✅ Resolved | Migrated to Google gtx guest endpoint |
-| Server-side Verb API | ✅ Resolved | Replaced with fully offline `VerbRepository` |
+| Flaky Translation API | ✅ Removed | Migrated away from Google gtx guest endpoint |
+| Server-side Verb API | ✅ Removed | Replaced with fully offline features |
 | Audio Assets | 🔴 Open | Code is ready (ExoPlayer); requires physical `.mp3` files in `assets/` |

@@ -60,7 +60,7 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
     var showTranscript by remember { mutableStateOf(false) }
     var showResults by remember { mutableStateOf(false) }
     var showPartResults by remember { mutableStateOf(false) }
-    val answers = remember { mutableStateMapOf<Int, Int>() }
+    val answers = remember { mutableStateMapOf<String, Int>() }
     val parts = exam.hoerenParts
     val currentPart = parts.getOrNull(currentPartIndex) ?: return
 
@@ -360,7 +360,7 @@ fun HoerenQuestionCard(
 @Composable
 fun HoerenResults(
     parts: List<HoerenPart>,
-    answers: Map<Int, Int>,
+    answers: Map<String, Int>,
     onRestart: () -> Unit,
     navController: NavController
 ) {
