@@ -9,7 +9,27 @@ import com.deutschb1.network.WiktEntryDetail
 import com.deutschb1.network.WiktionaryDefinition
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONArray
 import java.net.URLEncoder
+import java.util.concurrent.TimeUnit
+
+data class DictApiEntry(
+    val word: String,
+    val phonetic: String?,
+    val meanings: List<DictMeaning>
+)
+
+data class DictMeaning(
+    val partOfSpeech: String,
+    val definitions: List<DictDefinition>
+)
+
+data class DictDefinition(
+    val definition: String,
+    val example: String?
+)
 
 sealed class ApiResult<out T> {
     data class Success<out T>(val data: T) : ApiResult<T>()
@@ -21,28 +41,31 @@ object ApiRepository {
 
     private val api: GermanApiService = RetrofitClient.api
 
-    /** Wiktionary Lookup */
-    suspend fun lookupWord(word: String): ApiResult<WiktionaryDefinition> = withContext(Dispatchers.IO) {
+    private val httpClient = OkHttpClient.Builder()
+        .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+        .readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+        .build()
+
+    /** Dictionary Lookup: Online DictionaryAPI.dev */
+    suspend fun lookupWord(word: String): ApiResult<List<DictApiEntry>> = withContext(Dispatchers.IO) {
         try {
-            val url = "https://en.wiktionary.org/api/rest_v1/page/definition/${word.lowercase().trim()}"
-            val response = api.lookupWord(url)
-            val body = response.body()
-            val deSection = body?.get("de")
-            
-            if (deSection.isNullOrEmpty()) {
-                ApiResult.Error("Kein Eintrag für \"$word\" gefunden.")
-            } else {
-                val entries = deSection.map { entry ->
-                    WiktEntryDetail(
-                        partOfSpeech = entry.partOfSpeech ?: "",
-                        definitions = entry.definitions.map { it.definition.stripHtml() },
-                        examples = entry.definitions.flatMap { it.examples?.map { ex -> ex.stripHtml() } ?: emptyList() }
-                    )
+            val encoded = URLEncoder.encode(word.lowercase().trim(), "UTF-8")
+            val url = "https://api.dictionaryapi.dev/api/v2/entries/de/$encoded"
+            val request = Request.Builder().url(url).get().build()
+            val response = httpClient.newCall(request).execute()
+
+            when (response.code) {
+                200 -> {
+                    val body = response.body?.string() ?: return@withContext ApiResult.Error("Leere Antwort.")
+                    val type = object : com.google.gson.reflect.TypeToken<List<DictApiEntry>>() {}.type
+                    val entries: List<DictApiEntry> = com.google.gson.Gson().fromJson(body, type)
+                    ApiResult.Success(entries)
                 }
-                ApiResult.Success(WiktionaryDefinition(word, entries))
+                404 -> ApiResult.Error("\"$word\" nicht im Wörterbuch gefunden.")
+                else -> ApiResult.Error("Fehler ${response.code}. Bitte erneut versuchen.")
             }
         } catch (e: Exception) {
-            ApiResult.Error("Verbindung fehlgeschlagen. Bitte erneut versuchen.")
+            ApiResult.Error("Keine Verbindung. Bitte erneut versuchen.")
         }
     }
 
@@ -67,40 +90,44 @@ object ApiRepository {
         }
     }
 
-    /** Translation with MyMemory + LibreTranslate Fallback */
+    /** Translation: Google Translate gtx Endpoint (Guest) */
     suspend fun translate(text: String, langpair: String): ApiResult<String> = withContext(Dispatchers.IO) {
         try {
-            // PRIMARY: MyMemory
-            val encodedText = URLEncoder.encode(text, "UTF-8")
-            val url = "https://api.mymemory.translated.net/get?q=$encodedText&langpair=$langpair"
-            val resp = api.translateMyMemory(url)
-            val body = resp.body()
+            val parts = langpair.split("|")
+            if (parts.size != 2) return@withContext ApiResult.Error("Ungültiges Sprachpaar.")
             
-            if (resp.isSuccessful && body != null && body.responseStatus == 200) {
-                ApiResult.Success(body.responseData.translatedText)
-            } else if (resp.code() == 403 || (body != null && body.responseStatus == 403)) {
-                translateWithLibre(text, langpair) // Fallback
-            } else {
-                ApiResult.Error("Übersetzung fehlgeschlagen (${body?.responseStatus ?: resp.code()}).")
+            val sourceLang = parts[0]
+            val targetLang = parts[1]
+            
+            val encoded = URLEncoder.encode(text, "UTF-8")
+            val url = "https://translate.googleapis.com/translate_a/single" +
+                      "?client=gtx&sl=$sourceLang&tl=$targetLang&dt=t&q=$encoded"
+            
+            val request = Request.Builder().url(url).get().build()
+            val response = httpClient.newCall(request).execute()
+            
+            if (!response.isSuccessful) {
+                return@withContext ApiResult.Error("Übersetzung fehlgeschlagen (HTTP ${response.code}).")
             }
+            
+            val body = response.body?.string()
+                ?: return@withContext ApiResult.Error("Leere Antwort vom Server.")
+            
+            // Parse the nested JSON array manually
+            val jsonArray = JSONArray(body)
+            val translationsArray = jsonArray.getJSONArray(0)
+            val sb = StringBuilder()
+            for (i in 0 until translationsArray.length()) {
+                val part = translationsArray.getJSONArray(i)
+                if (!part.isNull(0)) sb.append(part.getString(0))
+            }
+            
+            val result = sb.toString().trim()
+            if (result.isBlank()) ApiResult.Error("Keine Übersetzung gefunden.")
+            else ApiResult.Success(result)
+            
         } catch (e: Exception) {
             ApiResult.Error("Keine Verbindung. Bitte erneut versuchen.")
-        }
-    }
-
-    private suspend fun translateWithLibre(text: String, langpair: String): ApiResult<String> {
-        return try {
-            val parts = langpair.split("|")
-            val url = "https://translate.argosopentech.com/translate"
-            val body = LibreTranslateRequest(q = text, source = parts[0], target = parts[1])
-            val resp = api.translateLibre(url, body)
-            if (resp.isSuccessful && resp.body() != null) {
-                ApiResult.Success(resp.body()!!.translatedText)
-            } else {
-                ApiResult.Error("Tages-Limit erreicht und Backup fehlgeschlagen.")
-            }
-        } catch (e: Exception) {
-            ApiResult.Error("Alle Übersetzungsdienste nicht erreichbar.")
         }
     }
 }

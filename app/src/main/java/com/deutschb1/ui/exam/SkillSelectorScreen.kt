@@ -29,6 +29,8 @@ import androidx.navigation.NavController
 import com.deutschb1.R
 import com.deutschb1.data.ExamProvider
 import com.deutschb1.data.ExamSkill
+import com.deutschb1.data.toBrandColor
+import com.deutschb1.data.toIconRes
 import com.deutschb1.ui.theme.*
 
 data class SkillCardData(
@@ -51,11 +53,7 @@ fun SkillSelectorScreen(
         SkillCardData(ExamSkill.SPRECHEN, "Sprechkompetenz & Interaktion", IosPurple)
     )
 
-    val providerColor = when (provider) {
-        ExamProvider.GOETHE -> GoetheBlue
-        ExamProvider.OESD -> OesdRed
-        ExamProvider.TELC -> TelcGreen
-    }
+    val providerColor = provider.toBrandColor()
 
     Scaffold(
         topBar = {
@@ -121,23 +119,17 @@ fun SkillSelectorScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val iconRes = when (provider) {
-                            ExamProvider.GOETHE -> R.drawable.ic_goethe
-                            ExamProvider.OESD -> R.drawable.ic_osd
-                            ExamProvider.TELC -> R.drawable.ic_telc
-                        }
                         Box(
                             modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
+                                .size(52.dp)
+                                .clip(RoundedCornerShape(14.dp))
                                 .background(providerColor),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(28.dp)
+                            Image(
+                                painter = painterResource(id = provider.toIconRes()),
+                                contentDescription = provider.displayName,
+                                modifier = Modifier.size(36.dp)
                             )
                         }
                         Spacer(modifier = Modifier.width(16.dp))

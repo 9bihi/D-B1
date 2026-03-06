@@ -1,5 +1,7 @@
 package com.deutschb1.data
 
+import com.deutschb1.R
+
 // ─── Exam Provider ───────────────────────────────────────────────────────────
 
 enum class ExamProvider(val displayName: String, val description: String) {
@@ -7,6 +9,20 @@ enum class ExamProvider(val displayName: String, val description: String) {
     OESD("ÖSD", "Österreichisches Sprachdiplom Deutsch"),
     TELC("TELC", "The European Language Certificates")
 }
+
+@androidx.annotation.DrawableRes
+fun ExamProvider.toIconRes(): Int = when (this) {
+    ExamProvider.GOETHE -> R.drawable.ic_goethe
+    ExamProvider.OESD   -> R.drawable.ic_osd
+    ExamProvider.TELC   -> R.drawable.ic_telc
+}
+
+fun ExamProvider.toBrandColor(): androidx.compose.ui.graphics.Color = when (this) {
+    ExamProvider.GOETHE -> androidx.compose.ui.graphics.Color(0xFF00A550)   // Goethe green
+    ExamProvider.OESD   -> androidx.compose.ui.graphics.Color(0xFF0070C0)   // ÖSD blue
+    ExamProvider.TELC   -> androidx.compose.ui.graphics.Color(0xFFE2001A)   // TELC red
+}
+
 
 // ─── Exam Skill ──────────────────────────────────────────────────────────────
 

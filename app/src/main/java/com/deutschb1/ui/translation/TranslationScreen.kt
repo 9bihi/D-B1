@@ -49,6 +49,7 @@ val supportedPairs = listOf(
     TranslationLangPair("Deutsch → Türkçe", "de|tr", "🇩🇪→🇹🇷")
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslationScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
@@ -58,17 +59,7 @@ fun TranslationScreen(navController: NavController) {
     var inputText by remember { mutableStateOf("") }
     var resultState by remember { mutableStateOf<ApiResult<String>?>(null) }
     var selectedPair by remember { mutableStateOf(supportedPairs[0]) }
-
-    // Debounced translation
-    LaunchedEffect(inputText, selectedPair) {
-        if (inputText.isBlank()) {
-            resultState = null
-            return@LaunchedEffect
-        }
-        delay(500)
-        resultState = ApiResult.Loading
-        resultState = ApiRepository.translate(inputText.trim(), selectedPair.code)
-    }
+    var hasSearched by remember { mutableStateOf(false) }
 
     val gradientBrush = Brush.verticalGradient(
         colors = listOf(Color(0xFF0A0A0A), Color(0xFF111827))
@@ -102,7 +93,7 @@ fun TranslationScreen(navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        "MyMemory + LibreTranslate Fallback",
+                        "Google Translate (gtx)",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray
                     )
@@ -111,14 +102,14 @@ fun TranslationScreen(navController: NavController) {
 
             // Language Selector
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(vertical = 4.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(top = 8.dp)
             ) {
                 items(supportedPairs) { pair ->
-                    LanguageChip(
-                        pair = pair,
-                        isSelected = selectedPair == pair,
-                        onClick = { selectedPair = pair }
+                    FilterChip(
+                        selected = (pair == selectedPair),
+                        onClick = { selectedPair = pair },
+                        label = { Text(pair.emoji + " " + pair.displayName, fontSize = 12.sp) }
                     )
                 }
             }
@@ -158,30 +149,47 @@ fun TranslationScreen(navController: NavController) {
                 }
             }
 
+            // Translate button
+            Button(
+                onClick = {
+                    hasSearched = true
+                    resultState = ApiResult.Loading
+                    scope.launch {
+                        resultState = ApiRepository.translate(inputText, selectedPair.code)
+                    }
+                },
+                enabled = inputText.isNotBlank(),
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5856D6)),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Text("Übersetzen", fontWeight = FontWeight.Bold)
+            }
+
             // Result Area
-            when (val res = resultState) {
-                is ApiResult.Loading -> {
-                    com.deutschb1.ui.components.ApiShimmerCard()
-                }
-                is ApiResult.Success -> {
-                    ResultContent(
-                        text = res.data,
-                        onCopy = {
-                            clipboard.setText(AnnotatedString(res.data))
-                            Toast.makeText(context, "Kopiert!", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                }
-                is ApiResult.Error -> {
-                    com.deutschb1.ui.components.ApiErrorCard(res.message, onRetry = {
-                        scope.launch {
-                            resultState = ApiResult.Loading
-                            resultState = ApiRepository.translate(inputText, selectedPair.code)
-                        }
-                    })
-                }
-                null -> {
-                    // Empty state
+            if (hasSearched) {
+                when (val res = resultState) {
+                    is ApiResult.Loading -> {
+                        com.deutschb1.ui.components.ApiShimmerCard()
+                    }
+                    is ApiResult.Success -> {
+                        ResultContent(
+                            text = res.data,
+                            onCopy = {
+                                clipboard.setText(AnnotatedString(res.data))
+                                Toast.makeText(context, "Kopiert!", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    }
+                    is ApiResult.Error -> {
+                        com.deutschb1.ui.components.ApiErrorCard(res.message, onRetry = {
+                            scope.launch {
+                                resultState = ApiResult.Loading
+                                resultState = ApiRepository.translate(inputText, selectedPair.code)
+                            }
+                        })
+                    }
+                    null -> {}
                 }
             }
             
@@ -190,34 +198,6 @@ fun TranslationScreen(navController: NavController) {
     }
 }
 
-@Composable
-fun LanguageChip(pair: TranslationLangPair, isSelected: Boolean, onClick: () -> Unit) {
-    val alpha by animateFloatAsState(if (isSelected) 1f else 0.4f, label = "alpha")
-    
-    Surface(
-        onClick = onClick,
-        modifier = Modifier.clip(RoundedCornerShape(30.dp)),
-        color = if (isSelected) Color(0xFF5856D6).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.05f),
-        border = BorderStroke(
-            width = 1.dp,
-            color = if (isSelected) Color(0xFF5856D6) else Color.White.copy(alpha = 0.1f)
-        )
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(pair.emoji, modifier = Modifier.padding(bottom = 2.dp))
-            Spacer(Modifier.width(8.dp))
-            Text(
-                pair.displayName,
-                color = Color.White.copy(alpha = alpha),
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-            )
-        }
-    }
-}
 
 @Composable
 fun ResultContent(text: String, onCopy: () -> Unit) {

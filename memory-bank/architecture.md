@@ -1,10 +1,10 @@
 # Architecture - Deutsch B1 Exam
-## Version 2.1 - Post-Integration Baseline
+## Version 2.2 — Offline-First Integration Baseline
 
 ---
 
 ## System Overview
-Single-activity Android app built entirely in Jetpack Compose. Uses a modern modular UI architecture with declarative navigation, a robust persistence layer (Room), and hybrid content loading (static objects for core exams, JSON-based assets for stories/games/flashcards).
+Single-activity Android app built entirely in Jetpack Compose. Uses a modern modular UI architecture with declarative navigation, a robust persistence layer (Room), and hybrid content loading (static objects for core exams, JSON-based assets for stories/games/flashcards). **Version 2.2** introduces a dedicated offline verb engine and optimized third-party API routes.
 
 ---
 
@@ -21,7 +21,7 @@ Single-activity Android app built entirely in Jetpack Compose. Uses a modern mod
               |       |       +-- [ProgressDashboardScreen] (Stats, Streaks, History)
               |       |
               |       +-- [ExamsHomeScreen]
-              |       |       +-- [ProviderSkillSelector]
+              |       |       +-- [ProviderSkillSelector] (Uses ExamProvider extensions)
               |       |               +-- [ModelltestSelectorScreen] (Room completion badges)
               |       |                       +-- [Exam Screens] (Lesen, Hoeren, Schreiben, Sprechen)
               |       |                       +-- [ResultSummaryScreen] (Score summary + Persistence)
@@ -33,9 +33,9 @@ Single-activity Android app built entirely in Jetpack Compose. Uses a modern mod
               |       |       +-- [Spiele (Games)] (Word Match, Fill-in-the-Blank)
               |       |       +-- [WordVaultScreen] (Personal saved dictionary)
               |       |
-              |       +-- [TranslationScreen] (Multi-engine with fallback)
-              |       +-- [DictionaryScreen] (Browse 5000 words + definitions)
-              |       +-- [VerbConjugationScreen] (Full tense analysis)
+              |       +-- [TranslationScreen] (Google Translate gtx engine)
+              |       +-- [DictionaryScreen] (Browse 5000 words + DictionaryAPI.dev)
+              |       +-- [VerbConjugationScreen] (Offline logic via VerbRepository)
               |
               +-- [FloatingGlassNavBar] (Custom Pill-shaped Bottom Bar)
 ```
@@ -52,6 +52,7 @@ OFFLINE CONTENT LAYER
 │  FlashcardData.kt ──► assets/flashcards/*.json          │
 │  GeschichtenData.kt ──► assets/geschichten/stories.json │
 │  GrammarDrillData.kt ──► enriching LearnData logic      │
+│  VerbRepository.kt ──► assets/verbs/conjugations.json   │
 │  SpielData.kt ──► assets/spiele/games.json              │
 └─────────────────────────────────────────────────────────┘
 
@@ -66,8 +67,8 @@ USER PERSISTENCE LAYER (Room DB)
 NETWORK LAYER (ApiRepository)
 ┌─────────────────────────────────────────────────────────┐
 │  ApiResult<T> Pattern (Loading/Success/Error states)    │
-│  Shimmer UI Feedback integration                        │
-│  LibreTranslate API Integration (Self-hosted/Public)    │
+│  Google Translate gtx (Direct OkHttp implementation)    │
+│  DictionaryAPI.dev (Online definitions fallback)        │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -83,6 +84,9 @@ Standardized `ShimmerItem` component used across all asynchronous data loads (Tr
 
 ### 3. Progressive Disclosure
 The `ProgressDashboardScreen` transforms raw `StudySession` logs into meaningful metrics (streaks, total hours, module-specific progress) using specialized aggregation queries in `StudySessionDao`.
+
+### 4. Provider Extensions
+The `ExamProvider` enum in `ExamData.kt` uses extension functions (`toIconRes()`, `toBrandColor()`) to decouple UI resource mapping from the core data model, ensuring a single source of truth for provider branding.
 
 ---
 
@@ -104,5 +108,7 @@ The `ProgressDashboardScreen` transforms raw `StudySession` logs into meaningful
 | TELC missing content | ✅ Resolved | Full mock test content added to `ExamData.kt` |
 | No Result Summary | ✅ Resolved | Persisted history now visible in Stats dashboard |
 | Asset Loading UI | ✅ Resolved | Shimmer implemented for all deferred loading |
-| No ViewModels | 🟡 Pending | Screens hold internal state; refactor needed if logic expands |
+| Provider Icon Rendering | ✅ Resolved | Fixed white square bug via Extension + Icon tinted image |
+| Flaky Translation API | ✅ Resolved | Migrated to Google gtx guest endpoint |
+| Server-side Verb API | ✅ Resolved | Replaced with fully offline `VerbRepository` |
 | Audio Assets | 🔴 Open | Code is ready (ExoPlayer); requires physical `.mp3` files in `assets/` |

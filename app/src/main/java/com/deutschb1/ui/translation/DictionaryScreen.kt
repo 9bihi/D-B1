@@ -2,14 +2,15 @@ package com.deutschb1.ui.translation
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -26,11 +27,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.ApiRepository
 import com.deutschb1.data.ApiResult
-import com.deutschb1.network.WiktEntryDetail
-import com.deutschb1.network.WiktionaryDefinition
+import com.deutschb1.data.DictApiEntry
+import com.deutschb1.data.DictMeaning
 import com.deutschb1.util.AssetLoader
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DictionaryScreen(navController: NavController) {
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -46,7 +48,7 @@ fun DictionaryScreen(navController: NavController) {
 
     // Lookup State
     var lookupWord by remember { mutableStateOf("") }
-    var lookupResult by remember { mutableStateOf<ApiResult<WiktionaryDefinition>?>(null) }
+    var lookupResult by remember { mutableStateOf<ApiResult<List<DictApiEntry>>?>(null) }
 
     // Load word list
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -179,7 +181,7 @@ fun BrowseContent(
 fun LookupContent(
     word: String,
     onWordChange: (String) -> Unit,
-    result: ApiResult<WiktionaryDefinition>?,
+    result: ApiResult<List<DictApiEntry>>?,
     onSearch: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -223,16 +225,8 @@ fun LookupContent(
             }
             is ApiResult.Success -> {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    item {
-                        Text(
-                            text = result.data.word.replaceFirstChar { it.uppercase() },
-                            style = MaterialTheme.typography.displaySmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
-                    items(result.data.entries) { entry ->
-                        WiktEntryCard(entry)
+                    items(result.data) { entry ->
+                        DictEntryCard(entry)
                     }
                 }
             }
@@ -267,7 +261,7 @@ fun DictionaryWordRow(word: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun WiktEntryCard(entry: WiktEntryDetail) {
+fun DictEntryCard(entry: DictApiEntry) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
@@ -280,50 +274,61 @@ fun WiktEntryCard(entry: WiktEntryDetail) {
                 .padding(20.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Surface(
-                    color = Color(0xFF5856D6).copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(width = 0.5.dp, color = Color(0xFF5856D6).copy(alpha = 0.5f))
-                ) {
-                    Text(
-                        entry.partOfSpeech,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        color = Color(0xFF8E8CE1),
-                        style = MaterialTheme.typography.labelMedium
-                    )
+                Text(
+                    text = entry.word.replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(Modifier.width(8.dp))
+                if (entry.phonetic != null) {
+                    Text(entry.phonetic, color = Color.Gray, fontSize = 14.sp)
                 }
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = { /* TODO: Bookmark */ }) {
+                IconButton(onClick = { /* Save Bookmark */ }) {
                     Icon(Icons.Default.BookmarkBorder, contentDescription = "Save", tint = Color.Gray)
                 }
             }
             
             Spacer(Modifier.height(12.dp))
             
-            entry.definitions.forEachIndexed { index, def ->
-                Row {
-                    Text("${index + 1}.", color = Color(0xFF5856D6), fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.width(8.dp))
-                    Text(def, color = Color.White)
+            entry.meanings.forEach { meaning ->
+                Surface(
+                    color = Color(0xFF5856D6).copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(width = 0.5.dp, color = Color(0xFF5856D6).copy(alpha = 0.4f))
+                ) {
+                    Text(
+                        meaning.partOfSpeech,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        color = Color(0xFF8E8CE1),
+                        style = MaterialTheme.typography.labelSmall
+                    )
                 }
+                
                 Spacer(Modifier.height(8.dp))
-            }
-
-            if (entry.examples.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
+                
+                meaning.definitions.forEachIndexed { index, def ->
+                    Column(modifier = Modifier.padding(start = 4.dp, bottom = 12.dp)) {
+                        Row {
+                            Text("${index + 1}.", color = Color(0xFF5856D6), fontWeight = FontWeight.Bold)
+                            Spacer(Modifier.width(8.dp))
+                            Text(def.definition, color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                        }
+                        if (def.example != null) {
+                            Text(
+                                "\"${def.example}\"",
+                                color = Color.Gray,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                                modifier = Modifier.padding(start = 24.dp, top = 4.dp)
+                            )
+                        }
+                    }
+                }
                 HorizontalDivider(color = Color.White.copy(alpha = 0.05f))
                 Spacer(Modifier.height(8.dp))
-                entry.examples.take(2).forEach { ex ->
-                    Text(
-                        "\"$ex\"",
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                    )
-                    Spacer(Modifier.height(4.dp))
-                }
             }
         }
     }
 }
-

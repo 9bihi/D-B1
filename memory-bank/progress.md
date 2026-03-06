@@ -1,10 +1,18 @@
 # Progress - Deutsch B1 Exam
-## Version 2.0
+## Version 2.2 — Icon Fix + API Complete Rewrite
 
 ---
 
-## 🏁 Status: **PHASE 5 COMPLETE — READY FOR ASSETS**
-Foundation and features are fully stable. All 8 external repo integrations are verified. Build errors resolved. Ready for final audio asset wiring (Phase 6).
+## 🏁 Status: **PHASE 0 (FIXES) COMPLETE**
+All core API issues resolved. 200+ verbs now offline. Provider icons fixed. Google Translate gtx integrated.
+
+---
+
+## ✅ Recent Fixes (Sprint 2.2)
+- [x] **0.A Provider Icons**: Logic moved to `ExamProvider` extensions; header card rendering fixed (no more white squares).
+- [x] **0.B Google Translate**: Replaced flaky MyMemory/Libre with reliable `gtx` endpoint via OkHttp.
+- [x] **0.C Verb Conjugation**: Fully offline database for 200 B1-essential verbs. UI overhauled with autocomplete.
+- [x] **0.D Dictionary**: Switched to `dictionaryapi.dev` for cleaner JSON parsing. Integrated with 5000-word offline browser.
 
 ---
 
@@ -24,23 +32,20 @@ Foundation and features are fully stable. All 8 external repo integrations are v
 - [x] **Spiele (Games)**: Word Match and Fill-in-the-Blank learning games
 - [x] **Word Vault**: Personal dictionary for bookmarked words with Room persistence
 - [x] **Progress Dashboard**: Statistics tracking (Study time, Streaks, Session history)
-- [x] **Utilities**: Translation (MyMemory + Shimmer) + Dictionary via `ApiRepository`
+- [x] **Utilities**: Translation (Google Translate) + Dictionary (Offline + DictAPI)
 - [x] **Visual Design**: Dark mode glassmorphism, blur cards, Shimmer loading states
 - [x] **Memory Bank**: All project docs in `memory-bank/`
 
 ---
 
-## 🔴 Bug Fixes In Progress
-
-| Bug | Status |
-|---|---|
-| Goethe/ÖSD Modelltest 2 content empty | ✅ Fixed |
-| No Result Summary Screen | ✅ Fixed |
-| Silent API failures (crash/blank) | ✅ Fixed |
-| No Copy button in Translator | ✅ Fixed |
-| Screen.Translation, OnlineDictionary, VerbConjugation wired | ✅ Fixed |
-| Dashboard 'timestamp' vs 'completedAt' mismatch | ✅ Fixed |
-| GeschichteReader/WordVault compilation errors | ✅ Fixed |
+## 🔴 Bug Fixes Summary
+✅ Goethe/ÖSD Modelltest 2 content empty FIXED
+✅ No Result Summary Screen FIXED
+✅ Silent API failures (crash/blank) FIXED (Moved to gtx/offline)
+✅ No Copy button in Translator FIXED
+✅ Dashboard 'timestamp' vs 'completedAt' mismatch FIXED
+✅ GeschichteReader/WordVault compilation errors FIXED
+✅ Provider Icons fixed
 
 ---
 
@@ -61,12 +66,12 @@ Foundation and features are fully stable. All 8 external repo integrations are v
 
 | Module | Before Sprint | After Sprint Target |
 |---|---|---|
-| Exam Content | 50% | 100% (Goethe, ÖSD, TELC) |
-| Learn Content | 70% | 98% (Expansion complete) |
-| Bug Fixes | 0% | 100% |
-| New Features | 30% | 95% (Stories, Drills, Games, Stats done) |
+| Exam Content | 100% | 100% |
+| Learn Content | 98% | 98% |
+| Bug Fixes | 90% | 100% |
+| New Features | 95% | 96% |
 | Persistence | 100% | 100% |
-| Audio | 80% | 90% (Code ready, needs mp3s) |
+| Audio | 80% | 80% (Code ready, needs mp3s) |
 | **Overall** | **~98%** | **~99%** |
 
 ---

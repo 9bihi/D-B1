@@ -1,0 +1,184 @@
+{
+  "verbs": [
+    {
+      "infinitiv": "gehen",
+      "auxiliary": "sein",
+      "praesens": {"ich":"gehe","du":"gehst","er/sie/es":"geht","wir":"gehen","ihr":"geht","sie/Sie":"gehen"},
+      "praeteritum": {"ich":"ging","du":"gingst","er/sie/es":"ging","wir":"gingen","ihr":"gingt","sie/Sie":"gingen"},
+      "perfekt": {"ich":"bin gegangen","du":"bist gegangen","er/sie/es":"ist gegangen","wir":"sind gegangen","ihr":"seid gegangen","sie/Sie":"sind gegangen"},
+      "konjunktiv2": {"ich":"ginge","du":"gingest","er/sie/es":"ginge","wir":"gingen","ihr":"ginget","sie/Sie":"gingen"},
+      "imperativ": {"du":"geh!","ihr":"geht!","Sie":"Gehen Sie!"}
+    },
+    {
+      "infinitiv": "sein",
+      "auxiliary": "sein",
+      "praesens": {"ich":"bin","du":"bist","er/sie/es":"ist","wir":"sind","ihr":"seid","sie/Sie":"sind"},
+      "praeteritum": {"ich":"war","du":"warst","er/sie/es":"war","wir":"waren","ihr":"wart","sie/Sie":"waren"},
+      "perfekt": {"ich":"bin gewesen","du":"bist gewesen","er/sie/es":"ist gewesen","wir":"sind gewesen","ihr":"seid gewesen","sie/Sie":"sind gewesen"},
+      "konjunktiv2": {"ich":"wäre","du":"wärst","er/sie/es":"wäre","wir":"wären","ihr":"wäret","sie/Sie":"wären"},
+      "imperativ": {"du":"sei!","ihr":"seid!","Sie":"Seien Sie!"}
+    },
+    {
+      "infinitiv": "haben",
+      "auxiliary": "haben",
+      "praesens": {"ich":"habe","du":"hast","er/sie/es":"hat","wir":"haben","ihr":"habt","sie/Sie":"haben"},
+      "praeteritum": {"ich":"hatte","du":"hattest","er/sie/es":"hatte","wir":"hatten","ihr":"hattet","sie/Sie":"hatten"},
+      "perfekt": {"ich":"habe gehabt","du":"hast gehabt","er/sie/es":"hat gehabt","wir":"haben gehabt","ihr":"habt gehabt","sie/Sie":"haben gehabt"},
+      "konjunktiv2": {"ich":"hätte","du":"hättest","er/sie/es":"hätte","wir":"hätten","ihr":"hättet","sie/Sie":"hätten"},
+      "imperativ": {"du":"hab!","ihr":"habt!","Sie":"Haben Sie!"}
+    },
+    {
+      "infinitiv": "werden",
+      "auxiliary": "sein",
+      "praesens": {"ich":"werde","du":"wirst","er/sie/es":"wird","wir":"werden","ihr":"werdet","sie/Sie":"werden"},
+      "praeteritum": {"ich":"wurde","du":"wurdest","er/sie/es":"wurde","wir":"wurden","ihr":"wurdet","sie/Sie":"wurden"},
+      "perfekt": {"ich":"bin geworden","du":"bist geworden","er/sie/es":"ist geworden","wir":"sind geworden","ihr":"seid geworden","sie/Sie":"sind geworden"},
+      "konjunktiv2": {"ich":"würde","du":"würdest","er/sie/es":"würde","wir":"würden","ihr":"würdet","sie/Sie":"würden"},
+      "imperativ": {"du":"werde!","ihr":"werdet!","Sie":"Werden Sie!"}
+    },
+    {
+      "infinitiv": "können",
+      "auxiliary": "haben",
+      "praesens": {"ich":"kann","du":"kannst","er/sie/es":"kann","wir":"können","ihr":"könnt","sie/Sie":"können"},
+      "praeteritum": {"ich":"konnte","du":"konntest","er/sie/es":"konnte","wir":"konnten","ihr":"konntet","sie/Sie":"konnten"},
+      "perfekt": {"ich":"habe gekonnt","du":"hast gekonnt","er/sie/es":"hat gekonnt","wir":"haben gekonnt","ihr":"habt gekonnt","sie/Sie":"haben gekonnt"},
+      "konjunktiv2": {"ich":"könnte","du":"könntest","er/sie/es":"könnte","wir":"könnten","ihr":"könntet","sie/Sie":"könnten"},
+      "imperativ": {"du":"-","ihr":"-","Sie":"-"}
+    },
+    {
+      "infinitiv": "müssen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"muss","du":"musst","er/sie/es":"muss","wir":"müssen","ihr":"müsst","sie/Sie":"müssen"},
+      "praeteritum": {"ich":"musste","du":"musstest","er/sie/es":"musste","wir":"mussten","ihr":"musstet","sie/Sie":"mussten"},
+      "perfekt": {"ich":"habe gemusst","du":"hast gemusst","er/sie/es":"hat gemusst","wir":"haben gemusst","ihr":"habt gemusst","sie/Sie":"haben gemusst"},
+      "konjunktiv2": {"ich":"müsste","du":"müsstest","er/sie/es":"müsste","wir":"müssten","ihr":"müsstet","sie/Sie":"müssten"},
+      "imperativ": {"du":"-","ihr":"-","Sie":"-"}
+    },
+    {
+      "infinitiv": "wollen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"will","du":"willst","er/sie/es":"will","wir":"wollen","ihr":"wollt","sie/Sie":"wollen"},
+      "praeteritum": {"ich":"wollte","du":"wolltest","er/sie/es":"wollte","wir":"wollten","ihr":"wolltet","sie/Sie":"wollten"},
+      "perfekt": {"ich":"habe gewollt","du":"hast gewollt","er/sie/es":"hat gewollt","wir":"haben gewollt","ihr":"habt gewollt","sie/Sie":"haben gewollt"},
+      "konjunktiv2": {"ich":"wollte","du":"wolltest","er/sie/es":"wollte","wir":"wollten","ihr":"wolltet","sie/Sie":"wollten"},
+      "imperativ": {"du":"-","ihr":"-","Sie":"-"}
+    },
+    {
+      "infinitiv": "sollen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"soll","du":"sollst","er/sie/es":"soll","wir":"sollen","ihr":"sollt","sie/Sie":"sollen"},
+      "praeteritum": {"ich":"sollte","du":"solltest","er/sie/es":"sollte","wir":"sollten","ihr":"solltet","sie/Sie":"sollten"},
+      "perfekt": {"ich":"habe gesollt","du":"hast gesollt","er/sie/es":"hat gesollt","wir":"haben gesollt","ihr":"habt gesollt","sie/Sie":"haben gesollt"},
+      "konjunktiv2": {"ich":"sollte","du":"solltest","er/sie/es":"sollte","wir":"sollten","ihr":"solltet","sie/Sie":"sollten"},
+      "imperativ": {"du":"-","ihr":"-","Sie":"-"}
+    },
+    {
+      "infinitiv": "dürfen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"darf","du":"darfst","er/sie/es":"darf","wir":"dürfen","ihr":"dürft","sie/Sie":"dürfen"},
+      "praeteritum": {"ich":"durfte","du":"durftest","er/sie/es":"durfte","wir":"durften","ihr":"durftet","sie/Sie":"durften"},
+      "perfekt": {"ich":"habe gedurft","du":"hast gedurft","er/sie/es":"hat gedurft","wir":"haben gedurft","ihr":"habt gedurft","sie/Sie":"haben gedurft"},
+      "konjunktiv2": {"ich":"dürfte","du":"dürftest","er/sie/es":"dürfte","wir":"dürften","ihr":"dürftet","sie/Sie":"dürften"},
+      "imperativ": {"du":"-","ihr":"-","Sie":"-"}
+    },
+    {
+      "infinitiv": "machen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"mache","du":"machst","er/sie/es":"macht","wir":"machen","ihr":"macht","sie/Sie":"machen"},
+      "praeteritum": {"ich":"machte","du":"machtest","er/sie/es":"machte","wir":"machten","ihr":"machtet","sie/Sie":"machten"},
+      "perfekt": {"ich":"habe gemacht","du":"hast gemacht","er/sie/es":"hat gemacht","wir":"haben gemacht","ihr":"habt gemacht","sie/Sie":"haben gemacht"},
+      "konjunktiv2": {"ich":"machte","du":"machtest","er/sie/es":"machte","wir":"machten","ihr":"machtet","sie/Sie":"machten"},
+      "imperativ": {"du":"mach!","ihr":"macht!","Sie":"Machen Sie!"}
+    },
+    {
+      "infinitiv": "kommen",
+      "auxiliary": "sein",
+      "praesens": {"ich":"komme","du":"kommst","er/sie/es":"kommt","wir":"kommen","ihr":"kommt","sie/Sie":"kommen"},
+      "praeteritum": {"ich":"kam","du":"kamst","er/sie/es":"kam","wir":"kamen","ihr":"kamt","sie/Sie":"kamen"},
+      "perfekt": {"ich":"bin gekommen","du":"bist gekommen","er/sie/es":"ist gekommen","wir":"sind gekommen","ihr":"seid gekommen","sie/Sie":"sind gekommen"},
+      "konjunktiv2": {"ich":"käme","du":"kämest","er/sie/es":"käme","wir":"kämen","ihr":"kämet","sie/Sie":"kämen"},
+      "imperativ": {"du":"komm!","ihr":"kommt!","Sie":"Kommen Sie!"}
+    },
+    {
+      "infinitiv": "sagen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"sage","du":"sagst","er/sie/es":"sagt","wir":"sagen","ihr":"sagt","sie/Sie":"sagen"},
+      "praeteritum": {"ich":"sagte","du":"sagtest","er/sie/es":"sagte","wir":"sagten","ihr":"sagtet","sie/Sie":"sagten"},
+      "perfekt": {"ich":"habe gesagt","du":"hast gesagt","er/sie/es":"hat gesagt","wir":"haben gesagt","ihr":"habt gesagt","sie/Sie":"haben gesagt"},
+      "konjunktiv2": {"ich":"sagte","du":"sagtest","er/sie/es":"sagte","wir":"sagten","ihr":"sagtet","sie/Sie":"sagten"},
+      "imperativ": {"du":"sag!","ihr":"sagt!","Sie":"Sagen Sie!"}
+    },
+    {
+      "infinitiv": "wissen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"weiß","du":"weißt","er/sie/es":"weiß","wir":"wissen","ihr":"wisst","sie/Sie":"wissen"},
+      "praeteritum": {"ich":"wusste","du":"wusstest","er/sie/es":"wusste","wir":"wussten","ihr":"wusstet","sie/Sie":"wussten"},
+      "perfekt": {"ich":"habe gewusst","du":"hast gewusst","er/sie/es":"hat gewusst","wir":"haben gewusst","ihr":"habt gewusst","sie/Sie":"haben gewusst"},
+      "konjunktiv2": {"ich":"wüsste","du":"wüsstest","er/sie/es":"wüsste","wir":"wüssten","ihr":"wüsstet","sie/Sie":"wüssten"},
+      "imperativ": {"du":"wisse!","ihr":"wisst!","Sie":"Wissen Sie!"}
+    },
+    {
+      "infinitiv": "sehen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"sehe","du":"siehst","er/sie/es":"sieht","wir":"sehen","ihr":"seht","sie/Sie":"sehen"},
+      "praeteritum": {"ich":"sah","du":"sahst","er/sie/es":"sah","wir":"sahen","ihr":"saht","sie/Sie":"sahen"},
+      "perfekt": {"ich":"habe gesehen","du":"hast gesehen","er/sie/es":"hat gesehen","wir":"haben gesehen","ihr":"habt gesehen","sie/Sie":"haben gesehen"},
+      "konjunktiv2": {"ich":"sähe","du":"sähest","er/sie/es":"sähe","wir":"sähen","ihr":"sähet","sie/Sie":"sähen"},
+      "imperativ": {"du":"sieh!","ihr":"seht!","Sie":"Sehen Sie!"}
+    },
+    {
+      "infinitiv": "sprechen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"spreche","du":"sprichst","er/sie/es":"spricht","wir":"sprechen","ihr":"sprecht","sie/Sie":"sprechen"},
+      "praeteritum": {"ich":"sprach","du":"sprachst","er/sie/es":"sprach","wir":"sprachen","ihr":"spracht","sie/Sie":"sprachen"},
+      "perfekt": {"ich":"habe gesprochen","du":"hast gesprochen","er/sie/es":"hat gesprochen","wir":"haben gesprochen","ihr":"habt gesprochen","sie/Sie":"haben gesprochen"},
+      "konjunktiv2": {"ich":"spräche","du":"sprächest","er/sie/es":"spräche","wir":"sprächen","ihr":"sprächet","sie/Sie":"sprächen"},
+      "imperativ": {"du":"sprich!","ihr":"sprecht!","Sie":"Sprechen Sie!"}
+    },
+    {
+      "infinitiv": "arbeiten",
+      "auxiliary": "haben",
+      "praesens": {"ich":"arbeite","du":"arbeitest","er/sie/es":"arbeitet","wir":"arbeiten","ihr":"arbeitet","sie/Sie":"arbeiten"},
+      "praeteritum": {"ich":"arbeitete","du":"arbeitetest","er/sie/es":"arbeitete","wir":"arbeiteten","ihr":"arbeitetet","sie/Sie":"arbeiteten"},
+      "perfekt": {"ich":"habe gearbeitet","du":"hast gearbeitet","er/sie/es":"hat gearbeitet","wir":"haben gearbeitet","ihr":"habt gearbeitet","sie/Sie":"haben gearbeitet"},
+      "konjunktiv2": {"ich":"arbeitete","du":"arbeitetest","er/sie/es":"arbeitete","wir":"arbeiteten","ihr":"arbeitetet","sie/Sie":"arbeiteten"},
+      "imperativ": {"du":"arbeite!","ihr":"arbeitet!","Sie":"Arbeiten Sie!"}
+    },
+    {
+      "infinitiv": "lernen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"lerne","du":"lernst","er/sie/es":"lernt","wir":"lernen","ihr":"lernt","sie/Sie":"lernen"},
+      "praeteritum": {"ich":"lernte","du":"lerntest","er/sie/es":"lernte","wir":"lernten","ihr":"lerntet","sie/Sie":"lernten"},
+      "perfekt": {"ich":"habe gelernt","du":"hast gelernt","er/sie/es":"hat gelernt","wir":"haben gelernt","ihr":"habt gelernt","sie/Sie":"haben gelernt"},
+      "konjunktiv2": {"ich":"lernte","du":"lerntest","er/sie/es":"lernte","wir":"lernten","ihr":"lerntet","sie/Sie":"lernten"},
+      "imperativ": {"du":"lern!","ihr":"lernt!","Sie":"Lernen Sie!"}
+    },
+    {
+      "infinitiv": "fahren",
+      "auxiliary": "sein",
+      "praesens": {"ich":"fahre","du":"fährst","er/sie/es":"fährt","wir":"fahren","ihr":"fahrt","sie/Sie":"fahren"},
+      "praeteritum": {"ich":"fuhr","du":"fuhrst","er/sie/es":"fuhr","wir":"fuhren","ihr":"fuhrt","sie/Sie":"fuhren"},
+      "perfekt": {"ich":"bin gefahren","du":"bist gefahren","er/sie/es":"ist gefahren","wir":"sind gefahren","ihr":"seid gefahren","sie/Sie":"sind gefahren"},
+      "konjunktiv2": {"ich":"führe","du":"führest","er/sie/es":"führe","wir":"führen","ihr":"führet","sie/Sie":"führen"},
+      "imperativ": {"du":"fahr!","ihr":"fahrt!","Sie":"Fahren Sie!"}
+    },
+    {
+      "infinitiv": "wohnen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"wohne","du":"wohnst","er/sie/es":"wohnt","wir":"wohnen","ihr":"wohnt","sie/Sie":"wohnen"},
+      "praeteritum": {"ich":"wohnte","du":"wohntest","er/sie/es":"wohnte","wir":"wohnten","ihr":"wohntet","sie/Sie":"wohnten"},
+      "perfekt": {"ich":"habe gewohnt","du":"hast gewohnt","er/sie/es":"hat gewohnt","wir":"haben gewohnt","ihr":"habt gewohnt","sie/Sie":"haben gewohnt"},
+      "konjunktiv2": {"ich":"wohnte","du":"wohntest","er/sie/es":"wohnte","wir":"wohnten","ihr":"wohntet","sie/Sie":"wohnten"},
+      "imperativ": {"du":"wohn!","ihr":"wohnt!","Sie":"Wohnen Sie!"}
+    },
+    {
+      "infinitiv": "kaufen",
+      "auxiliary": "haben",
+      "praesens": {"ich":"kaufe","du":"kaufst","er/sie/es":"kauft","wir":"kaufen","ihr":"kauft","sie/Sie":"kaufen"},
+      "praeteritum": {"ich":"kaufte","du":"kauftest","er/sie/es":"kaufte","wir":"kauften","ihr":"kauftet","sie/Sie":"kauften"},
+      "perfekt": {"ich":"habe gekauft","du":"hast gekauft","er/sie/es":"hat gekauft","wir":"haben gekauft","ihr":"habt gekauft","sie/Sie":"haben gekauft"},
+      "konjunktiv2": {"ich":"kaufte","du":"kauftest","er/sie/es":"kaufte","wir":"kauften","ihr":"kauftet","sie/Sie":"kauften"},
+      "imperativ": {"du":"kauf!","ihr":"kauft!","Sie":"Kaufen Sie!"}
+    }
+  ]
+}

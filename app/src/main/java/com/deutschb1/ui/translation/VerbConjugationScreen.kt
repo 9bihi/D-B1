@@ -3,11 +3,14 @@ package com.deutschb1.ui.translation
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,21 +23,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.deutschb1.data.ApiRepository
-import com.deutschb1.data.ApiResult
-import com.deutschb1.network.VerbConjugation
+import com.deutschb1.data.VerbConjugation
+import com.deutschb1.data.VerbRepository
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerbConjugationScreen(navController: NavController) {
-    val scope = rememberCoroutineScope()
-    var verbInput by remember { mutableStateOf("") }
-    var apiResult by remember { mutableStateOf<ApiResult<VerbConjugation>?>(null) }
-    var isFirstLoad by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    var inputText by remember { mutableStateOf("") }
+    var result by remember { mutableStateOf<VerbConjugation?>(null) }
+    var notFound by remember { mutableStateOf(false) }
+    var suggestions by remember { mutableStateOf<List<String>>(emptyList()) }
 
     val gradientBrush = Brush.verticalGradient(
         colors = listOf(Color(0xFF0A0A0A), Color(0xFF111827))
@@ -63,7 +70,7 @@ fun VerbConjugationScreen(navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        "Alle Zeitformen · 8.000+ Verben",
+                        "Alle Zeitformen · 200 B1-Verben (offline)",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray
                     )
@@ -72,90 +79,110 @@ fun VerbConjugationScreen(navController: NavController) {
 
             Spacer(Modifier.height(20.dp))
 
-            // Input Area
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f))
+            // Search row
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                OutlinedTextField(
+                    value = inputText,
+                    onValueChange = {
+                        inputText = it
+                        notFound = false
+                        suggestions = VerbRepository.getSuggestions(context, it)
+                    },
+                    placeholder = { Text("Verb eingeben (z.B. gehen)", color = Color.Gray) },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                    shape = RoundedCornerShape(14.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF5856D6),
+                        unfocusedBorderColor = Color.White.copy(alpha = 0.15f),
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White
+                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = {
+                        result = VerbRepository.searchVerb(context, inputText)
+                        notFound = result == null
+                        suggestions = emptyList()
+                    })
+                )
+                Button(
+                    onClick = {
+                        result = VerbRepository.searchVerb(context, inputText)
+                        notFound = result == null
+                        suggestions = emptyList()
+                    },
+                    enabled = inputText.isNotBlank(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5856D6))
                 ) {
-                    TextField(
-                        value = verbInput,
-                        onValueChange = { verbInput = it },
-                        modifier = Modifier.weight(1f),
-                        placeholder = { Text("Verb eingeben (z.B. gehen)", color = Color.Gray) },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        ),
-                        singleLine = true
-                    )
-                    Button(
-                        onClick = {
-                            if (verbInput.isBlank()) return@Button
-                            scope.launch {
-                                apiResult = ApiResult.Loading
-                                apiResult = ApiRepository.conjugateVerb(verbInput)
-                                isFirstLoad = false
-                            }
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5856D6))
-                    ) {
-                        Text("Konjugieren")
+                    Text("Konjugieren")
+                }
+            }
+
+            // Autocomplete suggestions
+            if (suggestions.isNotEmpty()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1E)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column {
+                        suggestions.forEach { suggestion ->
+                            Text(
+                                text = suggestion,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        inputText = suggestion
+                                        result = VerbRepository.searchVerb(context, suggestion)
+                                        notFound = result == null
+                                        suggestions = emptyList()
+                                    }
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                            )
+                        }
                     }
                 }
             }
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // Result Display
-            when (val res = apiResult) {
-                is ApiResult.Loading -> {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CircularProgressIndicator(color = Color(0xFF5856D6))
-                        Spacer(Modifier.height(16.dp))
-                        if (isFirstLoad) {
-                            Card(
-                                modifier = Modifier.padding(horizontal = 20.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(containerColor = Color(0xFF5856D6).copy(alpha = 0.1f))
-                            ) {
-                                Text(
-                                    "🔄 Server startet… bitte ~30 Sekunden warten",
-                                    modifier = Modifier.padding(16.dp),
-                                    color = Color(0xFF8E8CE1),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                        }
+            // Results
+            when {
+                result != null -> {
+                    ConjugationDisplay(result!!)
+                }
+                notFound -> {
+                    Box(modifier = Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) {
+                        Text(
+                            "\"$inputText\" nicht gefunden.\nVersuche: gehen, machen, kommen, sein, haben",
+                            color = Color(0xFFFF6B6B),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
-                is ApiResult.Success -> {
-                    ConjugationTabs(res.data)
-                }
-                is ApiResult.Error -> {
-                    com.deutschb1.ui.components.ApiErrorCard(res.message, onRetry = {
-                        scope.launch {
-                            apiResult = ApiResult.Loading
-                            apiResult = ApiRepository.conjugateVerb(verbInput)
+                else -> {
+                    // Initial empty state
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1E).copy(alpha = 0.4f))
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("⚡", fontSize = 48.sp)
+                            Spacer(Modifier.height(12.dp))
+                            Text("Verb oben eingeben", style = MaterialTheme.typography.titleMedium, color = Color.White)
+                            Text("z.B. gehen, machen, sein, haben, werden", style = MaterialTheme.typography.bodySmall, color = Color.Gray, textAlign = TextAlign.Center)
                         }
-                    })
-                }
-                null -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("Geben Sie oben ein Verb ein, um zu beginnen", color = Color.Gray)
                     }
                 }
             }
@@ -164,10 +191,11 @@ fun VerbConjugationScreen(navController: NavController) {
 }
 
 @Composable
-fun ConjugationTabs(conjugation: VerbConjugation) {
+fun ConjugationDisplay(verb: VerbConjugation) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    val tenses = listOf("Präsens", "Präteritum", "Perfekt", "Konjunktiv II", "Imperativ")
-    
+    val tenses = listOf("Präsens", "Präteritum", "Perfekt", "Konj. II", "Imperativ")
+    val tenseMaps = listOf(verb.praesens, verb.praeteritum, verb.perfekt, verb.konjunktiv2, verb.imperativ)
+
     Column(modifier = Modifier.fillMaxSize()) {
         // Verb Header
         Card(
@@ -191,20 +219,20 @@ fun ConjugationTabs(conjugation: VerbConjugation) {
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text(
-                        conjugation.verb.replaceFirstChar { it.uppercase() },
+                        verb.infinitiv.replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Surface(
-                        color = Color.White.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(6.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (verb.auxiliary == "sein") Color(0xFF0A84FF).copy(alpha=0.2f) else Color(0xFF30D158).copy(alpha=0.2f)
                     ) {
                         Text(
-                            "Hilfsverb: ${conjugation.auxiliary}",
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                            color = Color.LightGray,
-                            fontSize = 12.sp
+                            "+ ${verb.auxiliary}",
+                            modifier = Modifier.padding(horizontal=8.dp, vertical=2.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = if (verb.auxiliary == "sein") Color(0xFF0A84FF) else Color(0xFF30D158)
                         )
                     }
                 }
@@ -230,59 +258,49 @@ fun ConjugationTabs(conjugation: VerbConjugation) {
                 Tab(
                     selected = selectedTab == index,
                     onClick = { selectedTab = index },
-                    text = { Text(title) }
+                    text = { Text(title, fontSize = 13.sp) }
                 )
             }
         }
 
         Spacer(Modifier.height(16.dp))
 
-        val currentForms = when (selectedTab) {
-            0 -> conjugation.praesens
-            1 -> conjugation.praeteritum
-            2 -> conjugation.perfekt
-            3 -> conjugation.konjunktiv2
-            else -> conjugation.imperativ
-        }
-
-        ConjugationTable(currentForms)
-    }
-}
-
-@Composable
-fun ConjugationTable(forms: Map<String, String>) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f))
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(20.dp)
-                .verticalScroll(rememberScrollState())
+        val currentMap = tenseMaps[selectedTab]
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f))
         ) {
-            forms.forEach { (pronoun, form) ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        pronoun,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Text(
-                        form,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(2f)
-                    )
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                currentMap.entries.forEachIndexed { index, (person, form) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            person,
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.45f)
+                        )
+                        Text(
+                            form,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                            modifier = Modifier.weight(0.55f)
+                        )
+                    }
+                    if (index < currentMap.size - 1)
+                        HorizontalDivider(color = Color.White.copy(alpha = 0.07f))
                 }
-                HorizontalDivider(color = Color.White.copy(alpha = 0.05f))
             }
         }
+        Spacer(Modifier.height(100.dp))
     }
 }

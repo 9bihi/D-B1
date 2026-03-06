@@ -1,125 +1,98 @@
 # Task List - Deutsch B1 Exam
-## Version 2.1 — API Overhaul + Integration Sprint
+## Version 2.2
 
 ---
 
 ## 🚨 ACTIVE TASK
-> **API Overhaul** — Fix all 3 broken API tools (Dictionary, Verb Conjugation, Translation) before any other new feature work.
+> **Fix 2 confirmed live bugs**: (1) Provider icon broken on skill selector screen. (2) All 3 API tools failing. Do these before any other work.
 
 ---
 
-## 🔴 Phase 0 — API Overhaul (CURRENT — Do Before Everything Else)
+## 🔴 Phase 0 — CURRENT: Icon Fix + API Rewrite
 
-### RetrofitClient.kt
-- [ ] **[API-0.0a]** Add OkHttp `Cache(100 MB)` to `RetrofitClient`
-- [ ] **[API-0.0b]** Add `HttpLoggingInterceptor` (BASIC level) for debugging
-- [ ] **[API-0.0c]** Configure Retrofit to support absolute `@Url` annotations for multi-base-URL calls
+### A. Provider Icon Fix (Quick win — do this first, ~30 min)
+- [ ] **[ICON-A1]** Open `ExamProviderListScreen.kt` — identify exact drawable names and method used to render provider icons (`painterResource(R.drawable.ic_goethe)` etc.)
+- [ ] **[ICON-A2]** Add `fun ExamProvider.toIconRes(): Int` extension mapping each provider to its drawable
+- [ ] **[ICON-A3]** Add `fun ExamProvider.toBrandColor(): Color` extension (Goethe=`#00A550`, ÖSD=`#0070C0`, TELC=`#E2001A`)
+- [ ] **[ICON-A4]** In `ProviderSkillSelectorScreen.kt`, find the provider header card and replace broken icon with `Image(painter = painterResource(provider.toIconRes()), ...)`
+- [ ] **[ICON-A5]** Wrap icon in `Box` with `background(provider.toBrandColor())` and `clip(RoundedCornerShape(14.dp))`
+- [ ] **[ICON-A6]** Test: tap all 3 providers — all show correct logo and brand color
 
-### New Data Models
-- [ ] **[API-0.1a]** Create `WiktionaryDefinition` + `WiktEntry` data classes
-- [ ] **[API-0.1b]** Create `VerbConjugation` data class (verb, auxiliary, tense maps)
-- [ ] **[API-0.1c]** Create `MyMemoryResponse` + `LibreTranslateRequest/Response` data classes
-- [ ] **[API-0.1d]** Create `TranslationLangPair` data class for the UI selector
+### B. Translation Fix — Google Translate gtx via raw OkHttp
+- [ ] **[TRANS-B1]** Add `private val httpClient = OkHttpClient.Builder().connectTimeout(15s).readTimeout(15s).build()` to `ApiRepository`
+- [ ] **[TRANS-B2]** Add `suspend fun translate(text, sourceLang, targetLang): ApiResult<String>` using raw OkHttp
+  - URL: `https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={tgt}&dt=t&q={encoded}`
+  - Parse: `JSONArray(body)[0]` → iterate segments → concatenate `[i][0]`
+- [ ] **[TRANS-B3]** Add `data class LangPair(label, source, target, emoji)` and list of 5 pairs
+- [ ] **[TRANS-B4]** Update `TranslationScreen.kt`:
+  - [ ] Add `LazyRow` of `FilterChip`s for language pair selection
+  - [ ] Input `TextField` multiline + `"${text.length}/300"` counter
+  - [ ] "Übersetzen" `Button` (disabled when blank)
+  - [ ] `ApiResult` states: Loading shimmer | Success card with copy button | Error card with retry
+  - [ ] `ContentCopy` `IconButton` → `ClipboardManager.setText()` + Toast "Kopiert!"
+- [ ] **[TRANS-B5]** Test de→en: "Guten Morgen" → "Good Morning". Test de→ar. Test airplane mode → error card.
 
-### ApiRepository.kt — Replace All Broken Calls
-- [ ] **[API-0.2a]** Remove Google Books Dictionary call entirely
-- [ ] **[API-0.2b]** Add `suspend fun lookupWord(word: String): ApiResult<WiktionaryDefinition>`
-  - `GET https://en.wiktionary.org/api/rest_v1/page/definition/{word}`
-  - Parse `de[]` key from response
-  - Return `ApiResult.Error("Kein Eintrag gefunden")` if `de` key absent
-- [ ] **[API-0.2c]** Add `fun sanitizeVerbForApi(verb: String): String` (umlaut → ascii)
-- [ ] **[API-0.2d]** Add `suspend fun conjugateVerb(verb: String): ApiResult<VerbConjugation>`
-  - Sanitize verb first
-  - `GET https://german-verbs-api.onrender.com/german-verbs-api/{verb}`
-  - Handle 404 (verb not found) and timeout (cold start) gracefully
-- [ ] **[API-0.2e]** Update `suspend fun translate(text, langpair): ApiResult<String>`
-  - PRIMARY: `GET https://api.mymemory.translated.net/get?q={text}&langpair={pair}`
-  - Check `responseStatus`: 200=success, 403=quota exceeded → trigger fallback
-  - FALLBACK: `POST https://libretranslate.com/translate` with empty `api_key`
-  - Expose `langpair` parameter (de|en, en|de, de|ar, de|fr, de|tr)
+### C. Verb Conjugation Fix — Fully Offline JSON
+- [ ] **[VERB-C1]** Create directory `app/src/main/assets/verbs/`
+- [ ] **[VERB-C2]** Create `conjugations.json` with **all 200 B1 verbs** (schema defined in implementation-plan.md). Must include at minimum: sein, haben, werden, können, müssen, wollen, sollen, dürfen, mögen, gehen, kommen, machen, sagen, wissen, sehen, sprechen, arbeiten, lernen, fahren, wohnen, kaufen, lesen, schreiben, hören, verstehen, denken, glauben, finden, zeigen, brauchen, helfen, geben, nehmen, bringen, stellen, legen, setzen, fragen, antworten, erklären, besuchen, reisen, warten, bleiben, heißen, leben, kennen, laufen, schlafen, essen, trinken, kochen, spielen, studieren, bezahlen, öffnen, schließen, anfangen, aufhören, einladen, empfehlen, vergessen, erinnern, passieren, gefallen, interessieren, entscheiden, versuchen, schaffen, erreichen + 130 more
+- [ ] **[VERB-C3]** Create `data/VerbRepository.kt` with `loadVerbs(context)`, `searchVerb(context, query)`, `getSuggestions(context, prefix)`
+- [ ] **[VERB-C4]** Create/update `VerbConjugationScreen.kt`:
+  - [ ] TextField + "Konjugieren" button
+  - [ ] Autocomplete suggestions dropdown (prefix match, 8 results max)
+  - [ ] Initial empty state card with usage hint
+  - [ ] Success: verb title + auxiliary badge + `ScrollableTabRow` (5 tenses) + conjugation table (6 rows)
+  - [ ] Not-found state: helpful error with example verbs
+- [ ] **[VERB-C5]** Ensure `Screen.VerbConjugation` is registered in `AppNavGraph.kt`
+- [ ] **[VERB-C6]** Ensure "Verb Conjugation" card on API Tools screen navigates to `Screen.VerbConjugation`
+- [ ] **[VERB-C7]** Test: "gehen" → all tenses correct. "müssen" → works (umlaut in infinitiv). "xyz" → not-found message. App offline → still works.
 
-### Dictionary Screen (`ui/translation/DictionaryScreen.kt`)
-- [ ] **[API-0.3a]** Download `German-Words-5000.json` → commit to `assets/dictionary/words_5000.json`
-- [ ] **[API-0.3b]** Add **Browse tab**: load JSON via `AssetLoader`, searchable `LazyColumn` A–Z
-- [ ] **[API-0.3c]** Add **Lookup tab**: text field → Wiktionary API → render `WiktEntry` list
-- [ ] **[API-0.3d]** Show `partOfSpeech` chip (Verb / Nomen / Adjektiv) on each entry
-- [ ] **[API-0.3e]** Show example sentences below each definition (collapsible)
-- [ ] **[API-0.3f]** Add 🔖 Bookmark IconButton → `SavedWordDao.insert()`
-- [ ] **[API-0.3g]** Add shimmer loading state + "Kein Eintrag gefunden" empty state
-
-### Verb Conjugation Screen (`ui/translation/VerbConjugationScreen.kt`) — NEW
-- [ ] **[API-0.4a]** Create `VerbConjugationScreen.kt` composable
-- [ ] **[API-0.4b]** TextField for verb input + "Konjugieren" button
-- [ ] **[API-0.4c]** Show cold-start warning card: *"Server startet… (~30 Sekunden)"* during first load
-- [ ] **[API-0.4d]** Shimmer loading skeleton while API is responding
-- [ ] **[API-0.4e]** Tense `TabRow`: Präsens | Präteritum | Perfekt | Konjunktiv II | Imperativ
-- [ ] **[API-0.4f]** Each tab: 6-row conjugation table (Person | Form), Glass card styled
-- [ ] **[API-0.4g]** Show auxiliary info badge ("sein" or "haben") next to verb title
-- [ ] **[API-0.4h]** Error card for verb not found + Retry button
-- [ ] **[API-0.4i]** Register `Screen.VerbConjugation` in `AppNavGraph.kt`
-- [ ] **[API-0.4j]** Wire "Verb Conjugation" card on API Tools screen → `Screen.VerbConjugation`
-
-### Translation Screen (`ui/translation/TranslationScreen.kt`)
-- [ ] **[API-0.5a]** Add `LanguagePairSelector` dropdown with 5 pairs (de↔en, en↔de, de↔ar, de↔fr, de↔tr)
-- [ ] **[API-0.5b]** Replace old LibreTranslate-only call with MyMemory primary + LibreTranslate fallback
-- [ ] **[API-0.5c]** Show "Daily limit reached, using backup..." message on 403 fallback
-- [ ] **[API-0.5d]** Add 📋 `ContentCopy` IconButton → `ClipboardManager` + Toast *"Kopiert!"*
-- [ ] **[API-0.5e]** Add shimmer loading state
-- [ ] **[API-0.5f]** Add character count indicator below input field
-- [ ] **[API-0.5g]** Add `ErrorStateCard` with Retry button on network failure
+### D. Dictionary Fix — Offline Browse + DictionaryAPI.dev
+- [ ] **[DICT-D1]** Download `German-Words-5000.json` from GitHub raw URL, save to `assets/dictionary/words_5000.json`
+- [ ] **[DICT-D2]** Add `suspend fun lookupWord(word: String): ApiResult<List<DictApiEntry>>` to `ApiRepository` using raw OkHttp
+  - URL: `https://api.dictionaryapi.dev/api/v2/entries/de/{word}`
+  - Handle 404 gracefully: return `ApiResult.Error("Kein Eintrag gefunden")`
+- [ ] **[DICT-D3]** Create `DictApiEntry`, `DictMeaning`, `DictDefinition` data classes
+- [ ] **[DICT-D4]** Update `DictionaryScreen.kt`:
+  - [ ] Tab 0 (Wörterbuch): load words_5000.json on `LaunchedEffect(Unit)`, show in `LazyColumn`, search TextField filters in memory
+  - [ ] Tapping a word in Browse tab → switch to Tab 1 and auto-search that word
+  - [ ] Tab 1 (Nachschlagen): TextField + Suchen button + `ApiResult` states (shimmer/entries/error)
+  - [ ] Each entry: `partOfSpeech` chip + definition text + example sentence (italic, if available)
+  - [ ] 🔖 bookmark icon on each entry card
+- [ ] **[DICT-D5]** Test: Browse tab loads with no network. Search "Buch" in browse → filters. Lookup "machen" → definitions shown. Lookup "Abbaumaschinen" → graceful 404 message.
 
 ---
 
-## 🔴 Phase 1 — Critical Bug Fixes
+## 🔴 Phase 1 — Critical Content Bugs
 
-- [ ] **[FIX-1.1a–e]** Populate all 4 skills for GoetheExam2 and OesdExam2
-- [ ] **[FIX-1.2a–c]** Create `ResultSummaryScreen.kt` + wire at end of Lesen/Hoeren + register route
-- [ ] **[FIX-1.3a–e]** `ApiResult<T>` sealed class across all API calls (partially done in Phase 0)
-- [ ] **[FIX-1.4a–b]** Copy-to-clipboard in Translator (done in API-0.5d above)
-
----
-
-## 🟡 Phase 2 — Persistence Layer (Room DB)
-
-- [ ] **[DB-2.1a–e]** Room setup: entities, DAOs, AppDatabase, DatabaseProvider
-- [ ] **[DB-2.2a–b]** Completion badges on ModelltestSelectorScreen
+- [ ] **[FIX-1.1]** Populate all 4 skills for GoetheExam2 and OesdExam2 in `ExamData.kt`
+- [ ] **[FIX-1.2]** Create `ResultSummaryScreen.kt` and wire at end of Lesen/Hoeren screens
+- [ ] **[FIX-1.3]** Ensure `ApiResult<T>` sealed class is applied to all remaining network calls
 
 ---
+
+## 🟡 Phase 2 — Room DB Persistence
+- [ ] Room setup: entities, DAOs, AppDatabase, DatabaseProvider
+- [ ] Completion badges on ModelltestSelectorScreen
 
 ## 🟠 Phase 3 — Audio / ExoPlayer
+- [ ] ExoPlayer in HoerenScreen + AudioPlayerBar + mp3 assets
 
-- [ ] **[AUDIO-3.1a–f]** ExoPlayer in HoerenScreen + AudioPlayerBar composable + mp3 assets
-
----
-
-## 🟢 Phase 4 — External Repo Integrations (New Modules)
-
-- [ ] **[INT-4.1a–e]** WordVault Flashcards (saqibroy/deutsch-b1-vokab + greyels/deutsch-b1-prep)
-- [ ] **[INT-4.2a–f]** Geschichten Module (MohammedDrissi/Deutsche-Geschichten-zum-Lesen)
-- [ ] **[INT-4.3a–e]** Grammar Drill (MohammedDrissi/Grammar-mit-mir)
-- [ ] **[INT-4.4a–f]** Word Vault Bookmarks (MohammedDrissi/WordVault-Vocabulary-Builder)
-- [ ] **[INT-4.5a–e]** Spiele / Games (deutschimalltag22-hash/sprachspiel-b1)
-- [ ] **[INT-4.6a–c]** Thematic phrase enrichment (yunus-topal/Deutsch-Lernen)
-- [ ] **[INT-4.7a–d]** Progress Dashboard (saqibroy/German-b1-learning-tracker)
-
----
+## 🟢 Phase 4 — External Repo Integrations
+- [ ] Flashcards, Geschichten, Grammar Drill, WordVault, Spiele, LearnData enrichment, Progress Dashboard
 
 ## 🔵 Phase 5 — Polish
-
-- [ ] **[POLISH-5.1]** ShimmerEffect composable for all API screens (partially done in Phase 0)
-- [ ] **[POLISH-5.2]** TELC Modelltest 1 content (Lesen + Schreiben)
-- [ ] **[POLISH-5.3]** Extract all hardcoded strings to `strings.xml`
-- [ ] **[POLISH-5.4]** Dark theme variant toggle (Full Black / Deep Grey) via DataStore
+- [ ] Shimmer refinement, TELC content, strings.xml, theme toggle
 
 ---
 
-## ✅ Completed Tasks
-- [x] Project structure, navigation (`AppNavGraph`, `Screen` sealed class)
-- [x] Glassmorphism theme + custom `FloatingGlassNavBar`
-- [x] `ApiRepository` initial setup (Retrofit + OkHttp)
-- [x] Goethe Modelltest 1 — all 4 skills
-- [x] ÖSD Modelltest 1 — all 4 skills
-- [x] Learn module — Grammar + Vocabulary categories
-- [x] Memory Bank v2.1 documentation
-- [x] Map 8 external GitHub repos to integration targets
-- [x] Identify and document 3 verified free replacement APIs
+## ✅ Completed
+- [x] Project structure, NavGraph, Screen sealed class
+- [x] Glassmorphism theme + FloatingGlassNavBar
+- [x] Goethe + ÖSD Modelltest 1 — all 4 skills
+- [x] Learn module base (Grammar + Vocab categories)
+- [x] ApiResult<T> sealed class established
+- [x] Error cards + shimmer UI components built
+- [x] TranslationScreen UI structure (langpair selector, copy button, char counter)
+- [x] VerbConjugationScreen UI structure (tense tabs, conjugation table)
+- [x] DictionaryScreen UI structure (browse + lookup tabs)
+- [x] Memory Bank v2.2 updated
