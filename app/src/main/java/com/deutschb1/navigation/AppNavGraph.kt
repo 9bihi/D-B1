@@ -21,7 +21,8 @@ import com.deutschb1.ui.exams.ExamsHomeScreen
 import com.deutschb1.ui.learn.LearnHomeScreen
 import com.deutschb1.ui.learn.CategoryDetailScreen
 import com.deutschb1.ui.learn.ThemePhraseListScreen
-import com.deutschb1.ui.learn.ApiListScreen
+import com.deutschb1.ui.translation.DictionaryScreen
+import com.deutschb1.ui.translation.VerbConjugationScreen
 import com.deutschb1.ui.translation.TranslationScreen
 import com.deutschb1.ui.exam.ResultSummaryScreen
 import com.deutschb1.ui.exam.LastResultsProvider
@@ -68,9 +69,8 @@ sealed class Screen(val route: String) {
     object LearnTheme : Screen("learn/theme/{themeIndex}") {
         fun createRoute(index: Int) = "learn/theme/$index"
     }
-    object ApiTools : Screen("learn/api/{type}") {
-        fun createRoute(type: String) = "learn/api/$type"
-    }
+    object OnlineDictionary : Screen("learn/dictionary")
+    object VerbConjugation : Screen("learn/verbs")
     object FlashcardDecks : Screen("learn/flashcards")
     object FlashcardStudy : Screen("learn/flashcards/{deckId}") {
         fun createRoute(deckId: String) = "learn/flashcards/$deckId"
@@ -208,9 +208,11 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 ThemePhraseListScreen(content = content, navController = navController)
             }
         }
-        composable(Screen.ApiTools.route) { backStackEntry ->
-            val type = backStackEntry.arguments?.getString("type") ?: "dictionary"
-            ApiListScreen(navController = navController, type = type)
+        composable(Screen.OnlineDictionary.route) {
+            DictionaryScreen(navController = navController)
+        }
+        composable(Screen.VerbConjugation.route) {
+            VerbConjugationScreen(navController = navController)
         }
         composable(Screen.FlashcardDecks.route) {
             FlashcardDeckScreen(navController = navController)

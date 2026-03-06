@@ -33,8 +33,9 @@ Single-activity Android app built entirely in Jetpack Compose. Uses a modern mod
               |       |       +-- [Spiele (Games)] (Word Match, Fill-in-the-Blank)
               |       |       +-- [WordVaultScreen] (Personal saved dictionary)
               |       |
-              |       +-- [TranslationScreen] (LibreTranslate + Shimmer loading)
-              |       +-- [DictionaryScreen] (Deep integration with Word Vault)
+              |       +-- [TranslationScreen] (Multi-engine with fallback)
+              |       +-- [DictionaryScreen] (Browse 5000 words + definitions)
+              |       +-- [VerbConjugationScreen] (Full tense analysis)
               |
               +-- [FloatingGlassNavBar] (Custom Pill-shaped Bottom Bar)
 ```

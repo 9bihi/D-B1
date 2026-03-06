@@ -16,7 +16,7 @@ Foundation is stable. Now entering a major content + feature expansion phase dri
   - [x] Skill selection: Lesen, Hören, Schreiben, Sprechen
   - [x] Goethe Modelltest 1 & 2 — all 4 skills with full content
   - [x] ÖSD Modelltest 1 & 2 — all 4 skills with full content
-  - [x] TELC Modelltest 1 — Full content integrated
+  - [x] TELC Modelltest 1 & 2 — Full content integrated
   - [x] Interactive MC + True/False question UI
 - [x] **Learn Module**: Grammar + Vocabulary categories with thematic phrase lists
 - [x] **Geschichten (Stories)**: Immersive reading with one-tap word hints & comprehension quizzes
@@ -38,7 +38,7 @@ Foundation is stable. Now entering a major content + feature expansion phase dri
 | No Result Summary Screen | ✅ Fixed |
 | Silent API failures (crash/blank) | ✅ Fixed |
 | No Copy button in Translator | ✅ Fixed |
-| Screen.Translation missing & ExamData property mismatches | ✅ Fixed |
+| Screen.Translation, OnlineDictionary, VerbConjugation wired | ✅ Fixed |
 | Dashboard 'timestamp' vs 'completedAt' mismatch | ✅ Fixed |
 | GeschichteReader/WordVault compilation errors | ✅ Fixed |
 

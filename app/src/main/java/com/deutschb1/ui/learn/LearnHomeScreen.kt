@@ -191,17 +191,17 @@ fun LearnHomeScreen(navController: NavController) {
                 title = "Online Dictionary",
                 subtitle = "Browse 5,000 German B1 words",
                 gradient = listOf(Color(0xFF4ECDC4), Color(0xFF44A08D)),
-                onClick = { navController.navigate(Screen.ApiTools.createRoute("dictionary")) }
+                onClick = { navController.navigate(Screen.OnlineDictionary.route) }
             )
             Spacer(Modifier.height(10.dp))
-
+            
             // Verb Conjugation card
             ApiToolCard(
                 emoji = "⚡",
                 title = "Verb Conjugation",
                 subtitle = "8,000 verbs · All tenses",
                 gradient = listOf(Color(0xFF5856D6), Color(0xFF8E8CE1)),
-                onClick = { navController.navigate(Screen.ApiTools.createRoute("verbs")) }
+                onClick = { navController.navigate(Screen.VerbConjugation.route) }
             )
         }
     }

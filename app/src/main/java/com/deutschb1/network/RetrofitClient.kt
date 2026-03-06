@@ -1,50 +1,42 @@
 package com.deutschb1.network
 
+import com.deutschb1.BuildConfig
+import com.deutschb1.DeutschB1Application
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
+    private val context = DeutschB1Application.getContext()
+
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BASIC else HttpLoggingInterceptor.Level.NONE
     }
+
+    private val cache = Cache(File(context.cacheDir, "http_cache"), 100L * 1024 * 1024) // 100 MB
 
     val httpClient: OkHttpClient = OkHttpClient.Builder()
+        .cache(cache)
         .addInterceptor(loggingInterceptor)
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(20, TimeUnit.SECONDS)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    /** German Verb Conjugation API — https://german-verbs-api.onrender.com */
-    val verbApi: VerbApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://german-verbs-api.onrender.com/")
-            .client(httpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(VerbApiService::class.java)
-    }
-
-    /**
-     * LibreTranslate — free, no API key required.
-     * Using translate.argosopentech.com as the public free mirror.
-     * Fallback mirrors (in case this is down):
-     *   https://libretranslate.de/  (often rate-limited)
-     *   https://translate.terraprint.co/
+    /** 
+     * Centralized API service using @Url on endpoints.
+     * The base URL is just a placeholder because all methods use absolute URLs via @Url.
      */
-    val translateApi: TranslateApiService by lazy {
+    val api: GermanApiService by lazy {
         Retrofit.Builder()
-            .baseUrl("https://translate.argosopentech.com/")
+            .baseUrl("https://localhost/") // Placeholder
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(TranslateApiService::class.java)
+            .create(GermanApiService::class.java)
     }
-
-    // Note: DictionaryApiService has been removed from Retrofit because Gson cannot
-    // deserialize List<T> through Retrofit's reflection proxy without a TypeToken.
-    // Dictionary lookups now use raw OkHttp calls in ApiRepository.fetchWordDefinition().
 }

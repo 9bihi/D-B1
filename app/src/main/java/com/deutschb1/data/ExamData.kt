@@ -1101,8 +1101,73 @@ val telcExam1 = ExamContent(
     )
 )
 
+val telcExam2 = ExamContent(
+    id = "telc_2",
+    provider = ExamProvider.TELC,
+    name = "Modelltest 2",
+    lesenParts = listOf(
+        ReadingPart(
+            partNumber = 1,
+            title = "Teil 1 – Wohnen und Umwelt",
+            instruction = "Welche Überschrift passt?",
+            text = """
+                Text 1: Solarstrom wird immer günstiger. Viele Hausbesitzer installieren Photovoltaik-Anlagen auf ihren Dächern, um Stromkosten zu sparen und die Umwelt zu schonen.
+                Text 2: Die Mieten in Großstädten steigen weiter. Besonders junge Familien finden kaum noch bezahlbaren Wohnraum in zentrumsnahen Vierteln.
+                Text 3: Urban Gardening ist im Trend. Bewohner von Großstädten pflanzen Gemüse und Kräuter in Kisten auf ihren Balkonen oder in Gemeinschaftsgärten.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(1, "Text 1 thematisiert...", listOf("Solarenergie privat nutzen", "Neue Fenster einbauen", "Strom sparen im Haushalt"), 0),
+                MultipleChoiceQuestion(2, "Text 2 beschreibt...", listOf("Wohnungsnot in Städten", "Hausbau auf dem Land", "Umzugstipps für Familien"), 0),
+                MultipleChoiceQuestion(3, "Text 3 handelt von...", listOf("Gärtnern in der Stadt", "Kochen mit Kräutern", "Urlaub auf dem Bauernhof"), 0)
+            )
+        )
+    ),
+    hoerenParts = listOf(
+        HoerenPart(
+            partNumber = 1,
+            title = "Teil 1 – Nachrichten",
+            instruction = "Was ist richtig?",
+            transcript = """
+                Meldung 1: Morgen gibt es im ganzen Land viel Sonnenschein und Temperaturen bis zu 25 Grad. Erst am Abend ziehen Gewitter auf.
+                Meldung 2: Der Streik am Flughafen Frankfurt wurde beendet. Ab sofort starten und landen die Flugzeuge wieder planmäßig.
+                Meldung 3: Die Autobahn A8 ist nach einem Unfall gesperrt. Reisende Richtung Stuttgart müssen mit langen Staus rechnen.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(1, "Wie wird das Wetter morgen?", listOf("Regnerisch", "Sonnig und warm", "Kalt und windig"), 1),
+                MultipleChoiceQuestion(2, "Am Flughafen Frankfurt...", listOf("wird weiter gestreikt", "gibt es keine Flüge mehr", "läuft alles wieder normal"), 2)
+            )
+        )
+    ),
+    schreibenTasks = listOf(
+        SchreibenTask(
+            taskNumber = 1,
+            title = "Teil 1 – Bewerbung um ein Praktikum",
+            prompt = """
+                Sie haben eine Anzeige für ein Praktikum im Hotel 'Sonnenblick' gesehen. 
+                Schreiben Sie eine E-Mail an die Personalabteilung:
+                • Warum interessieren Sie sich für das Praktikum?
+                • Welche Kenntnisse bringen Sie mit?
+                • Wann haben Sie Zeit?
+            """.trimIndent(),
+            minWords = 80,
+            hints = listOf("Formelle Anrede", "Berufserfahrung erwähnen", "Höfliche Verabschiedung")
+        )
+    ),
+    sprechenTasks = listOf(
+        SprechenTask(
+            taskNumber = 1,
+            title = "Teil 1 – Über Erfahrungen sprechen",
+            instruction = "Erzählen Sie Ihrem Partner von Ihrer letzten Reise.",
+            topic = "Wohin sind Sie gereist? Was haben Sie erlebt? Was war das Highlight?",
+            prepTimeSec = 60,
+            speakTimeSec = 120,
+            tips = listOf("Vergangenheit benutzen", "Emotionen einbauen")
+        )
+    )
+)
+
 val allExams: Map<ExamProvider, List<ExamContent>> = mapOf(
     ExamProvider.GOETHE to listOf(GoetheExam1, GoetheExam2),
     ExamProvider.OESD to listOf(OesdExam1, OesdExam2),
-    ExamProvider.TELC to listOf(telcExam1)
+    ExamProvider.TELC to listOf(telcExam1, telcExam2)
 )
