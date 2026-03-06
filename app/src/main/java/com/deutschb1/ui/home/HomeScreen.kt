@@ -29,6 +29,8 @@ import com.deutschb1.R
 import com.deutschb1.data.ExamProvider
 import com.deutschb1.navigation.Screen
 import com.deutschb1.ui.theme.*
+import com.deutschb1.data.db.DatabaseProvider
+import androidx.compose.ui.platform.LocalContext
 
 data class CategoryCard(
     val title: String,
@@ -101,8 +103,8 @@ fun HomeScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Tip card (glass style)
-        TipCard()
+        // Dashboard (glass style)
+        DashboardCard()
 
         Spacer(modifier = Modifier.height(28.dp))
 
@@ -124,14 +126,23 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun TipCard() {
+fun DashboardCard() {
+    val context = LocalContext.current
+    val results by DatabaseProvider.getResultDao(context).getAllResults().collectAsState(initial = emptyList())
+    
+    val distinctDays = results.map { 
+        val cal = java.util.Calendar.getInstance()
+        cal.timeInMillis = it.completedAt
+        "${cal.get(java.util.Calendar.YEAR)}-${cal.get(java.util.Calendar.DAY_OF_YEAR)}"
+    }.distinct().size
+
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF1C1C1E).copy(alpha = 0.65f)
         ),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Box(
             modifier = Modifier
@@ -139,26 +150,54 @@ fun TipCard() {
                 .border(
                     width = 1.dp,
                     color = Color.White.copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(20.dp)
                 )
         ) {
             Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("💡", fontSize = 24.sp)
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("🔥", fontSize = 20.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            "Lern-Streak",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                     Text(
-                        "Tipp des Tages",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontWeight = FontWeight.SemiBold
+                        "$distinctDays Tage gelernt",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
+                }
+                
+                VerticalDivider(
+                    modifier = Modifier.height(40.dp).padding(horizontal = 16.dp),
+                    color = Color.White.copy(alpha = 0.1f)
+                )
+
+                Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("✅", fontSize = 20.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            "Prüfungen",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                     Text(
-                        "Übe täglich 30 Minuten – Kontinuität schlägt Intensität!",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        "${results.size} Abgeschlossen",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = IosGreen
                     )
                 }
             }

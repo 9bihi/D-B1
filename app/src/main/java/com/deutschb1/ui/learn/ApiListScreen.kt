@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.ApiRepository
+import com.deutschb1.data.ApiResult
 import kotlinx.coroutines.launch
 
 enum class ApiScreenType { DICTIONARY, VERBS }
@@ -79,10 +80,11 @@ fun ApiListScreen(navController: NavController, type: String) {
             isLoading = true
             errorMessage = null
             val result = ApiRepository.fetchB1WordList()
-            result.fold(
-                onSuccess = { wordList = it },
-                onFailure = { errorMessage = "Could not load word list: ${it.localizedMessage}" }
-            )
+            when (result) {
+                is ApiResult.Success -> { wordList = result.data }
+                is ApiResult.Error -> { errorMessage = "Could not load word list: ${result.message}" }
+                else -> {}
+            }
             isLoading = false
         }
     }
@@ -142,10 +144,12 @@ fun ApiListScreen(navController: NavController, type: String) {
                                             errorMessage = null
                                             isLoading = true
                                             if (screenType == ApiScreenType.DICTIONARY) {
-                                                ApiRepository.fetchB1WordList().fold(
-                                                    onSuccess = { wordList = it },
-                                                    onFailure = { errorMessage = it.localizedMessage }
-                                                )
+                                                val res = ApiRepository.fetchB1WordList()
+                                                if (res is ApiResult.Success) {
+                                                    wordList = res.data
+                                                } else if (res is ApiResult.Error) {
+                                                    errorMessage = res.message
+                                                }
                                             }
                                             isLoading = false
                                         }
@@ -243,15 +247,24 @@ fun ApiListScreen(navController: NavController, type: String) {
                                     isLoadingDefinition = true
                                     // Step 1: translate German word to English
                                     val transResult = ApiRepository.translateText(word, "de", "en")
-                                    val englishWord = transResult.getOrNull()?.trim()?.lowercase()
-                                    translatedWord = transResult.getOrNull()
+                                    if (transResult is ApiResult.Success) {
+                                        val englishWord = transResult.data.trim().lowercase()
+                                        translatedWord = transResult.data
 
-                                    // Step 2: look up English definition
-                                    if (!englishWord.isNullOrBlank()) {
-                                        val defResult = ApiRepository.fetchWordDefinition(englishWord)
-                                        definitionText = defResult.getOrElse { "No definition found." }
-                                    } else {
-                                        definitionText = "Translation unavailable."
+                                        // Step 2: look up English definition
+                                        if (englishWord.isNotBlank()) {
+                                            val defResult = ApiRepository.fetchWordDefinition(englishWord)
+                                            definitionText = when (defResult) {
+                                                is ApiResult.Success -> defResult.data
+                                                is ApiResult.Error -> "Definition error: ${defResult.message}"
+                                                else -> "No definition found."
+                                            }
+                                        } else {
+                                            definitionText = "Definition unavailable."
+                                        }
+                                    } else if (transResult is ApiResult.Error) {
+                                        translatedWord = "Translation Error"
+                                        definitionText = transResult.message
                                     }
                                     isLoadingDefinition = false
                                 }
@@ -294,19 +307,19 @@ fun ApiListScreen(navController: NavController, type: String) {
                                         scope.launch {
                                             isLoadingConjugation = true
                                             val result = ApiRepository.fetchVerbConjugation(verb, code)
-                                            result.fold(
-                                                onSuccess = { v ->
-                                                    verbResult = buildMap {
-                                                        if (v.ich != null) put("ich", v.ich)
-                                                        if (v.du != null) put("du", v.du)
-                                                        if (v.er != null) put("er/sie/es", v.er)
-                                                        if (v.wir != null) put("wir", v.wir)
-                                                        if (v.ihr != null) put("ihr", v.ihr)
-                                                        if (v.sie != null) put("sie/Sie", v.sie)
-                                                    }
-                                                },
-                                                onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
-                                            )
+                                            if (result is ApiResult.Success) {
+                                                val v = result.data
+                                                verbResult = buildMap {
+                                                    if (v.ich != null) put("ich", v.ich)
+                                                    if (v.du != null) put("du", v.du)
+                                                    if (v.er != null) put("er/sie/es", v.er)
+                                                    if (v.wir != null) put("wir", v.wir)
+                                                    if (v.ihr != null) put("ihr", v.ihr)
+                                                    if (v.sie != null) put("sie/Sie", v.sie)
+                                                }
+                                            } else if (result is ApiResult.Error) {
+                                                errorMessage = "Error: ${result.message}"
+                                            }
                                             isLoadingConjugation = false
                                         }
                                     }
@@ -331,19 +344,19 @@ fun ApiListScreen(navController: NavController, type: String) {
                                         scope.launch {
                                             isLoadingConjugation = true
                                             val result = ApiRepository.fetchVerbConjugation(verb, code)
-                                            result.fold(
-                                                onSuccess = { v ->
-                                                    verbResult = buildMap {
-                                                        if (v.ich != null) put("ich", v.ich)
-                                                        if (v.du != null) put("du", v.du)
-                                                        if (v.er != null) put("er/sie/es", v.er)
-                                                        if (v.wir != null) put("wir", v.wir)
-                                                        if (v.ihr != null) put("ihr", v.ihr)
-                                                        if (v.sie != null) put("sie/Sie", v.sie)
-                                                    }
-                                                },
-                                                onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
-                                            )
+                                            if (result is ApiResult.Success) {
+                                                val v = result.data
+                                                verbResult = buildMap {
+                                                    if (v.ich != null) put("ich", v.ich)
+                                                    if (v.du != null) put("du", v.du)
+                                                    if (v.er != null) put("er/sie/es", v.er)
+                                                    if (v.wir != null) put("wir", v.wir)
+                                                    if (v.ihr != null) put("ihr", v.ihr)
+                                                    if (v.sie != null) put("sie/Sie", v.sie)
+                                                }
+                                            } else if (result is ApiResult.Error) {
+                                                errorMessage = "Error: ${result.message}"
+                                            }
                                             isLoadingConjugation = false
                                         }
                                     }
@@ -390,20 +403,20 @@ fun ApiListScreen(navController: NavController, type: String) {
                                                 isLoadingConjugation = true
                                                 errorMessage = null
                                                 val result = ApiRepository.fetchVerbConjugation(query, selectedTense)
-                                                result.fold(
-                                                    onSuccess = { v ->
-                                                        verbResult = buildMap {
-                                                            if (v.ich != null) put("ich", v.ich)
-                                                            if (v.du != null) put("du", v.du)
-                                                            if (v.er != null) put("er/sie/es", v.er)
-                                                            if (v.wir != null) put("wir", v.wir)
-                                                            if (v.ihr != null) put("ihr", v.ihr)
-                                                            if (v.sie != null) put("sie/Sie", v.sie)
-                                                        }
-                                                        if (verbResult.isEmpty()) errorMessage = "No conjugation found for \"$query\""
-                                                    },
-                                                    onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
-                                                )
+                                                if (result is ApiResult.Success) {
+                                                    val v = result.data
+                                                    verbResult = buildMap {
+                                                        if (v.ich != null) put("ich", v.ich)
+                                                        if (v.du != null) put("du", v.du)
+                                                        if (v.er != null) put("er/sie/es", v.er)
+                                                        if (v.wir != null) put("wir", v.wir)
+                                                        if (v.ihr != null) put("ihr", v.ihr)
+                                                        if (v.sie != null) put("sie/Sie", v.sie)
+                                                    }
+                                                    if (verbResult.isEmpty()) errorMessage = "No conjugation found for \"$query\""
+                                                } else if (result is ApiResult.Error) {
+                                                    errorMessage = "Error: ${result.message}"
+                                                }
                                                 isLoadingConjugation = false
                                             }
                                         }
@@ -473,20 +486,20 @@ fun ApiListScreen(navController: NavController, type: String) {
                                 isLoadingConjugation = true
                                 errorMessage = null
                                 val result = ApiRepository.fetchVerbConjugation(verb, selectedTense)
-                                result.fold(
-                                    onSuccess = { v ->
-                                        verbResult = buildMap {
-                                            if (v.ich != null) put("ich", v.ich)
-                                            if (v.du != null) put("du", v.du)
-                                            if (v.er != null) put("er/sie/es", v.er)
-                                            if (v.wir != null) put("wir", v.wir)
-                                            if (v.ihr != null) put("ihr", v.ihr)
-                                            if (v.sie != null) put("sie/Sie", v.sie)
-                                        }
-                                        if (verbResult.isEmpty()) errorMessage = "No conjugation found for \"$verb\""
-                                    },
-                                    onFailure = { errorMessage = "Error: ${it.localizedMessage}" }
-                                )
+                                if (result is ApiResult.Success) {
+                                    val v = result.data
+                                    verbResult = buildMap {
+                                        if (v.ich != null) put("ich", v.ich)
+                                        if (v.du != null) put("du", v.du)
+                                        if (v.er != null) put("er/sie/es", v.er)
+                                        if (v.wir != null) put("wir", v.wir)
+                                        if (v.ihr != null) put("ihr", v.ihr)
+                                        if (v.sie != null) put("sie/Sie", v.sie)
+                                    }
+                                    if (verbResult.isEmpty()) errorMessage = "No conjugation found for \"$verb\""
+                                } else if (result is ApiResult.Error) {
+                                    errorMessage = "Error: ${result.message}"
+                                }
                                 isLoadingConjugation = false
                             }
                         }

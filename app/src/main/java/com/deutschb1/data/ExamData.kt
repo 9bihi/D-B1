@@ -49,7 +49,8 @@ data class HoerenPart(
     val title: String,
     val instruction: String,
     val transcript: String,
-    val questions: List<MultipleChoiceQuestion>
+    val questions: List<MultipleChoiceQuestion>,
+    val audioAssetPath: String = ""
 )
 
 data class SchreibenTask(
@@ -340,11 +341,190 @@ val GoetheExam2 = ExamContent(
                 MultipleChoiceQuestion(2, "80% der Firmen sind zufriedener mit dem neuen Modell.", listOf("Richtig", "Falsch"), 0, "Text sagt: 80% berichten von höherer Zufriedenheit."),
                 MultipleChoiceQuestion(3, "Junge Fachkräfte finden die Vier-Tage-Woche unattraktiv.", listOf("Richtig", "Falsch"), 1, "Experten glauben, es ist ein wichtiges Argument für junge Fachkräfte.")
             )
+        ),
+        ReadingPart(
+            partNumber = 2,
+            title = "Teil 2 – Wohnungsmarkt",
+            instruction = "Welche Anzeige passt zu welcher Situation?",
+            text = """
+                Anzeige A: ZIMMER FREI
+                Helles 15qm Zimmer in Studenten-WG in Köln-Deutz ab sofort. 350€ warm. 
+                Wir suchen jemanden, der gerne zusammen kocht. kontakt@wg-deutz.de
+                
+                Anzeige B: FERIENWOHNUNG AN DER OSTSEE
+                Gemütliche Fewo für 4 Personen in Binz, ruhig gelegen, 5 Min. zum Strand. 
+                Ab 80€ pro Nacht. Haustiere erlaubt. www.ostsee-traum.de
+                
+                Anzeige C: GARAGE ZU VERMIETEN
+                Trockene Garage in Berlin-Steglitz, nähe U-Bahn. 100€ monatlich. 
+                Sofort frei. Tel: 030-987654
+                
+                Anzeige D: UMZUGSHELFer GESUCHT
+                Suche 3 kräftige Helfer für Umzug am Samstag, 20. April. 
+                15€/Std + Pizza. Bitte melden bei jan.mayer@web.de
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(4, "Lukas studiert in Köln und sucht eine günstige Bleibe.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 0, "Anzeige A ist ein WG-Zimmer in Köln für 350€."),
+                MultipleChoiceQuestion(5, "Familie Müller plant einen Sommerurlaub am Meer mit ihrem Hund.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 1, "Anzeige B bietet eine Ferienwohnung an der Ostsee, Haustiere erlaubt."),
+                MultipleChoiceQuestion(6, "Frau Schmidt wohnt in Steglitz und braucht einen Parkplatz für ihr neues Auto.", listOf("Anzeige A", "Anzeige B", "Anzeige C", "Anzeige D"), 2, "Anzeige C bietet eine Garage in Steglitz an.")
+            )
+        ),
+        ReadingPart(
+            partNumber = 3,
+            title = "Teil 3 – Klimawandel",
+            instruction = "Lesen Sie den Text. Welche Antwort (a, b oder c) passt?",
+            text = """
+                Klimaschutz im Alltag
+                
+                Immer mehr Deutsche versuchen, ihren ökologischen Fußabdruck zu verkleinern. 
+                Eine Umfrage ergab, dass 45% der Teilnehmer öfter das Fahrrad statt das Auto nutzen. 
+                Besonders in Städten wächst das Bewusstsein für nachhaltige Mobilität. 
+                Zudem verzichten 30% bewusst auf Flugreisen innerhalb Europas, um CO2-Emissionen zu vermeiden. 
+                
+                Ein weiterer Trend ist das „Zero Waste“-Prinzip. In vielen Städten eröffnen Unverpackt-Läden, 
+                in denen Kunden ihre eigenen Behälter mitbringen. Ziel ist es, Plastikmüll komplett zu vermeiden. 
+                Obwohl die Preise oft etwas höher sind als im Discounter, schätzen die Kunden die Qualität und 
+                das gute Gewissen beim Einkauf.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(7, "Was machen fast die Hälfte der Befragten für den Klimaschutz?",
+                    listOf("Sie fliegen weniger", "Sie fahren mehr Fahrrad", "Sie kaufen in Unverpackt-Läden"), 1,
+                    "45% nutzen öfter das Fahrrad statt das Auto."),
+                MultipleChoiceQuestion(8, "Warum fliegen 30% der Befragten nicht mehr innerhalb Europas?",
+                    listOf("Es ist zu teuer", "Wegen der Umweltbelastung", "Weil sie lieber im Inland bleiben"), 1,
+                    "Sie verzichten darauf, um CO2-Emissionen zu vermeiden."),
+                MultipleChoiceQuestion(9, "Was ist das Hauptmerkmal von Unverpackt-Läden?",
+                    listOf("Sie sind sehr günstig", "Man muss eigene Gefäße mitbringen", "Sie verkaufen nur Bio-Obst"), 1,
+                    "Kunden bringen ihre eigenen Behälter mit.")
+            )
         )
     ),
-    hoerenParts = emptyList(),
-    schreibenTasks = emptyList(),
-    sprechenTasks = emptyList()
+    hoerenParts = listOf(
+        HoerenPart(
+            partNumber = 1,
+            title = "Teil 1 – Alltagssituationen",
+            instruction = "Sie hören kurze Gespräche. Wählen Sie die richtige Antwort.",
+            transcript = """
+                [Gespräch 1]
+                Kunde: Guten Tag, ich suche ein Geschenk für meine Frau. Vielleicht ein Parfum?
+                Verkäuferin: Da haben wir gerade dieses neue Set im Angebot für 45 Euro.
+                Kunde: Das riecht gut. Haben Sie auch Schmuck?
+                Verkäuferin: Ja, in der ersten Etage, aber die schließt in 10 Minuten.
+                
+                [Gespräch 2]
+                Frau: Hallo Peter, kommst du heute Abend mit ins Kino?
+                Peter: Gern, wann fängt der Film an?
+                Frau: Um acht, wir treffen uns um halb acht vor dem Kino.
+                Peter: Oh, ich muss bis sieben arbeiten. Das wird knapp, aber ich schaffe es.
+                
+                [Gespräch 3]
+                Passagier: Entschuldigung, ist dieser Platz noch frei?
+                Frau: Ja, bitte setzen Sie sich.
+                Passagier: Wissen Sie, ob der Bus auch am Marktplatz hält?
+                Frau: Nein, er fährt direkt zum Bahnhof. Zum Marktplatz müssen Sie die Linie 12 nehmen.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(1, "Wo kann der Mann Schmuck finden?",
+                    listOf("Hinter der Kasse", "In der ersten Etage", "Im Nebengebäude"), 1,
+                    "Die Verkäuferin sagt: 'In der ersten Etage'."),
+                MultipleChoiceQuestion(2, "Wann treffen sie sich vor dem Kino?",
+                    listOf("19:00 Uhr", "19:30 Uhr", "20:00 Uhr"), 1,
+                    "Sie treffen sich um halb acht, also 19:30 Uhr."),
+                MultipleChoiceQuestion(3, "Wohin fährt dieser Bus?",
+                    listOf("Zum Marktplatz", "Zum Bahnhof", "Direkt in die Stadt"), 1,
+                    "Die Frau sagt: 'Er fährt direkt zum Bahnhof'.")
+            )
+        ),
+        HoerenPart(
+            partNumber = 2,
+            title = "Teil 2 – Radiobericht",
+            instruction = "Wählen Sie die richtige Antwort.",
+            transcript = """
+                Moderator: Heute bei uns im Studio: Marc Weber vom Verein 'Stadtwald'. Herr Weber, warum pflanzen Sie Bäume in der Stadt?
+                Marc Weber: Bäume sind die Lungen der Stadt. Sie kühlen die Luft im Sommer um bis zu 5 Grad ab und filtern Staub.
+                Moderator: Wer hilft Ihnen dabei?
+                Marc Weber: Hauptsächlich Freiwillige. Letztes Wochenende hatten wir über 50 Helfer, sogar viele Kinder waren dabei. Wir hoffen, bis Jahresende 1000 neue Bäume gepflanzt zu haben.
+            """.trimIndent(),
+            questions = listOf(
+                MultipleChoiceQuestion(4, "Was ist ein Vorteil von Bäumen in der Stadt laut Herrn Weber?",
+                    listOf("Sie spenden Schatten für Autos", "Sie kühlen die Luft ab", "Sie locken Vögel an"), 1,
+                    "Er sagt, sie kühlen die Luft um bis zu 5 Grad ab."),
+                MultipleChoiceQuestion(5, "Wie viele Bäume will der Verein insgesamt dieses Jahr pflanzen?",
+                    listOf("50 Bäume", "100 Bäume", "1000 Bäume"), 2,
+                    "Er hofft auf 1000 neue Bäume bis Jahresende.")
+            )
+        )
+    ),
+    schreibenTasks = listOf(
+        SchreibenTask(
+            taskNumber = 1,
+            title = "Teil 1 – Einladung",
+            prompt = """
+                Sie haben nächste Woche Geburtstag und möchten eine Party feiern.
+                Schreiben Sie eine E-Mail an Ihre Freunde (circa 80 Wörter):
+                • Laden Sie sie zur Party ein
+                • Sagen Sie, wann und wo die Party stattfindet
+                • Erklären Sie, was die Gäste mitbringen sollen
+                • Bitten Sie um eine Antwort bis Freitag
+            """.trimIndent(),
+            minWords = 80,
+            hints = listOf(
+                "Informelle Anrede",
+                "Datum und Uhrzeit nennen",
+                "Getränke oder Essen vorschlagen",
+                "Frist für die Rückmeldung setzen"
+            )
+        ),
+        SchreibenTask(
+            taskNumber = 2,
+            title = "Teil 2 – Meinung äußern",
+            prompt = """
+                Schreiben Sie einen kurzen Aufsatz (circa 150 Wörter) zum Thema:
+                „Ist es sinnvoll, im Ausland zu studieren?"
+                
+                Berücksichtigen Sie folgende Punkte:
+                • Warum entscheiden sich viele Studenten für ein Auslandssemester?
+                • Was sind die Herausforderungen (z.B. Sprache, Heimweh)?
+                • Ihre eigene Meinung dazu.
+            """.trimIndent(),
+            minWords = 150,
+            hints = listOf(
+                "Vorteile: Sprache lernen, neue Kultur",
+                "Nachteile: Kosten, Distanz zur Familie",
+                "Verknüpfungswörter benutzen",
+                "Klare Struktur (Einleitung, Hauptteil, Schluss)"
+            )
+        )
+    ),
+    sprechenTasks = listOf(
+        SprechenTask(
+            taskNumber = 1,
+            title = "Teil 1 – Kennenlernen",
+            instruction = "Sprechen Sie über sich.",
+            topic = "Stellen Sie sich vor: Name, Alter, Wohnort, Familie, Hobbys und Ihre Pläne für die Zukunft.",
+            prepTimeSec = 60,
+            speakTimeSec = 120,
+            tips = listOf("Flüssig sprechen", "Details zu Hobbys nennen", "Zukunftspläne (Beruf/Reise) erläutern")
+        ),
+        SprechenTask(
+            taskNumber = 2,
+            title = "Teil 2 – Planung",
+            instruction = "Planen Sie mit Ihrem Partner eine Überraschung.",
+            topic = "Ein gemeinsamer Freund hat das B1-Zertifikat bestanden. Planen Sie ein kleines Geschenk und eine Feier.",
+            prepTimeSec = 60,
+            speakTimeSec = 180,
+            tips = listOf("Vorschläge machen", "Auf Partner eingehen", "Termin und Budget klären")
+        ),
+        SprechenTask(
+            taskNumber = 3,
+            title = "Teil 3 – Präsentation",
+            instruction = "Beschreiben Sie ein Bild und geben Sie Ihre Meinung.",
+            topic = "Thema: Homeschooling. Das Bild zeigt ein Kind, das allein am Laptop lernt. Beschreiben Sie die Situation und diskutieren Sie Vor- und Nachteile.",
+            prepTimeSec = 60,
+            speakTimeSec = 120,
+            tips = listOf("Bilddetails nennen", "Bezug zum Thema Unterricht / Internet", "Eigene Meinung zum Online-Lernen")
+        )
+    )
 )
 
 // ─── ÖSD B1 Content ──────────────────────────────────────────────────────────
@@ -827,166 +1007,59 @@ val OesdExam2 = ExamContent(
     )
 )
 
-// ─── TELC B1 Content ─────────────────────────────────────────────────────────
+// ─── All Exams Map ────────────────────────────────────────────────────────────
 
-val TelcExam1 = ExamContent(
+val telcExam1 = ExamContent(
     id = "telc_1",
-    name = "Modelltest 1",
     provider = ExamProvider.TELC,
+    name = "Modelltest 1",
     lesenParts = listOf(
         ReadingPart(
             partNumber = 1,
-            title = "Leseverstehen 1 – Textrekonstruktion",
-            instruction = "Welcher Satz passt in welche Lücke? Es gibt mehr Sätze als Lücken.",
-            text = """
-                Die Geschichte des Fahrrades
-                
-                Das Fahrrad ist eine der wichtigsten Erfindungen der Menschheit. ___[1]___
-                Es wurde im Jahr 1817 von Karl von Drais erfunden und hieß damals „Laufmaschine". 
-                ___[2]___ Man musste also noch mit den Füßen abstoßen, um voranzukommen.
-                
-                Erst ca. 50 Jahre später wurde das Pedal erfunden. ___[3]___
-                Seitdem hat sich das Fahrrad stark weiterentwickelt. Heute gibt es Rennräder, Mountainbikes und E-Bikes.
-                ___[4]___ Besonders in Städten setzt man auf das Rad, um Staus zu vermeiden und die Umwelt zu schonen.
-                
-                Fehlende Sätze:
-                A) Damals hatte es noch keine Pedale.
-                B) Heutzutage ist das Fahrrad weltweit das meistgenutzte Fortbewegungsmittel.
-                C) Es ist umweltfreundlich, günstig und hält fit.
-                D) Das Fahrrad revolutionierte die Mobilität der Menschen grundlegend.
-                E) Dadurch wurde das Radfahren viel einfacher und schneller.
-            """.trimIndent(),
+            title = "Alltag in Deutschland",
+            instruction = "Lesen Sie den Text und wählen Sie die richtige Antwort.",
+            text = "In Deutschland gibt es viele Möglichkeiten, Deutsch zu lernen. Volkshochschulen bieten günstige Kurse an.",
             questions = listOf(
-                MultipleChoiceQuestion(1, "Welcher Satz passt in Lücke [1]?", listOf("A", "B", "C", "D", "E"), 3,
-                    "Satz D ('revolutionierte die Mobilität') passt als allgemeine Einleitung nach der ersten Aussage."),
-                MultipleChoiceQuestion(2, "Welcher Satz passt in Lücke [2]?", listOf("A", "B", "C", "D", "E"), 0,
-                    "Satz A erklärt, dass es damals keine Pedale gab – passt zum Kontext."),
-                MultipleChoiceQuestion(3, "Welcher Satz passt in Lücke [3]?", listOf("A", "B", "C", "D", "E"), 4,
-                    "Satz E ('Dadurch wurde das Radfahren viel einfacher') passt nach der Erfindung des Pedals."),
-                MultipleChoiceQuestion(4, "Welcher Satz passt in Lücke [4]?", listOf("A", "B", "C", "D", "E"), 1,
-                    "Satz B ('meistgenutztes Fortbewegungsmittel') passt als Überleitung zu heutiger Nutzung.")
-            )
-        ),
-        ReadingPart(
-            partNumber = 2,
-            title = "Leseverstehen 2 – Detailverstehen",
-            instruction = "Lesen Sie die Stellenanzeige und beantworten Sie die Fragen.",
-            text = """
-                STELLENANZEIGE – Softwareentwickler/in (m/w/d)
-                
-                Die TechStart GmbH in Frankfurt sucht ab sofort eine/n engagierte/n Entwickler/in.
-                
-                IHR PROFIL:
-                • Abgeschlossenes Studium der Informatik oder vergleichbare Ausbildung
-                • Mindestens 2 Jahre Erfahrung in der Softwareentwicklung
-                • Sehr gute Kenntnisse in Java oder Python
-                • Teamfähigkeit und selbstständige Arbeitsweise
-                • Deutsch C1, Englisch B2
-                
-                WIR BIETEN:
-                • Unbefristete Stelle, 40 Stunden/Woche
-                • Gehalt: 55.000–70.000 €/Jahr (je nach Erfahrung)
-                • 30 Tage Urlaub + Weihnachtsgeld
-                • Homeoffice bis zu 3 Tage pro Woche möglich
-                • Firmenkantine und Sportangebote
-                
-                BEWERBUNG: Senden Sie Ihre Unterlagen an hr@techstart.de
-                Bewerbungsschluss: 31. März 2024
-            """.trimIndent(),
-            questions = listOf(
-                MultipleChoiceQuestion(5, "Was ist an dieser Stelle besonders flexibel?",
-                    listOf("Die Arbeitszeit ist flexibel", "Homeoffice ist teilweise möglich", "Man kann die Sprache wählen"), 1,
-                    "Bis zu 3 Tage Homeoffice/Woche sind möglich."),
-                MultipleChoiceQuestion(6, "Welches Sprachniveau wird für Englisch verlangt?",
-                    listOf("B1", "B2", "C1"), 1,
-                    "Englisch B2 wird laut Stellenanzeige verlangt."),
-                MultipleChoiceQuestion(7, "Wie viele Erfahrungsjahre werden mindestens gefordert?",
-                    listOf("1 Jahr", "2 Jahre", "3 Jahre"), 1,
-                    "Mindestens 2 Jahre Erfahrung werden gefordert.")
+                MultipleChoiceQuestion(1, "Wer bietet günstige Kurse an?", listOf("Die Universität", "Volkshochschulen", "Privatschulen"), 1, "Richtig, Volkshochschulen sind bekannt für günstige Kurse.")
             )
         )
     ),
     hoerenParts = listOf(
         HoerenPart(
             partNumber = 1,
-            title = "Hörverstehen 1 – Dialoge",
-            instruction = "Sie hören Gespräche. Entscheiden Sie: Was ist richtig?",
-            transcript = """
-                [Dialog 1 – Im Reisebüro]
-                Kundin: Guten Tag, ich möchte gerne eine Reise nach Griechenland buchen.
-                Berater: Sehr gerne. Wann möchten Sie reisen?
-                Kundin: Am liebsten im Juli, für zwei Wochen.
-                Berater: Haben Sie ein Budget?
-                Kundin: So um die 1.500 Euro pro Person, alles inklusive wenn möglich.
-                Berater: Das ist machbar. Wir haben ein schönes Angebot auf Kreta – Halbpension, Flug inklusive, für 1.380 Euro.
-                Kundin: Klingt gut! Aber ist WLAN im Preis inbegriffen?
-                Berater: Ja, im Hotelzimmer kostenlos.
-                
-                [Dialog 2 – Beim Arzt]
-                Arzt: Was fehlt Ihnen denn?
-                Patient: Ich habe seit drei Tagen starke Kopfschmerzen und bin sehr müde.
-                Arzt: Haben Sie Fieber gemessen?
-                Patient: Ja, 38,2 Grad heute Morgen.
-                Arzt: Das klingt nach einem grippalen Infekt. Ich schreibe Sie heute und morgen krank.
-            """.trimIndent(),
+            title = "Ankunft am Bahnhof",
+            instruction = "Hören Sie die Durchsage und wählen Sie aus.",
+            transcript = "Gleis 4, der ICE nach Frankfurt fährt jetzt ein.",
             questions = listOf(
-                MultipleChoiceQuestion(1, "Was möchte die Kundin für ihre Griechenlandreise?",
-                    listOf("Nur Frühstück", "Halbpension", "Vollpension"), 1,
-                    "Der Berater bietet Halbpension an, und die Kundin akzeptiert das Angebot."),
-                MultipleChoiceQuestion(2, "Wie lange ist der Patient krank geschrieben?",
-                    listOf("Einen Tag", "Zwei Tage", "Drei Tage"), 1,
-                    "Der Arzt schreibt ihn heute und morgen krank = 2 Tage.")
-            )
+                MultipleChoiceQuestion(1, "Wo fährt der Zug nach Frankfurt ab?", listOf("Gleis 2", "Gleis 4", "Gleis 10"), 1)
+            ),
+            audioAssetPath = "telc_hoeren1.mp3"
         )
     ),
     schreibenTasks = listOf(
         SchreibenTask(
             taskNumber = 1,
-            title = "Schreiben – Forumsbeitrag",
-            prompt = """
-                In einem Online-Forum wurde die Frage gestellt: 
-                „Sollte das Rauchen in öffentlichen Bereichen wie Parks und Fußgängerzonen verboten werden?"
-                
-                Schreiben Sie einen Forumsbeitrag (circa 120 Wörter):
-                • Stellen Sie Ihre Meinung klar dar (dafür oder dagegen)
-                • Nennen Sie mindestens 2 Gründe
-                • Beziehen Sie sich auf die Meinung anderer
-                • Schreiben Sie einen abschließenden Appell
-            """.trimIndent(),
-            minWords = 120,
-            hints = listOf(
-                "Beginnen Sie mit Ihrer Position: 'Ich bin der Meinung, dass...'",
-                "Gründe nennen: 'Erstens... Zweitens...'",
-                "Auf andere eingehen: 'Manche sagen... Aber...'",
-                "Schluss: 'Deshalb appelliere ich...'",
-                "Benutzen Sie Konjunktiv für Meinungen: 'Es wäre besser, wenn...'"
-            )
+            title = "E-Mail an den Vermieter",
+            prompt = "Schreiben Sie eine E-Mail wegen der defekten Heizung.",
+            minWords = 80,
+            hints = listOf("Grund nennen", "Terminvorschlag", "Höfliche Anrede")
         )
     ),
     sprechenTasks = listOf(
         SprechenTask(
             taskNumber = 1,
-            title = "Sprechen – Präsentation",
-            instruction = "Halten Sie eine kurze Präsentation zu einem Thema.",
-            topic = "Thema: 'Meine Heimatstadt / mein Heimatland' – Stellen Sie Ihre Heimat vor: Lage, Besonderheiten, Sehenswürdigkeiten, Kultur, Essen.",
-            prepTimeSec = 120,
+            title = "Gemeinsam etwas planen",
+            instruction = "Planen Sie einen Ausflug mit einem Freund.",
+            topic = "Ausflugsziel, Termin, Verpflegung.",
+            prepTimeSec = 60,
             speakTimeSec = 180,
-            tips = listOf(
-                "Struktur: Einleitung → Hauptteil → Schluss",
-                "Einleitung: 'Ich möchte Ihnen heute... vorstellen'",
-                "Fachvokabular: Lage, Bevölkerung, Klima, Sehenswürdigkeiten",
-                "Bilder beschreiben falls vorhanden",
-                "Schluss: Persönliche Empfehlung oder Einladung"
-            )
+            tips = listOf("Vorschläge machen", "Auf Partner eingehen", "Einigung finden")
         )
     )
 )
 
-// ─── All Exams Map ────────────────────────────────────────────────────────────
-
 val allExams: Map<ExamProvider, List<ExamContent>> = mapOf(
     ExamProvider.GOETHE to listOf(GoetheExam1, GoetheExam2),
     ExamProvider.OESD to listOf(OesdExam1, OesdExam2),
-    ExamProvider.TELC to listOf(TelcExam1)
+    ExamProvider.TELC to listOf(telcExam1)
 )
-

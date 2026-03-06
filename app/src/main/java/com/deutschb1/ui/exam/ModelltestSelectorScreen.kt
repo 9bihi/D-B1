@@ -28,6 +28,11 @@ import com.deutschb1.data.ExamContent
 import com.deutschb1.data.ExamProvider
 import com.deutschb1.data.ExamSkill
 import com.deutschb1.ui.theme.*
+import com.deutschb1.data.db.DatabaseProvider
+import com.deutschb1.data.db.entities.UserExamResult
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +49,9 @@ fun ModelltestSelectorScreen(
         ExamSkill.SCHREIBEN -> IosOrange
         ExamSkill.SPRECHEN -> IosPurple
     }
+
+    val context = LocalContext.current
+    val results by DatabaseProvider.getResultDao(context).getAllResults().collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -150,9 +158,11 @@ fun ModelltestSelectorScreen(
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 items(modelltests) { test ->
+                    val result = results.find { it.examId == test.id && it.skill == skill }
                     GlassModelltestCard(
                         test = test,
                         skillColor = skillColor,
+                        result = result,
                         onClick = { onModelltestSelected(test) }
                     )
                 }
@@ -165,6 +175,7 @@ fun ModelltestSelectorScreen(
 fun GlassModelltestCard(
     test: ExamContent,
     skillColor: Color,
+    result: UserExamResult?,
     onClick: () -> Unit
 ) {
     var pressed by remember { mutableStateOf(false) }
@@ -212,9 +223,19 @@ fun GlassModelltestCard(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "Vollständiger Modelltest für B1",
+                        if (result != null) "Ergebnis: ${result.score}/${result.totalQuestions} • Abgeschlossen" 
+                        else "Vollständiger Modelltest für B1",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
+                        color = if (result != null) IosGreen else Color.Gray
+                    )
+                }
+
+                if (result != null) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = "Abgeschlossen",
+                        tint = IosGreen,
+                        modifier = Modifier.size(24.dp).padding(end = 8.dp)
                     )
                 }
                 Box(

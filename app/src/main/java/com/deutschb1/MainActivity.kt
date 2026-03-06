@@ -16,9 +16,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material.icons.outlined.School
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -91,18 +93,20 @@ fun FloatingGlassNavBar(navController: NavController) {
     val navItems = listOf(
         NavItem("Home", Screen.Home.route, Icons.Outlined.Home, Icons.Filled.Home),
         NavItem("Exams", Screen.ExamsHome.route, Icons.Outlined.MenuBook, Icons.Filled.MenuBook),
-        NavItem("Learn", Screen.LearnHome.route, Icons.Outlined.School, Icons.Filled.School)
+        NavItem("Learn", Screen.LearnHome.route, Icons.Outlined.School, Icons.Filled.School),
+        NavItem("Translate", Screen.Translation.route, Icons.Outlined.Translate, Icons.Filled.Translate)
     )
 
     val selectedIndex = navItems.indexOfFirst { item ->
         currentRoute == item.route ||
                 (item.route == Screen.ExamsHome.route && currentRoute?.startsWith("exam") == true) ||
-                (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true)
+                (item.route == Screen.LearnHome.route && currentRoute?.startsWith("learn") == true) ||
+                (item.route == Screen.Translation.route && currentRoute == "translation")
     }.coerceAtLeast(0)
 
     // Track x-offset and width of each tab for the sliding indicator
-    val tabOffsets = remember { mutableStateListOf(0f, 0f, 0f) }
-    val tabWidths = remember { mutableStateListOf(0f, 0f, 0f) }
+    val tabOffsets = remember { mutableStateListOf(0f, 0f, 0f, 0f) }
+    val tabWidths = remember { mutableStateListOf(0f, 0f, 0f, 0f) }
 
     val indicatorX by animateFloatAsState(
         targetValue = tabOffsets.getOrElse(selectedIndex) { 0f },

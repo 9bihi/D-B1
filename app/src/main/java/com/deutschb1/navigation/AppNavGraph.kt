@@ -23,6 +23,11 @@ import com.deutschb1.ui.learn.CategoryDetailScreen
 import com.deutschb1.ui.learn.ThemePhraseListScreen
 import com.deutschb1.ui.learn.ApiListScreen
 import com.deutschb1.ui.translation.TranslationScreen
+import com.deutschb1.ui.exam.ResultSummaryScreen
+import com.deutschb1.ui.exam.LastResultsProvider
+import com.deutschb1.ui.learn.flashcards.FlashcardDeckScreen
+import com.deutschb1.ui.learn.flashcards.FlashcardStudyScreen
+import com.deutschb1.data.FlashcardData
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -56,6 +61,15 @@ sealed class Screen(val route: String) {
     }
     object ApiTools : Screen("learn/api/{type}") {
         fun createRoute(type: String) = "learn/api/$type"
+    }
+    object FlashcardDecks : Screen("learn/flashcards")
+    object FlashcardStudy : Screen("learn/flashcards/{deckId}") {
+        fun createRoute(deckId: String) = "learn/flashcards/$deckId"
+    }
+
+    // Results
+    object ResultSummary : Screen("exam/results/{score}/{total}/{skillName}") {
+        fun createRoute(score: Int, total: Int, skill: ExamSkill) = "exam/results/$score/$total/${skill.name}"
     }
 
     // Translation
@@ -161,6 +175,36 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         composable(Screen.ApiTools.route) { backStackEntry ->
             val type = backStackEntry.arguments?.getString("type") ?: "dictionary"
             ApiListScreen(navController = navController, type = type)
+        }
+        composable(Screen.FlashcardDecks.route) {
+            FlashcardDeckScreen(navController = navController)
+        }
+        composable(Screen.FlashcardStudy.route) { backStackEntry ->
+            val deckId = backStackEntry.arguments?.getString("deckId") ?: ""
+            val deck = FlashcardData.decks.find { it.id == deckId }
+            if (deck != null) {
+                FlashcardStudyScreen(deck = deck, navController = navController)
+            }
+        }
+
+        // Results
+        composable(Screen.ResultSummary.route) { backStackEntry ->
+            val score = backStackEntry.arguments?.getString("score")?.toIntOrNull() ?: 0
+            val total = backStackEntry.arguments?.getString("total")?.toIntOrNull() ?: 0
+            val skillName = backStackEntry.arguments?.getString("skillName") ?: ""
+            
+            // For now, we'll use the last results stored in a singleton or just show the score
+            // Implementation of this screen usually needs the question list
+            // Since we can't easily pass the list, we'll use a static reference or similar for this demo
+            ResultSummaryScreen(
+                score = score,
+                total = total,
+                questions = LastResultsProvider.lastResults,
+                onRetry = { navController.popBackStack() },
+                onBackToExams = { 
+                    navController.popBackStack(Screen.ExamsHome.route, inclusive = false)
+                }
+            )
         }
 
         // Translation

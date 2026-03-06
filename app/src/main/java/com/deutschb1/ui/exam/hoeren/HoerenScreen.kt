@@ -28,10 +28,34 @@ import com.deutschb1.data.MultipleChoiceQuestion
 import com.deutschb1.ui.theme.IosGreen
 import com.deutschb1.ui.theme.IosRed
 import com.deutschb1.ui.theme.IosTeal
+import com.deutschb1.navigation.Screen
+import com.deutschb1.ui.exam.LastResultsProvider
+import com.deutschb1.ui.exam.QuestionResult
+import com.deutschb1.data.ExamSkill
+import com.deutschb1.data.db.DatabaseProvider
+import com.deutschb1.data.db.entities.UserExamResult
+import com.deutschb1.ui.components.AudioPlayerBar
+import androidx.compose.ui.platform.LocalContext
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HoerenScreen(exam: ExamContent, navController: NavController) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    
+    val player = remember {
+        ExoPlayer.Builder(context).build()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            player.release()
+        }
+    }
+
     var currentPartIndex by remember { mutableStateOf(0) }
     var showTranscript by remember { mutableStateOf(false) }
     var showResults by remember { mutableStateOf(false) }
@@ -63,7 +87,7 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        if (showResults) {
+        if (false) { // showResults is no longer used for inline display
             HoerenResults(parts = parts, answers = answers, onRestart = {
                 answers.clear()
                 currentPartIndex = 0
@@ -116,14 +140,21 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Audio placeholder (removed actual player)
-                Text(
-                    "Audio-Datei nicht verfügbar",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                LaunchedEffect(currentPartIndex) {
+                    currentPart?.audioAssetPath?.let { path ->
+                        if (path.isNotBlank()) {
+                            val mediaItem = MediaItem.fromUri("asset:///$path")
+                            player.setMediaItem(mediaItem)
+                            player.prepare()
+                        }
+                    }
+                }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AudioPlayerBar(player = player)
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Transcript toggle button
                 OutlinedButton(
@@ -201,7 +232,43 @@ fun HoerenScreen(exam: ExamContent, navController: NavController) {
                         }
                     } else {
                         Button(
-                            onClick = { showResults = true },
+                            onClick = { 
+                                val allQuestions = parts.flatMap { it.questions }
+                                val correct = allQuestions.count { answers[it.id] == it.correctIndex }
+                                
+                                // Save to DB
+                                scope.launch {
+                                    val dao = DatabaseProvider.getResultDao(context)
+                                    dao.insertResult(
+                                        UserExamResult(
+                                            examId = exam.id,
+                                            provider = exam.provider,
+                                            skill = ExamSkill.HOEREN,
+                                            score = correct,
+                                            totalQuestions = allQuestions.size,
+                                            completedAt = System.currentTimeMillis()
+                                        )
+                                    )
+                                }
+
+                                LastResultsProvider.lastResults = allQuestions.map { q ->
+                                    QuestionResult(
+                                        questionText = q.text,
+                                        userAnswer = q.options.getOrNull(answers[q.id] ?: -1),
+                                        correctAnswer = q.options[q.correctIndex],
+                                        isCorrect = answers[q.id] == q.correctIndex,
+                                        explanation = q.explanation
+                                    )
+                                }
+                                
+                                navController.navigate(
+                                    Screen.ResultSummary.createRoute(
+                                        score = correct,
+                                        total = allQuestions.size,
+                                        skill = ExamSkill.HOEREN
+                                    )
+                                )
+                            },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = IosGreen)
                         ) {

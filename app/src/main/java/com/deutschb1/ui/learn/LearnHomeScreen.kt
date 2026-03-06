@@ -80,6 +80,48 @@ fun LearnHomeScreen(navController: NavController) {
             }
         }
 
+        // Study Tools
+        item {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "🔥 Study Tools",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Text(
+                "Master vocabulary with active recall",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+            Spacer(Modifier.height(10.dp))
+
+            ApiToolCard(
+                emoji = "🗂️",
+                title = "WortVault Flashcards",
+                subtitle = "Spaced Repetition · 10 Topics",
+                gradient = listOf(Color(0xFFFF5F6D), Color(0xFFFFC371)),
+                onClick = { navController.navigate(Screen.FlashcardDecks.route) }
+            )
+        }
+
+        // Categories Header
+        item {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "📚 Lernmaterial",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Text(
+                "Structured phrases and grammar",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+            Spacer(Modifier.height(4.dp))
+        }
+
         // Category cards (glass style)
         itemsIndexed(allCategories) { index, category ->
             val gradient = categoryGradients[index % categoryGradients.size]

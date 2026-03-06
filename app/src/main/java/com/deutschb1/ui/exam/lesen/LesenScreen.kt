@@ -31,10 +31,20 @@ import com.deutschb1.data.ReadingPart
 import com.deutschb1.ui.theme.IosBlue
 import com.deutschb1.ui.theme.IosGreen
 import com.deutschb1.ui.theme.IosRed
+import com.deutschb1.navigation.Screen
+import com.deutschb1.ui.exam.LastResultsProvider
+import com.deutschb1.ui.exam.QuestionResult
+import com.deutschb1.data.ExamSkill
+import com.deutschb1.data.db.DatabaseProvider
+import com.deutschb1.data.db.entities.UserExamResult
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LesenScreen(exam: ExamContent, navController: NavController) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     var currentPartIndex by remember { mutableStateOf(0) }
     var showResults by remember { mutableStateOf(false) }
     val answers = remember { mutableStateMapOf<Int, Int>() }
@@ -65,7 +75,7 @@ fun LesenScreen(exam: ExamContent, navController: NavController) {
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        if (showResults) {
+        if (false) { // showResults is no longer used for inline display
             LesenResults(parts = parts, answers = answers, onRestart = {
                 answers.clear()
                 currentPartIndex = 0
@@ -131,7 +141,43 @@ fun LesenScreen(exam: ExamContent, navController: NavController) {
                         }
                     } else {
                         Button(
-                            onClick = { showResults = true },
+                            onClick = { 
+                                val allQuestions = parts.flatMap { it.questions }
+                                val correct = allQuestions.count { answers[it.id] == it.correctIndex }
+                                
+                                // Save to DB
+                                scope.launch {
+                                    val dao = DatabaseProvider.getResultDao(context)
+                                    dao.insertResult(
+                                        UserExamResult(
+                                            examId = exam.id,
+                                            provider = exam.provider,
+                                            skill = ExamSkill.LESEN,
+                                            score = correct,
+                                            totalQuestions = allQuestions.size,
+                                            completedAt = System.currentTimeMillis()
+                                        )
+                                    )
+                                }
+
+                                LastResultsProvider.lastResults = allQuestions.map { q ->
+                                    QuestionResult(
+                                        questionText = q.text,
+                                        userAnswer = q.options.getOrNull(answers[q.id] ?: -1),
+                                        correctAnswer = q.options[q.correctIndex],
+                                        isCorrect = answers[q.id] == q.correctIndex,
+                                        explanation = q.explanation
+                                    )
+                                }
+                                
+                                navController.navigate(
+                                    Screen.ResultSummary.createRoute(
+                                        score = correct,
+                                        total = allQuestions.size,
+                                        skill = ExamSkill.LESEN
+                                    )
+                                )
+                            },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = IosGreen)
                         ) {

@@ -9,68 +9,68 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 
+sealed class ApiResult<out T> {
+    data class Success<out T>(val data: T) : ApiResult<T>()
+    data class Error(val message: String) : ApiResult<Nothing>()
+    object Loading : ApiResult<Nothing>()
+}
+
 object ApiRepository {
 
     /** Fetch verb conjugation for a given verb + tense.
      *  Tense codes: PRASENS, PERFEKT, PRATERITUM, FUTUR1, KONJUNKTIV2
      */
-    suspend fun fetchVerbConjugation(verb: String, tense: String = "PRASENS"): Result<VerbConjugation> =
+    suspend fun fetchVerbConjugation(verb: String, tense: String = "PRASENS"): ApiResult<VerbConjugation> =
         withContext(Dispatchers.IO) {
             try {
                 val result = RetrofitClient.verbApi.getConjugation(verb, tense)
-                Result.success(result)
+                ApiResult.Success(result)
             } catch (e: Exception) {
-                Result.failure(e)
+                ApiResult.Error(e.localizedMessage ?: "Unknown error occurred")
             }
         }
 
     /** Translate text using LibreTranslate (translate.argosopentech.com — free, no key) */
-    suspend fun translateText(text: String, source: String, target: String): Result<String> =
+    suspend fun translateText(text: String, source: String, target: String): ApiResult<String> =
         withContext(Dispatchers.IO) {
             try {
                 val response = RetrofitClient.translateApi.translate(
                     TranslateRequest(q = text, source = source, target = target)
                 )
-                val translated = response.translatedText ?: return@withContext Result.failure(
-                    Exception("Empty translation response")
+                val translated = response.translatedText ?: return@withContext ApiResult.Error(
+                    "Empty translation response"
                 )
-                Result.success(translated)
+                ApiResult.Success(translated)
             } catch (e: Exception) {
-                Result.failure(e)
+                ApiResult.Error(e.localizedMessage ?: "Translation failed")
             }
         }
 
     /**
      * Fetch the definition of a word using the Free Dictionary API.
-     *
-     * NOTE: This uses raw OkHttp (not Retrofit) because Gson crashes with
-     * "Class cannot be cast to ParameterizedType" when deserializing List<T>
-     * via Retrofit's reflection proxy.
-     *
-     * The word MUST be English. For German words, translate first, then call this.
      */
-    suspend fun fetchWordDefinition(word: String): Result<String> =
+    suspend fun fetchWordDefinition(word: String): ApiResult<String> =
         withContext(Dispatchers.IO) {
             try {
                 val url = "https://api.dictionaryapi.dev/api/v2/entries/en/${word.trim().lowercase()}"
                 val json = URL(url).readText()
                 val array = JSONArray(json)
-                if (array.length() == 0) return@withContext Result.success("No definition found.")
+                if (array.length() == 0) return@withContext ApiResult.Success("No definition found.")
                 val entry = array.getJSONObject(0)
                 val meanings = entry.optJSONArray("meanings")
-                    ?: return@withContext Result.success("No definition found.")
+                    ?: return@withContext ApiResult.Success("No definition found.")
                 val firstMeaning = meanings.getJSONObject(0)
                 val definitions = firstMeaning.optJSONArray("definitions")
-                    ?: return@withContext Result.success("No definition found.")
+                    ?: return@withContext ApiResult.Success("No definition found.")
                 val definition = definitions.getJSONObject(0).optString("definition", "No definition found.")
-                Result.success(definition)
+                ApiResult.Success(definition)
             } catch (e: Exception) {
-                Result.failure(e)
+                ApiResult.Error(e.localizedMessage ?: "Could not fetch definition")
             }
         }
 
     /** Fetch the 5000-word German B1 word list from GitHub */
-    suspend fun fetchB1WordList(): Result<List<String>> =
+    suspend fun fetchB1WordList(): ApiResult<List<String>> =
         withContext(Dispatchers.IO) {
             try {
                 val url = java.net.URL(
@@ -84,16 +84,14 @@ object ApiRepository {
                     .split(",")
                     .map { it.trim().removeSurrounding("\"") }
                     .filter { it.isNotBlank() }
-                Result.success(words)
+                ApiResult.Success(words)
             } catch (e: Exception) {
-                Result.failure(e)
+                ApiResult.Error(e.localizedMessage ?: "Failed to load word list")
             }
         }
 
     /**
      * Common German B1 verbs for the Verb Conjugation browser.
-     * These are shown as a browsable list so the user can tap any verb instead of
-     * having to type it manually.
      */
     val commonB1Verbs: List<String> = listOf(
         "sein", "haben", "werden", "können", "müssen", "dürfen", "wollen", "sollen",

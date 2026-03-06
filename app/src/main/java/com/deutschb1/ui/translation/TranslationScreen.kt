@@ -29,12 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.deutschb1.data.ApiRepository
+import com.deutschb1.data.ApiResult
 import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun TranslationScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val clipboard = LocalClipboardManager.current
+    val context = LocalContext.current
 
     var inputText by remember { mutableStateOf("") }
     var outputText by remember { mutableStateOf("") }
@@ -186,10 +190,16 @@ fun TranslationScreen(navController: NavController) {
                         val src = if (sourceIsGerman) "de" else "en"
                         val tgt = if (sourceIsGerman) "en" else "de"
                         val result = ApiRepository.translateText(inputText.trim(), src, tgt)
-                        result.fold(
-                            onSuccess = { outputText = it },
-                            onFailure = { errorMessage = "Translation failed: ${it.localizedMessage}" }
-                        )
+                        when (result) {
+                            is ApiResult.Success -> {
+                                outputText = result.data
+                                errorMessage = null
+                            }
+                            is ApiResult.Error -> {
+                                errorMessage = "Translation failed: ${result.message}"
+                            }
+                            else -> {}
+                        }
                         isLoading = false
                     }
                 },
@@ -262,6 +272,7 @@ fun TranslationScreen(navController: NavController) {
                                 IconButton(
                                     onClick = {
                                         clipboard.setText(AnnotatedString(outputText))
+                                        Toast.makeText(context, "Kopiert!", Toast.LENGTH_SHORT).show()
                                     },
                                     modifier = Modifier.size(32.dp)
                                 ) {
