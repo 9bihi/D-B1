@@ -53,7 +53,7 @@
 |---|---|---|---|
 | Goethe-Institut | ✅ | ✅ | Lesen, Hören, Schreiben, Sprechen |
 | ÖSD | ✅ | ✅ | Lesen, Hören, Schreiben, Sprechen |
-| TELC | ✅ | 🔧 | Lesen, Schreiben, Sprechen |
+| TELC | ✅ | ✅ | Lesen, Hören, Schreiben, Sprechen |
 
 | Module | Count | Status |
 |---|---|---|

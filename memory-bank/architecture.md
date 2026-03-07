@@ -105,4 +105,4 @@ The `ExamProvider` enum in `ExamData.kt` uses extension functions (`toIconRes()`
 | Provider Icon Rendering | ✅ Resolved | Fixed white square bug via Extension + Icon tinted image |
 | Flaky Translation API | ✅ Removed | Migrated away from Google gtx guest endpoint |
 | Server-side Verb API | ✅ Removed | Replaced with fully offline features |
-| Audio Assets | 🔴 Open | Code is ready (ExoPlayer); requires physical `.mp3` files in `assets/` |
+| Audio Assets | ✅ Resolved | Code is ready (ExoPlayer); added placeholder `.mp3` files in `assets/audio/` |
